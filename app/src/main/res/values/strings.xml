@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Tetris game collection</string>
+    <string name="action_tetris">Tetris</string>
+    <string name="action_columnus">Columnus</string>
+    <string name="action_color_balls">Color balls</string>
+</resources>
