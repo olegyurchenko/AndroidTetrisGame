@@ -71,13 +71,13 @@ public class TetrisBase {
       columnCount = columns;
       rowCount = rows;
       shapeMap = new HashMap<Integer, Shape>();
-      rect = new Rect();
+      //rect = new Rect();
 
       //Test shapes
-      for(int i = 0; i < 16; i++)
+      for(int i = 0; i < 30; i++)
       {
         int c = i % columnCount;
-        int r = i / rowCount;
+        int r = i / columnCount;
         Shape s = new Shape(this);
         put(c, r, s);
       }
@@ -112,8 +112,15 @@ public class TetrisBase {
           if(s != null)
           {
             int x = rect.left + c * shapeWidth;
-            int y = rect.top + r * shapeHeight;
+            int y = rect.top + (rowCount - r) * shapeHeight;
             s.onDraw(canvas, x, y, shapeWidth, shapeHeight);
+
+            //Debug
+            int textSize = 30;
+            p.setTextSize(textSize);
+            p.setColor(Color.BLUE);
+
+            canvas.drawText("#" + c + "." + r, x, y + textSize, p);
           }
         }
       }
@@ -147,6 +154,7 @@ public class TetrisBase {
       glass = onGlassCreate();
     }
 
+
     protected Glass onGlassCreate()
     {
       return new Glass(8, 16);
@@ -155,14 +163,14 @@ public class TetrisBase {
     @Override
     public void onDraw(Canvas canvas)
     {
-      if(glass.getRect().width() == 0)
+      if(glass.getRect() == null)
       {
-        Rect r = new Rect();
-        r.left = 100;
-        r.right = canvas.getWidth() - 100;
-        r.top = 100;
-        r.bottom = canvas.getHeight() - 100;
-        glass.setRect(r);
+        if(clientRect == null)
+        {
+          clientRect = new Rect(100, 100, canvas.getWidth() * 2 / 3, canvas.getHeight() * 2  /  3);
+        }
+
+        glass.setRect(clientRect);
       }
 
       glass.onDraw(canvas);

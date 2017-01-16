@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
@@ -42,10 +43,11 @@ public class TetrisBaseActivity extends Activity
     rotateBtn.setOnClickListener(this);
 
 
-
     drawView = new DrawView(this);
     gameController = onGameControllerCreate();
 
+
+    //gameController.setRect(new Rect(100, 100, drawView.getWidth(), drawView.getHeight()));
 
     RelativeLayout layout = (RelativeLayout)findViewById(R.id.activity_tetris_base);
     layout.addView(drawView);

@@ -14,6 +14,7 @@ public class GameController
 {
   private int unique;
   private boolean modified = false;
+  Rect clientRect;
 
   public boolean isModified()
   {
@@ -37,6 +38,16 @@ public class GameController
   public void onQuant()
   {
     //onUpdate();
+  }
+
+  public Rect getRect()
+  {
+    return clientRect;
+  }
+
+  public void setRect(Rect r)
+  {
+    clientRect = r;
   }
 
   public void onTouchDown(float x, float y)
