@@ -107,22 +107,90 @@ public class TetrisBase {
 
     public int getRowCount() {return rowCount;}
     public int getColumnCount() {return columnCount;}
-    public void rotateRight()
+    public void strip()
     {
-      HashMap<Integer, Shape> m = new HashMap<Integer, Shape>();
+      for(int row = 0; row < rowCount; row ++)
+      {
+        boolean empty = true;
+        for (int column = 0; column < columnCount; column ++)
+        {
+          Shape s = shapeMap.get(index(column, row));
+          if(s != null)
+          {
+            empty = false;
+            break;
+          }
+        }
+
+        if(empty)
+        {
+          //Erase empty row
+          Log.d("Game", "Erase empty row = " + row);
+          for(int r = row + 1; r < rowCount; r ++) {
+            for (int column = 0; column < columnCount; column++) {
+              int idx = index(column, r);
+              Shape s = shapeMap.get(idx);
+              if (s != null)
+              {
+                shapeMap.remove(idx);
+                shapeMap.put(index(column, r - 1), s);
+              }
+            }
+          }
+          row --;
+          rowCount --;
+        }
+      }
+
+      for (int column = 0; column < columnCount; column++)
+      {
+        boolean empty = true;
+        for(int row = 0; row < rowCount; row ++)
+        {
+          Shape s = shapeMap.get(index(column, row));
+          if(s != null)
+          {
+            empty = false;
+            break;
+          }
+        }
+
+        if(empty)
+        {
+          //Erase empty column
+          Log.d("Game", "Erase empty column = " + column);
+          for(int c = column + 1; c < columnCount; c ++) {
+            for(int row = 0; row < rowCount; row ++)
+            {
+              int idx = index(c, row);
+              Shape s = shapeMap.get(idx);
+              if (s != null)
+              {
+                shapeMap.remove(idx);
+                shapeMap.put(index(c - 1, row), s);
+              }
+            }
+          }
+          column --;
+          columnCount --;
+        }
+      }
+    }
+
+    public Figure rotateRight()
+    {
+      Figure f = new Figure();
       for(int row = 0; row < rowCount; row ++)
       {
         for (int column = 0; column < columnCount; column ++)
         {
           Shape s = get(column, row);
           if(s != null)
-            m.put(index(rowCount - row, column), s);
+            f.put(rowCount - row, column, s);
         }
       }
-      shapeMap = m;
-      int tmp = rowCount;
-      rowCount = columnCount;
-      columnCount = tmp;
+      f.strip();
+      return f;
     }
 
     public void onDraw(Canvas canvas, int left, int top, int shapeWidth, int shapeHeight)
@@ -349,8 +417,7 @@ public class TetrisBase {
     {
       if(activeFigure == null)
         return false;
-      Figure f = new Figure(activeFigure);
-      f.rotateRight();
+      Figure f = activeFigure.rotateRight();
       if(validPosition(activeFigurePosition.column(), activeFigurePosition.row(), f))
       {
         activeFigure = f;
@@ -410,9 +477,9 @@ public class TetrisBase {
     protected Figure onNewFigure() {
       Figure figure = new Figure();
       figure.put(0, 0, new Shape(Color.GREEN, Color.BLACK));
+      figure.put(1, 0, new Shape(Color.GREEN, Color.BLACK));
       figure.put(1, 1, new Shape(Color.GREEN, Color.BLACK));
-      figure.put(2, 2, new Shape(Color.GREEN, Color.BLACK));
-      figure.put(3, 3, new Shape(Color.GREEN, Color.BLACK));
+      figure.put(2, 0, new Shape(Color.GREEN, Color.BLACK));
 
       return figure;
     }
