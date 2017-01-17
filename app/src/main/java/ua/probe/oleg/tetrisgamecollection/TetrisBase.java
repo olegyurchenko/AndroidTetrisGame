@@ -5,6 +5,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import java.util.Calendar;
+import android.util.Log;
+
 import java.util.*;
 
 /**
@@ -62,6 +65,7 @@ public class TetrisBase {
   static public class Glass
   {
     int rowCount, columnCount;
+    protected int fillColor = Color.WHITE, borderColor = Color.BLUE;
     Rect rect;
 
     protected HashMap<Integer, Shape> shapeMap;
@@ -97,8 +101,13 @@ public class TetrisBase {
     {
       Paint p = new Paint();
 
+      // перенастраивам кисть на заливку
+      p.setColor(fillColor);
+      p.setStyle(Paint.Style.FILL);
+      canvas.drawRect(rect, p);
+
       // перенастраивам кисть на контуры
-      p.setColor(Color.BLACK);
+      p.setColor(borderColor);
       p.setStyle(Paint.Style.STROKE);
       canvas.drawRect(rect, p);
 
@@ -147,7 +156,10 @@ public class TetrisBase {
 
   static public class Controller extends GameController
   {
-    Glass glass;
+    protected Glass glass;
+    protected int interval = 1000; //ms
+    private long lastTime = 0;
+
     Controller()
     {
       super();
@@ -180,6 +192,12 @@ public class TetrisBase {
     @Override
     public void onQuant()
     {
+      if(System.currentTimeMillis() - lastTime >= interval)
+      {
+        nextInterval();
+        lastTime = System.currentTimeMillis();
+      }
+      //Log.d("TIME TEST", "Current sec = " + seconds);
     }
 
     @Override
@@ -216,6 +234,13 @@ public class TetrisBase {
     public void rotate()
     {
     }
+
+
+    protected void nextInterval()
+    {
+
+    }
+
   }
 
 
