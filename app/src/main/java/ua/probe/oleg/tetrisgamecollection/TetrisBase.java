@@ -39,6 +39,12 @@ public class TetrisBase {
       borderColor = bColor;
     }
 
+    Shape(int fColor)
+    {
+      fillColor = fColor;
+      borderColor = Color.BLACK;
+    }
+
     Shape()
     {
       fillColor = Color.WHITE;
@@ -50,6 +56,8 @@ public class TetrisBase {
       fillColor = other.fillColor;
       borderColor = other.borderColor;
     }
+
+    public int color() {return fillColor;}
 
     void onDraw(Canvas canvas, int x, int y, int width, int height)
     {
@@ -178,6 +186,8 @@ public class TetrisBase {
 
     public int getRowCount() {return rowCount;}
     public int getColumnCount() {return columnCount;}
+    public int getShapeWidth() { return rect.width() / columnCount;}
+    public int getShapeHeight() {return rect.height() / rowCount;}
 
     public void onDraw(Canvas canvas)
     {
@@ -193,8 +203,8 @@ public class TetrisBase {
       p.setStyle(Paint.Style.STROKE);
       canvas.drawRect(rect, p);
 
-      int shapeWidth = rect.width() / columnCount;
-      int shapeHeight = rect.height() / rowCount;
+      int shapeWidth = getShapeWidth();
+      int shapeHeight = getShapeHeight();
       for(int r = 0; r < rowCount; r++)
       {
         for(int c = 0; c < columnCount; c++)
@@ -203,7 +213,7 @@ public class TetrisBase {
           if(s != null)
           {
             int x = rect.left + c * shapeWidth;
-            int y = rect.top + (rowCount - r) * shapeHeight;
+            int y = rect.top + r * shapeHeight;
             s.onDraw(canvas, x, y, shapeWidth, shapeHeight);
 
             /*
@@ -224,13 +234,14 @@ public class TetrisBase {
         int y = rect.top + activeFigurePosition.row() * shapeHeight;
         activeFigure.onDraw(canvas, x, y, shapeWidth, shapeHeight);
 
+        /*
         //Debug
-
         int textSize = 30;
         p.setTextSize(textSize);
         p.setColor(Color.BLUE);
 
         canvas.drawText("Figure: x = " + x + ", y = " + y, x, y + textSize, p);
+        */
       }
 
       setModified(false);
@@ -249,7 +260,7 @@ public class TetrisBase {
         || row >= rowCount)
         return null;
 
-      return shapeMap.get(index(column, rowCount - row));
+      return shapeMap.get(index(column, row));
     }
 
     public void put(int column, int row, Shape s)
@@ -261,9 +272,9 @@ public class TetrisBase {
         return;
 
       if(s == null)
-        shapeMap.remove(index(column, rowCount - row));
+        shapeMap.remove(index(column, row));
       else
-         shapeMap.put(index(column, rowCount - row), s);
+         shapeMap.put(index(column, row), s);
       setModified(true);
     }
 
@@ -360,6 +371,10 @@ public class TetrisBase {
         setModified(true);
         return true;
       }
+      else
+      {
+        onFigureLended();
+      }
       return false;
     }
 
@@ -375,6 +390,33 @@ public class TetrisBase {
       return result;
     }
 
+
+    void onFigureLended()
+    {
+      //Convert figure to shapes
+      int rowCount = activeFigure.getRowCount();
+      int columnCount = activeFigure.getColumnCount();
+      for(int row = 0; row < rowCount; row ++)
+      {
+        for(int column = 0; column < columnCount; column ++)
+        {
+          Shape s = activeFigure.get(column, row);
+          if(s != null)
+          {
+            put(activeFigurePosition.column() + column,
+              activeFigurePosition.row() + row,
+              s);
+          }
+        }
+      }
+      activeFigure = null;
+    }
+
+    boolean annigilation()
+    {
+      return false;
+    }
+
   }
   /*-----------------------------------------------------------------------------------------------*/
   static public class Controller extends GameController
@@ -382,7 +424,25 @@ public class TetrisBase {
     protected Glass glass;
     protected int interval = 1000; //ms
     private long lastTime = 0;
+    boolean showNextFigure = true;
     Figure nextFigure;
+    static int colors[] = {
+      Color.rgb(2, 53, 58), //Color.BLACK,
+      Color.rgb(215, 235, 237),
+      Color.CYAN,
+      Color.MAGENTA,
+      Color.BLUE,
+      Color.GRAY,
+      Color.GREEN,
+      Color.RED,
+      Color.YELLOW
+    };
+
+    int randomColor()
+    {
+      int n = (int)(Math.random() * 1000.0);
+      return colors[n % colors.length];
+    }
 
     Controller()
     {
@@ -418,6 +478,12 @@ public class TetrisBase {
       }
 
       glass.onDraw(canvas);
+      if(nextFigure != null && showNextFigure)
+      {
+        int x = clientRect.right + 100;
+        int y = clientRect.top + 100;
+        nextFigure.onDraw(canvas, x, y, glass.getShapeWidth(), glass.getShapeHeight());
+      }
     }
 
 
@@ -426,8 +492,8 @@ public class TetrisBase {
     {
       if(System.currentTimeMillis() - lastTime >= interval)
       {
-        nextInterval();
         lastTime = System.currentTimeMillis();
+        nextInterval();
       }
       //Log.d("TIME TEST", "Current sec = " + seconds);
     }
@@ -480,20 +546,29 @@ public class TetrisBase {
     {
       if(nextFigure == null)
         nextFigure = onNewFigure();
+
       if(glass.getActiveFigure() == null)
       {
-        if(!glass.put(nextFigure))
-        {
-          Log.d("Game", "Error add figure");
+
+        if(glass.annigilation()) {
+          lastTime = System.currentTimeMillis() - interval;
+
         }
         else
         {
-          Log.d("Game", "Add figure Ok");
-          nextFigure = onNewFigure();
-        }
 
+          if (!glass.put(nextFigure)) {
+//          Log.d("Game", "Error add figure");
+          } else {
+//          Log.d("Game", "Add figure Ok");
+            nextFigure = onNewFigure();
+          }
+        }
       }
-      setModified(true);
+      else
+        glass.moveDown();
+
+      setModified(glass.isModified());
     }
 
   }

@@ -9,6 +9,7 @@ import android.util.Log;
 
 public class TetrisGame extends TetrisBase
 {
+  /*-----------------------------------------------------------------------------------------------*/
   public static class TetrisFigure extends TetrisBase.Figure
   {
 
@@ -30,7 +31,7 @@ public class TetrisGame extends TetrisBase
         if(empty)
         {
           //Erase empty row
-          Log.d("Game", "Erase empty row = " + row);
+          //Log.d("Game", "Erase empty row = " + row);
           for(int r = row + 1; r < rowCount; r ++) {
             for (int column = 0; column < columnCount; column++) {
               int idx = index(column, r);
@@ -63,7 +64,7 @@ public class TetrisGame extends TetrisBase
         if(empty)
         {
           //Erase empty column
-          Log.d("Game", "Erase empty column = " + column);
+          //Log.d("Game", "Erase empty column = " + column);
           for(int c = column + 1; c < columnCount; c ++) {
             for(int row = 0; row < rowCount; row ++)
             {
@@ -99,19 +100,64 @@ public class TetrisGame extends TetrisBase
       return f;
     }
   }
+  /*-----------------------------------------------------------------------------------------------*/
+  public static class TetrisGlass extends TetrisBase.Glass
+  {
+    public TetrisGlass(int colCount, int rowCount)
+    {
+      super(colCount, rowCount);
+    }
 
+    @Override
+    boolean annigilation()
+    {
+      for(int row = 0; row < rowCount; row ++)
+      {
+        boolean full = true;
+        for(int column = 0; column < columnCount; column ++)
+        {
+          if(get(column, row) == null)
+          {
+            full = false;
+            break;
+          }
+        }
+
+        if(full)
+        {
+          //remove row
+          for(int r = row - 1; r >= 0; r --)
+          {
+            for(int column = 0; column < columnCount; column ++)
+              put(column, r + 1, get(column, r));
+
+          }
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+  /*-----------------------------------------------------------------------------------------------*/
   public static class Controller extends TetrisBase.Controller
   {
+
+    @Override
+    protected Glass onGlassCreate()
+    {
+      return new TetrisGlass(8, 16);
+    }
+
     @Override
     protected Figure onNewFigure() {
       Figure figure = new TetrisFigure();
-      figure.put(0, 0, new Shape(Color.GREEN, Color.BLACK));
-      figure.put(1, 0, new Shape(Color.GREEN, Color.BLACK));
-      figure.put(1, 1, new Shape(Color.GREEN, Color.BLACK));
-      figure.put(2, 0, new Shape(Color.GREEN, Color.BLACK));
+      figure.put(2, 0, new Shape(Color.GREEN));
+      figure.put(1, 0, new Shape(Color.GREEN));
+      figure.put(0, 0, new Shape(Color.GREEN));
 
       return figure;
     }
   }
+  /*-----------------------------------------------------------------------------------------------*/
 
 }
