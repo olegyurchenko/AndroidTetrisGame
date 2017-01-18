@@ -13,6 +13,28 @@ public class TetrisGame extends TetrisBase
   public static class TetrisFigure extends TetrisBase.Figure
   {
 
+    protected TetrisFigure() {
+      super();
+    }
+
+    public TetrisFigure(byte data[], int color)
+    {
+      super();
+
+      int row = 0;
+      for(byte b : data)
+      {
+        for(int i = 0; i < 8; i++)
+        {
+          if((b & (1 << i)) != 0)
+          {
+            put(i, row, new Shape(color));
+          }
+        }
+        row ++;
+      }
+    }
+
     public void strip()
     {
       for(int row = 0; row < rowCount; row ++)
@@ -141,6 +163,38 @@ public class TetrisGame extends TetrisBase
   /*-----------------------------------------------------------------------------------------------*/
   public static class Controller extends TetrisBase.Controller
   {
+    static byte figures[][] = {
+
+      //1x1
+      {0b1},
+      //2x2
+      {0b11},
+      {0b11, 0b01},
+      {0b11, 0b10},
+      {0b11, 0b11},
+      //3x2
+      {0b111},
+      {0b111, 0b100},
+      {0b111, 0b010},
+      {0b111, 0b001},
+      {0b111, 0b101},
+      {0b111, 0b110},
+      {0b111, 0b011},
+      {0b110, 0b011},
+      {0b011, 0b110},
+      {0b111, 0b111},
+      //3x3
+      {0b111, 0b100, 0b100},
+      {0b111, 0b010, 0b010},
+      {0b111, 0b001, 0b001},
+
+    };
+
+    byte[] randomFigure()
+    {
+      int n = (int)(Math.random() * 1000.0);
+      return figures[n % figures.length];
+    }
 
     @Override
     protected Glass onGlassCreate()
@@ -150,10 +204,11 @@ public class TetrisGame extends TetrisBase
 
     @Override
     protected Figure onNewFigure() {
-      Figure figure = new TetrisFigure();
-      figure.put(2, 0, new Shape(Color.GREEN));
-      figure.put(1, 0, new Shape(Color.GREEN));
-      figure.put(0, 0, new Shape(Color.GREEN));
+      Figure figure = new TetrisFigure(randomFigure(), randomColor());
+
+      int n = (int)(Math.random() * 1000.0) % 2;
+      for(int i = 0; i < n; i++)
+        figure = figure.rotate();
 
       return figure;
     }
