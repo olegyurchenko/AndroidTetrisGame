@@ -68,7 +68,7 @@ public class TetrisBaseActivity extends Activity
               drawView.invalidate();
           }
         });
-      };
+      }
     }, 100, 10); // интервал - 100 миллисекунд, 0 миллисекунд до первого запуска.
 
   }
