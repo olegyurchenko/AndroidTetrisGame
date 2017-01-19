@@ -301,7 +301,7 @@ public class TetrisBase {
         return false;
       Cell cell = new Cell();
       //Centered in top
-      cell.setColumn((columnCount - f.getColumnCount()) / 2);
+      cell.setColumn(1 + (columnCount - f.getColumnCount()) / 2);
       if(!validPosition(cell.column(), cell.row(), f))
         return false;
       activeFigure = f;
@@ -482,32 +482,32 @@ public class TetrisBase {
     protected void geometryInit()
     {
       int x, y, w, h;
+      int border = 20;
 
-      //if(rect.width() < rect.height()) //Verical
-      if(false)
+      if(rect.width() < rect.height()) //Verical
       {
-        x = 100;
-        w = rect.width() - 200;
+        x = border;
+        w = rect.width() - 2 * border;
         h = (w / glass.getColumnCount()) * glass.getRowCount();
-        y = 200 + 3 * w / glass.getColumnCount();
+        y = 2* border + 3 * w / glass.getColumnCount();
         glass.setRect(
           new Rect(x, y, x + w, y + h)
         );
 
         nextFigureX = x + (w - glass.getShapeWidth() * 3) / 2;
-        nextFigureY = 100;
+        nextFigureY = border;
 
       }
       else
       { //Horisontal
-        x = y = 100;
-        h = rect.height() - 200;
+        x = y = border;
+        h = rect.height() - 2 * border;
         w = (h / glass.getRowCount()) * glass.getColumnCount();
         glass.setRect(
           new Rect(x, y, x + w, y + h)
         );
-        nextFigureX = y + w + 100;
-        nextFigureY = 100;
+        nextFigureX = y + w + border;
+        nextFigureY = border;
       }
     }
     /*============================================================*/

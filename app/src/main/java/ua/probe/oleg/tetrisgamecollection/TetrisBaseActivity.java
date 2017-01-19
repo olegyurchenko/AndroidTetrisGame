@@ -18,7 +18,7 @@ import java.util.TimerTask;
 
 public class TetrisBaseActivity extends Activity
   implements View.OnTouchListener, View.OnClickListener {
-  protected Button leftBtn, rightBtn, downBtn, rotateBtn;
+  protected Button btn;
   protected TetrisBase.Controller gameController;
   protected View drawView = null;
 
@@ -31,17 +31,25 @@ public class TetrisBaseActivity extends Activity
     setContentView(R.layout.activity_tetris_base);
 
     //Buttons
-    leftBtn = (Button) findViewById(R.id.btnLeft);
-    leftBtn.setOnClickListener(this);
+    btn = (Button) findViewById(R.id.btnLeft1);
+    btn.setOnClickListener(this);
+    btn = (Button) findViewById(R.id.btnLeft2);
+    btn.setOnClickListener(this);
 
-    rightBtn = (Button) findViewById(R.id.btnRight);
-    rightBtn.setOnClickListener(this);
+    btn = (Button) findViewById(R.id.btnRight1);
+    btn.setOnClickListener(this);
+    btn = (Button) findViewById(R.id.btnRight2);
+    btn.setOnClickListener(this);
 
-    downBtn = (Button) findViewById(R.id.btnDown);
-    downBtn.setOnClickListener(this);
+    btn = (Button) findViewById(R.id.btnDown1);
+    btn.setOnClickListener(this);
+    btn = (Button) findViewById(R.id.btnDown2);
+    btn.setOnClickListener(this);
 
-    rotateBtn = (Button) findViewById(R.id.btnRotate);
-    rotateBtn.setOnClickListener(this);
+    btn = (Button) findViewById(R.id.btnRotate1);
+    btn.setOnClickListener(this);
+    btn = (Button) findViewById(R.id.btnRotate2);
+    btn.setOnClickListener(this);
 
 
     drawView = new DrawView(this);
@@ -108,16 +116,20 @@ public class TetrisBaseActivity extends Activity
   {
     switch(v.getId())
     {
-      case R.id.btnLeft:
+      case R.id.btnLeft1:
+      case R.id.btnLeft2:
         gameController.moveLeft();
         break;
-      case R.id.btnRight:
+      case R.id.btnRight1:
+      case R.id.btnRight2:
         gameController.moveRight();
         break;
-      case R.id.btnDown:
+      case R.id.btnDown1:
+      case R.id.btnDown2:
         gameController.moveDown();
         break;
-      case R.id.btnRotate:
+      case R.id.btnRotate1:
+      case R.id.btnRotate2:
         gameController.rotate();
         break;
     }
