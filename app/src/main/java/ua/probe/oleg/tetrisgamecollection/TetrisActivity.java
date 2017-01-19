@@ -7,7 +7,7 @@ package ua.probe.oleg.tetrisgamecollection;
 public class TetrisActivity extends TetrisBaseActivity
 {
   @Override
-  protected GameController onGameControllerCreate()
+  protected TetrisBase.Controller onGameControllerCreate()
   {
     return new TetrisGame.Controller();
   }

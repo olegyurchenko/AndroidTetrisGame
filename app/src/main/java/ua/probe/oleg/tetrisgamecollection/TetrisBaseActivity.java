@@ -19,7 +19,7 @@ import java.util.TimerTask;
 public class TetrisBaseActivity extends Activity
   implements View.OnTouchListener, View.OnClickListener {
   protected Button leftBtn, rightBtn, downBtn, rotateBtn;
-  protected GameController gameController;
+  protected TetrisBase.Controller gameController;
   protected View drawView = null;
 
   Timer myTimer = new Timer(); // Создаем таймер
@@ -75,7 +75,7 @@ public class TetrisBaseActivity extends Activity
   }
 
 
-  protected GameController onGameControllerCreate()
+  protected TetrisBase.Controller onGameControllerCreate()
   {
     return new TetrisBase.Controller();
   }
@@ -127,6 +127,12 @@ public class TetrisBaseActivity extends Activity
 
     public DrawView(Context context) {
       super(context);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+      super.onSizeChanged(w, h, oldw, oldh);
+      gameController.setSize(w, h);
     }
 
     @Override

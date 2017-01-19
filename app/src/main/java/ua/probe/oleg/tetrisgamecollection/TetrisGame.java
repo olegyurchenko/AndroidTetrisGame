@@ -199,7 +199,7 @@ public class TetrisGame extends TetrisBase
     @Override
     protected Glass onGlassCreate()
     {
-      return new TetrisGlass(8, 16);
+      return new TetrisGlass(defaultColumnCount, defaultRowCount);
     }
 
     @Override

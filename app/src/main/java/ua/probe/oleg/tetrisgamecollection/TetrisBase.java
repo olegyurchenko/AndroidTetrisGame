@@ -4,8 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
-import android.util.SparseArray;
 
 import java.util.*;
 
@@ -420,13 +418,24 @@ public class TetrisBase {
 
   }
   /*-----------------------------------------------------------------------------------------------*/
-  static public class Controller extends GameController
+  static public class Controller
   {
+    private boolean modified = false;
+    Rect rect;
     protected Glass glass;
     protected int interval = 1000; //ms
     private long lastTime = 0;
+    protected int defaultColumnCount = 6, defaultRowCount = 12;
+
     boolean showNextFigure = true;
     Figure nextFigure;
+    int nextFigureX, nextFigureY;
+
+    /*============================================================*/
+    boolean isModified() {return modified;}
+    /*============================================================*/
+    void setModified(boolean m) {modified = m;}
+    /*============================================================*/
     static int colors[] = {
       Color.rgb(2, 53, 58), //Color.BLACK,
       Color.rgb(215, 235, 237),
@@ -438,24 +447,23 @@ public class TetrisBase {
       Color.RED,
       Color.YELLOW
     };
-
+    /*============================================================*/
     int randomColor()
     {
       int n = (int)(Math.random() * 1000.0);
       return colors[n % colors.length];
     }
-
+    /*============================================================*/
     Controller()
     {
-      super();
       glass = onGlassCreate();
     }
-
-
+    /*============================================================*/
     protected Glass onGlassCreate()
     {
-      return new Glass(8, 16);
+      return new Glass(defaultColumnCount, defaultRowCount);
     }
+    /*============================================================*/
     protected Figure onNewFigure() {
       Figure figure = new Figure();
       figure.put(0, 0, new Shape(Color.GREEN, Color.BLACK));
@@ -464,31 +472,66 @@ public class TetrisBase {
 
       return figure;
     }
+    /*============================================================*/
+    public void setSize(int w, int h)
+    {
+      rect = new Rect(0, 0, w, h);
+      geometryInit();
+    }
+    /*============================================================*/
+    protected void geometryInit()
+    {
+      int x, y, w, h;
 
-    @Override
+      //if(rect.width() < rect.height()) //Verical
+      if(false)
+      {
+        x = 100;
+        w = rect.width() - 200;
+        h = (w / glass.getColumnCount()) * glass.getRowCount();
+        y = 200 + 3 * w / glass.getColumnCount();
+        glass.setRect(
+          new Rect(x, y, x + w, y + h)
+        );
+
+        nextFigureX = x + (w - glass.getShapeWidth() * 3) / 2;
+        nextFigureY = 100;
+
+      }
+      else
+      { //Horisontal
+        x = y = 100;
+        h = rect.height() - 200;
+        w = (h / glass.getRowCount()) * glass.getColumnCount();
+        glass.setRect(
+          new Rect(x, y, x + w, y + h)
+        );
+        nextFigureX = y + w + 100;
+        nextFigureY = 100;
+      }
+    }
+    /*============================================================*/
     public void onDraw(Canvas canvas)
     {
       if(glass.getRect() == null)
       {
-        if(clientRect == null)
+        if(rect == null)
         {
-          clientRect = new Rect(100, 100, canvas.getWidth() * 2 / 3, canvas.getHeight() * 2  /  3);
+          rect = new Rect(0, 0, canvas.getWidth(), canvas.getHeight());
+          geometryInit();
         }
 
-        glass.setRect(clientRect);
+        glass.setRect(rect);
       }
 
       glass.onDraw(canvas);
       if(nextFigure != null && showNextFigure)
       {
-        int x = clientRect.right + 100;
-        int y = clientRect.top + 100;
-        nextFigure.onDraw(canvas, x, y, glass.getShapeWidth(), glass.getShapeHeight());
+        nextFigure.onDraw(canvas, nextFigureX, nextFigureY, glass.getShapeWidth(), glass.getShapeHeight());
       }
     }
 
-
-    @Override
+    /*============================================================*/
     public void onQuant()
     {
       if(System.currentTimeMillis() - lastTime >= interval)
@@ -498,51 +541,43 @@ public class TetrisBase {
       }
       //Log.d("TIME TEST", "Current sec = " + seconds);
     }
-
-    @Override
+    /*============================================================*/
     public void onTouchDown(float x, float y)
     {
     }
-
-    @Override
+    /*============================================================*/
     public void onTouchUp(float x, float y)
     {
     }
-
-    @Override
+    /*============================================================*/
     public void onTouchMove(float x, float y)
     {
     }
-
-    @Override
+    /*============================================================*/
     public void moveLeft()
     {
       glass.moveLeft();
       setModified(glass.isModified());
     }
-
-    @Override
+    /*============================================================*/
     public void moveRight()
     {
       glass.moveRight();
       setModified(glass.isModified());
     }
-
-    @Override
+    /*============================================================*/
     public void moveDown()
     {
       glass.moveBottom();
       setModified(glass.isModified());
     }
-
-    @Override
+    /*============================================================*/
     public void rotate()
     {
       glass.rotate();
       setModified(glass.isModified());
     }
-
-
+    /*============================================================*/
     protected void nextInterval()
     {
       if(nextFigure == null)

@@ -228,7 +228,7 @@ public class ColorBallsGame extends TetrisBase {
     @Override
     protected Glass onGlassCreate()
     {
-      return new BallsGlass(8, 16);
+      return new BallsGlass(defaultColumnCount, defaultRowCount);
     }
 
     @Override

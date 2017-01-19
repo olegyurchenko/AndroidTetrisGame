@@ -166,7 +166,7 @@ public class ColumnusGame extends TetrisBase {
     @Override
     protected Glass onGlassCreate()
     {
-      return new ColumnusGlass(8, 16);
+      return new ColumnusGlass(defaultColumnCount, defaultRowCount);
     }
 
     @Override

@@ -14,32 +14,49 @@
         android:id="@+id/draw_layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="367dp"
+        android:layout_height="363dp"
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/btnRotate">
     </LinearLayout>
 
-<RelativeLayout
-    android:id="@+id/button_layout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:baselineAligned="false">
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/button_layout1"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/btnRotate"
+        android:layout_height="wrap_content">
 
 
-    <Button
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
-        android:drawableTop="@drawable/ic_rotate"
-        android:textSize="8pt"
-        android:id="@+id/btnRotate"
-        android:layout_above="@+id/btnDown"
-        android:layout_alignLeft="@+id/btnDown"
-        android:layout_alignStart="@+id/btnDown">
-    </Button>
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_left"
+            android:textSize="8pt"
+            android:id="@+id/btnLeft"
+            android:layout_alignBaseline="@+id/btnRotate"
+            android:layout_alignBottom="@+id/btnRotate"
+            android:layout_toLeftOf="@+id/btnDown"
+            android:layout_toStartOf="@+id/btnDown"
+            android:layout_marginRight="17dp"
+            android:layout_marginEnd="17dp">
+        </Button>
 
-    <Button
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_rotate"
+            android:textSize="8pt"
+            android:id="@+id/btnRotate"
+            android:layout_above="@+id/btnDown"
+            android:layout_alignLeft="@+id/btnDown"
+            android:layout_alignStart="@+id/btnDown">
+        </Button>
+
+        <Button
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_weight="1"
@@ -54,29 +71,26 @@
         android:layout_marginStart="11dp">
     </Button>
 
-    <Button
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
-        android:drawableTop="@drawable/ic_left"
-        android:textSize="8pt"
-        android:id="@+id/btnLeft"
-        android:layout_alignBaseline="@+id/btnRotate"
-        android:layout_alignBottom="@+id/btnRotate"
-        android:layout_toLeftOf="@+id/btnDown"
-        android:layout_toStartOf="@+id/btnDown"
-        android:layout_marginRight="17dp"
-        android:layout_marginEnd="17dp">
-    </Button>
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/btnDown"
-        android:drawableTop="@drawable/ic_bottom"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/button_layout2"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/btnRotate"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
-    </Button>
+        android:weightSum="1">
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/btnDown"
+            android:drawableTop="@drawable/ic_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="0.94">
+        </Button>
+
+    </LinearLayout>
 </LinearLayout>
