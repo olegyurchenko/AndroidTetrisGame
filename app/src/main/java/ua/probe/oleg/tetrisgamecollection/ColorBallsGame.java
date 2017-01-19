@@ -24,19 +24,17 @@ public class ColorBallsGame extends TetrisBase {
     @Override
     void onDraw(Canvas canvas, int x, int y, int width, int height)
     {
-      Paint p = new Paint();
-      Rect rect = new Rect(x, y, x + width, y + height);
-
+      rect.set(x, y, x + width, y + height);
 
       // перенастраивам кисть на заливку
-      p.setColor(fillColor);
-      p.setStyle(Paint.Style.FILL);
-      canvas.drawCircle(rect.left + rect.width() / 2, rect.top + rect.height() / 2, Math.min(rect.width(), rect.height())/ 2, p);
+      paint.setColor(fillColor);
+      paint.setStyle(Paint.Style.FILL);
+      canvas.drawCircle(rect.left + rect.width() / 2, rect.top + rect.height() / 2, Math.min(rect.width(), rect.height())/ 2, paint);
 
       // перенастраивам кисть на контуры
-      p.setColor(borderColor);
-      p.setStyle(Paint.Style.STROKE);
-      canvas.drawCircle(rect.left + rect.width() / 2, rect.top + rect.height() / 2, Math.min(rect.width(), rect.height())/ 2, p);
+      paint.setColor(borderColor);
+      paint.setStyle(Paint.Style.STROKE);
+      canvas.drawCircle(rect.left + rect.width() / 2, rect.top + rect.height() / 2, Math.min(rect.width(), rect.height())/ 2, paint);
     }
   }
   /*-----------------------------------------------------------------------------------------------*/

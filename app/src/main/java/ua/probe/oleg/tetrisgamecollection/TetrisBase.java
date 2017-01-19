@@ -31,6 +31,8 @@ public class TetrisBase {
   {
     int fillColor, borderColor;
 //    protected int width = 0, height = 0;
+    protected Paint paint = new Paint();
+    protected Rect rect = new Rect();
 
     Shape(int fColor, int bColor)
     {
@@ -60,19 +62,17 @@ public class TetrisBase {
 
     void onDraw(Canvas canvas, int x, int y, int width, int height)
     {
-      Paint p = new Paint();
-      Rect rect = new Rect(x, y, x + width, y + height);
-
+      rect.set(x, y, x + width, y + height);
 
       // перенастраивам кисть на заливку
-      p.setColor(fillColor);
-      p.setStyle(Paint.Style.FILL);
-      canvas.drawRect(rect, p);
+      paint.setColor(fillColor);
+      paint.setStyle(Paint.Style.FILL);
+      canvas.drawRect(rect, paint);
 
       // перенастраивам кисть на контуры
-      p.setColor(borderColor);
-      p.setStyle(Paint.Style.STROKE);
-      canvas.drawRect(rect, p);
+      paint.setColor(borderColor);
+      paint.setStyle(Paint.Style.STROKE);
+      canvas.drawRect(rect, paint);
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
@@ -123,7 +123,6 @@ public class TetrisBase {
 
     public void onDraw(Canvas canvas, int left, int top, int shapeWidth, int shapeHeight)
     {
-      Paint p = new Paint();
 
       for(int r = 0; r < rowCount; r++)
       {
@@ -150,6 +149,7 @@ public class TetrisBase {
     Figure activeFigure = null;
     Cell activeFigurePosition = new Cell();
     boolean modified = false;
+    private Paint paint;
 
     HashMap<Integer, Shape> shapeMap;
 
@@ -158,7 +158,7 @@ public class TetrisBase {
       columnCount = columns;
       rowCount = rows;
       shapeMap = new HashMap<Integer, Shape>();
-      //rect = new Rect();
+      paint = new Paint();
 
       //Test shapes
       for(int i = 0; i < 0; i++)
@@ -190,17 +190,15 @@ public class TetrisBase {
 
     public void onDraw(Canvas canvas)
     {
-      Paint p = new Paint();
-
       // перенастраивам кисть на заливку
-      p.setColor(fillColor);
-      p.setStyle(Paint.Style.FILL);
-      canvas.drawRect(rect, p);
+      paint.setColor(fillColor);
+      paint.setStyle(Paint.Style.FILL);
+      canvas.drawRect(rect, paint);
 
       // перенастраивам кисть на контуры
-      p.setColor(borderColor);
-      p.setStyle(Paint.Style.STROKE);
-      canvas.drawRect(rect, p);
+      paint.setColor(borderColor);
+      paint.setStyle(Paint.Style.STROKE);
+      canvas.drawRect(rect, paint);
 
       int shapeWidth = getShapeWidth();
       int shapeHeight = getShapeHeight();
