@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidTetrisGame.iml" filepath="$PROJECT_DIR$/AndroidTetrisGame.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TetrisGame.iml" filepath="$PROJECT_DIR$/TetrisGame.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
