@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
+import android.util.SparseArray;
 
 import java.util.*;
 
@@ -28,9 +29,9 @@ public class TetrisBase {
     public void setRow(int r) {row = r;}
   }
   /*-----------------------------------------------------------------------------------------------*/
-  static public class Shape
+  static class Shape
   {
-    protected int fillColor, borderColor;
+    int fillColor, borderColor;
 //    protected int width = 0, height = 0;
 
     Shape(int fColor, int bColor)
@@ -77,10 +78,10 @@ public class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  static public class Figure
+  static class Figure
   {
-    protected HashMap<Integer, Shape> shapeMap;
-    protected int columnCount = 0, rowCount = 0;
+    HashMap<Integer, Shape> shapeMap;
+    int columnCount = 0, rowCount = 0;
 
     Figure()
     {
@@ -143,16 +144,16 @@ public class TetrisBase {
   }
 
   /*-----------------------------------------------------------------------------------------------*/
-  static public class Glass
+  static class Glass
   {
     int rowCount, columnCount;
-    protected int fillColor = Color.WHITE, borderColor = Color.BLUE;
-    protected Rect rect;
-    protected Figure activeFigure = null;
-    protected Cell activeFigurePosition = new Cell();
-    protected boolean modified = false;
+    int fillColor = Color.WHITE, borderColor = Color.BLUE;
+    Rect rect;
+    Figure activeFigure = null;
+    Cell activeFigurePosition = new Cell();
+    boolean modified = false;
 
-    protected HashMap<Integer, Shape> shapeMap;
+    HashMap<Integer, Shape> shapeMap;
 
     Glass(int columns, int rows)
     {
