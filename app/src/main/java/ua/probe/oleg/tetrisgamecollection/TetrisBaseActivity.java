@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.util.Timer;
@@ -49,7 +50,7 @@ public class TetrisBaseActivity extends Activity
 
     //gameController.setRect(new Rect(100, 100, drawView.getWidth(), drawView.getHeight()));
 
-    RelativeLayout layout = (RelativeLayout)findViewById(R.id.activity_tetris_base);
+    LinearLayout layout = (LinearLayout)findViewById(R.id.draw_layout);
     layout.addView(drawView);
 
     drawView.setOnTouchListener(this);
