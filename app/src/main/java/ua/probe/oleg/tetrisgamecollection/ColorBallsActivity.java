@@ -9,6 +9,6 @@ public class ColorBallsActivity extends TetrisBaseActivity
   @Override
   protected TetrisBase.Controller onGameControllerCreate()
   {
-    return new ColorBallsGame.Controller();
+    return new ColorBallsGame.Controller(this);
   }
 }

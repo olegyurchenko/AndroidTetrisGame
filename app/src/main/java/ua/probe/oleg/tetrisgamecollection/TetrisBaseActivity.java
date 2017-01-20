@@ -85,7 +85,7 @@ public class TetrisBaseActivity extends Activity
 
   protected TetrisBase.Controller onGameControllerCreate()
   {
-    return new TetrisBase.Controller();
+    return new TetrisBase.Controller(this);
   }
 
 

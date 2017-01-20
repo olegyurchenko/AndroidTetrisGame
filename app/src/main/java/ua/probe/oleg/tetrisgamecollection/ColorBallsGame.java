@@ -1,5 +1,6 @@
 package ua.probe.oleg.tetrisgamecollection;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -213,7 +214,10 @@ public class ColorBallsGame extends TetrisBase {
 
       for(Cell c:list)
       {
-        put(c.column(), c.row(), null);
+        if(get(c.column(), c.row()) != null) {
+          addRemovedShapes(1);
+          put(c.column(), c.row(), null);
+        }
       }
 
       return modifications > 0 || !list.isEmpty();
@@ -222,6 +226,11 @@ public class ColorBallsGame extends TetrisBase {
   }
   /*-----------------------------------------------------------------------------------------------*/
   public static class Controller extends TetrisBase.Controller {
+
+    Controller(Context c)
+    {
+      super(c);
+    }
 
     @Override
     protected Glass onGlassCreate()

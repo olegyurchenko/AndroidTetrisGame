@@ -9,7 +9,7 @@ public class TetrisActivity extends TetrisBaseActivity
   @Override
   protected TetrisBase.Controller onGameControllerCreate()
   {
-    return new TetrisGame.Controller();
+    return new TetrisGame.Controller(this);
   }
 
 }

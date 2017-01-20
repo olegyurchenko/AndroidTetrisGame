@@ -9,6 +9,6 @@ public class ColumnusActivity extends TetrisBaseActivity
   @Override
   protected TetrisBase.Controller onGameControllerCreate()
   {
-    return new ColumnusGame.Controller();
+    return new ColumnusGame.Controller(this);
   }
 }

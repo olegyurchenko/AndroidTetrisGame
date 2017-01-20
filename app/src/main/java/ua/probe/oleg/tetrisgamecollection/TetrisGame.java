@@ -1,5 +1,6 @@
 package ua.probe.oleg.tetrisgamecollection;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 
@@ -154,6 +155,7 @@ public class TetrisGame extends TetrisBase
               put(column, r + 1, get(column, r));
 
           }
+          addRemovedShapes(columnCount);
           return true;
         }
       }
@@ -189,6 +191,11 @@ public class TetrisGame extends TetrisBase
       {0b111, 0b001, 0b001},
 
     };
+
+    Controller(Context c)
+    {
+      super(c);
+    }
 
     byte[] randomFigure()
     {

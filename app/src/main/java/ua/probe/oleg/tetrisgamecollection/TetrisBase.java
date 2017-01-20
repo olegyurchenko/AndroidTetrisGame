@@ -1,5 +1,6 @@
 package ua.probe.oleg.tetrisgamecollection;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -150,6 +151,7 @@ public class TetrisBase {
     Cell activeFigurePosition = new Cell();
     boolean modified = false;
     private Paint paint;
+    private long rating;
 
     HashMap<Integer, Shape> shapeMap;
 
@@ -159,6 +161,8 @@ public class TetrisBase {
       rowCount = rows;
       shapeMap = new HashMap<Integer, Shape>();
       paint = new Paint();
+
+      rating = 0;
 
       //Test shapes
       for(int i = 0; i < 0; i++)
@@ -181,6 +185,12 @@ public class TetrisBase {
     public Rect getRect()
     {
       return  rect;
+    }
+
+    public long getRating() {return rating;}
+    protected void addRemovedShapes(int shapes) {
+      //TODO: waight koefficient
+      rating += shapes * 17;
     }
 
     public int getRowCount() {return rowCount;}
@@ -419,7 +429,9 @@ public class TetrisBase {
   static public class Controller
   {
     private boolean modified = false;
+    Context context;
     Rect rect;
+    Paint paint;
     protected Glass glass;
     protected int interval = 1000; //ms
     private long lastTime = 0;
@@ -428,6 +440,8 @@ public class TetrisBase {
     boolean showNextFigure = true;
     Figure nextFigure;
     int nextFigureX, nextFigureY;
+    boolean showRating = true;
+    int ratingX, ratingY;
 
     /*============================================================*/
     boolean isModified() {return modified;}
@@ -452,9 +466,11 @@ public class TetrisBase {
       return colors[n % colors.length];
     }
     /*============================================================*/
-    Controller()
+    Controller(Context c)
     {
+      context = c;
       glass = onGlassCreate();
+      paint = new Paint();
     }
     /*============================================================*/
     protected Glass onGlassCreate()
@@ -487,14 +503,16 @@ public class TetrisBase {
         x = border;
         w = rect.width() - 2 * border;
         h = (w / glass.getColumnCount()) * glass.getRowCount();
-        y = 2* border + 3 * w / glass.getColumnCount();
+        y = border + 3 * w / glass.getColumnCount();
         glass.setRect(
           new Rect(x, y, x + w, y + h)
         );
 
-        nextFigureX = x + (w - glass.getShapeWidth() * 3) / 2;
+        nextFigureX = x ;
         nextFigureY = border;
 
+        ratingX = x;
+        ratingY = y + h;
       }
       else
       { //Horisontal
@@ -504,9 +522,13 @@ public class TetrisBase {
         glass.setRect(
           new Rect(x, y, x + w, y + h)
         );
-        nextFigureX = y + w + border;
+        nextFigureX = x + w + border;
         nextFigureY = border;
+
+        ratingX = x + w + border;
+        ratingY = border + glass.getShapeWidth() * 3;
       }
+
     }
     /*============================================================*/
     public void onDraw(Canvas canvas)
@@ -525,7 +547,18 @@ public class TetrisBase {
       glass.onDraw(canvas);
       if(nextFigure != null && showNextFigure)
       {
-        nextFigure.onDraw(canvas, nextFigureX, nextFigureY, glass.getShapeWidth(), glass.getShapeHeight());
+        nextFigure.onDraw(canvas, nextFigureX, nextFigureY, 20, 20);
+        //nextFigure.onDraw(canvas, nextFigureX, nextFigureY, glass.getShapeWidth(), glass.getShapeHeight());
+      }
+
+      if(showRating)
+      {
+        paint.setColor(Color.BLUE);
+        paint.setTextSize(30);
+
+        // создаем строку с значениями ширины и высоты канвы
+        canvas.drawText(context.getString(R.string.rating) + ": " + glass.getRating(), ratingX, ratingY + 30, paint);
+
       }
     }
 

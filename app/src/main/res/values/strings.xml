@@ -3,4 +3,5 @@
     <string name="action_tetris">Tetris</string>
     <string name="action_columnus">Columnus</string>
     <string name="action_color_balls">Color balls</string>
+    <string name="rating">Rating</string>
 </resources>
