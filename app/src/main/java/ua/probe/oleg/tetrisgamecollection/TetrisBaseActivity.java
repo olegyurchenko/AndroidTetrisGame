@@ -2,6 +2,7 @@ package ua.probe.oleg.tetrisgamecollection;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -12,15 +13,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class TetrisBaseActivity extends Activity
-  implements View.OnTouchListener, View.OnClickListener {
-  protected Button btn;
+  implements View.OnTouchListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener
+{
   protected TetrisBase.Controller gameController;
   protected View drawView = null;
+  protected String sectionName = "TetrisBase";
+  private SharedPreferences preferences;
 
   Timer myTimer = new Timer(); // Создаем таймер
   Handler uiHandler = new Handler();
@@ -29,6 +34,9 @@ public class TetrisBaseActivity extends Activity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_tetris_base);
+
+    Button btn;
+    SeekBar seekBar;
 
     //Buttons
     btn = (Button) findViewById(R.id.btnLeft1);
@@ -51,9 +59,20 @@ public class TetrisBaseActivity extends Activity
     btn = (Button) findViewById(R.id.btnRotate2);
     btn.setOnClickListener(this);
 
+    gameController = onGameControllerCreate();
+    preferences = getSharedPreferences(sectionName, MODE_PRIVATE);;
+    gameController.setSpeedRate(preferences.getInt("speedRate", 50));
+    gameController.setComplexRate(preferences.getInt("complexRate", 50));
+
+    seekBar = (SeekBar)findViewById(R.id.sppedSeekbar);
+    seekBar.setProgress(gameController.getSpeedRate());
+    seekBar.setOnSeekBarChangeListener(this);
+
+    seekBar = (SeekBar)findViewById(R.id.complexSeekbar);
+    seekBar.setProgress(gameController.getComplexRate());
+    seekBar.setOnSeekBarChangeListener(this);
 
     drawView = new DrawView(this);
-    gameController = onGameControllerCreate();
 
 
     //gameController.setRect(new Rect(100, 100, drawView.getWidth(), drawView.getHeight()));
@@ -89,6 +108,35 @@ public class TetrisBaseActivity extends Activity
   }
 
 
+  @Override
+  public void onStopTrackingTouch(SeekBar seekBar) {
+  }
+
+  @Override
+  public void onStartTrackingTouch(SeekBar seekBar) {
+  }
+
+  @Override
+  public void onProgressChanged(SeekBar seekBar, int progress,
+                                boolean fromUser)
+  {
+    int id = seekBar.getId();
+    SharedPreferences.Editor ed = preferences.edit();
+
+    switch(id)
+    {
+      case R.id.sppedSeekbar:
+        gameController.setSpeedRate(progress);
+        ed.putInt("speedRate", gameController.getSpeedRate());
+        break;
+      case R.id.complexSeekbar:
+        gameController.setComplexRate(progress);
+        ed.putInt("complexRate", gameController.getComplexRate());
+        break;
+    }
+
+    ed.commit();
+  }
 
   @Override
   public boolean onTouch(View v, MotionEvent event)

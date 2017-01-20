@@ -241,9 +241,9 @@ public class ColorBallsGame extends TetrisBase {
     @Override
     protected Figure onNewFigure() {
       Figure figure = new BallsFigure();
-      figure.put(0, 0, new Ball(randomColor()));
-      figure.put(0, 1, new Ball(randomColor()));
-      figure.put(0, 2, new Ball(randomColor()));
+      figure.put(0, 0, new Ball(randomComplexColor()));
+      figure.put(0, 1, new Ball(randomComplexColor()));
+      figure.put(0, 2, new Ball(randomComplexColor()));
 
       return figure;
     }

@@ -200,6 +200,7 @@ public class TetrisGame extends TetrisBase
     byte[] randomFigure()
     {
       int n = (int)(Math.random() * 1000.0);
+      n %= (figures.length * complexRate) / 100;
       return figures[n % figures.length];
     }
 

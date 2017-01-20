@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 import java.util.*;
 
@@ -151,7 +152,8 @@ public class TetrisBase {
     Cell activeFigurePosition = new Cell();
     boolean modified = false;
     private Paint paint;
-    private long rating;
+    private long score;
+    private long scoreScale = 100;
 
     HashMap<Integer, Shape> shapeMap;
 
@@ -162,7 +164,7 @@ public class TetrisBase {
       shapeMap = new HashMap<Integer, Shape>();
       paint = new Paint();
 
-      rating = 0;
+      score = 0;
 
       //Test shapes
       for(int i = 0; i < 0; i++)
@@ -187,10 +189,14 @@ public class TetrisBase {
       return  rect;
     }
 
-    public long getRating() {return rating;}
+    public long getScore() {return score;}
     protected void addRemovedShapes(int shapes) {
       //TODO: waight koefficient
-      rating += shapes * 17;
+      score += shapes * 17 * scoreScale;
+    }
+    public void setScoreScale(long s)
+    {
+      scoreScale = s;
     }
 
     public int getRowCount() {return rowCount;}
@@ -433,9 +439,11 @@ public class TetrisBase {
     Rect rect;
     Paint paint;
     protected Glass glass;
+    final int minInterval = 250, maxInterval = 2250;
     protected int interval = 1000; //ms
     private long lastTime = 0;
     protected int defaultColumnCount = 6, defaultRowCount = 12;
+    protected int complexRate = 50, speedRate = 50;
 
     boolean showNextFigure = true;
     Figure nextFigure;
@@ -448,21 +456,60 @@ public class TetrisBase {
     /*============================================================*/
     void setModified(boolean m) {modified = m;}
     /*============================================================*/
+    int getComplexRate() {return complexRate;}
+    /*============================================================*/
+    void setComplexRate(int r)
+    {
+      if(r > 0 && r <= 100)
+      {
+        complexRate = r;
+        glass.setScoreScale(complexRate * speedRate);
+        setModified(true);
+      }
+    }
+    /*============================================================*/
+    int getSpeedRate() {return speedRate;}
+    /*============================================================*/
+    void setSpeedRate(int r)
+    {
+      if(r > 0 && r <= 199)
+      {
+        speedRate = r;
+        interval = minInterval + ((maxInterval - minInterval) * (100 - speedRate)) / 100;
+        Log.d("GameController", "interval=" + interval);
+        glass.setScoreScale(complexRate * speedRate);
+        setModified(true);
+      }
+    }
+    /*============================================================*/
     static int colors[] = {
-      Color.rgb(2, 53, 58), //Color.BLACK,
-      Color.rgb(215, 235, 237),
       Color.CYAN,
       Color.MAGENTA,
       Color.BLUE,
       Color.GRAY,
       Color.GREEN,
       Color.RED,
-      Color.YELLOW
+      Color.YELLOW,
+      Color.rgb(244, 125, 66),
+      Color.rgb(123, 229, 206),
+      Color.rgb(187, 123, 229),
+      Color.rgb(142, 58, 125),
+      Color.rgb(37, 102, 74),
+      Color.rgb(2, 53, 58), //Color.BLACK,
+      Color.rgb(215, 235, 237) //WHITE
     };
     /*============================================================*/
     int randomColor()
     {
       int n = (int)(Math.random() * 1000.0);
+      return colors[n % colors.length];
+    }
+    /*============================================================*/
+    int randomComplexColor()
+    {
+      int n = (int)(Math.random() * 1000.0);
+      int d =  (colors.length * complexRate) / 100;
+      n %= d < 1 ? 1 : d;
       return colors[n % colors.length];
     }
     /*============================================================*/
@@ -556,9 +603,12 @@ public class TetrisBase {
         paint.setColor(Color.BLUE);
         paint.setTextSize(30);
 
-        // создаем строку с значениями ширины и высоты канвы
-        canvas.drawText(context.getString(R.string.rating) + ": " + glass.getRating(), ratingX, ratingY + 30, paint);
-
+        int y = ratingY + 30;
+        canvas.drawText(context.getString(R.string.speed) + ": " + speedRate + "%", ratingX, y, paint);
+        y += 30;
+        canvas.drawText(context.getString(R.string.complex) + ": " + complexRate + "%", ratingX, y, paint);
+        y += 30;
+        canvas.drawText(context.getString(R.string.score) + ": " + glass.getScore(), ratingX, y, paint);
       }
     }
 

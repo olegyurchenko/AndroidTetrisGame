@@ -182,9 +182,9 @@ public class ColumnusGame extends TetrisBase {
     @Override
     protected Figure onNewFigure() {
       Figure figure = new ColumnusFigure();
-      figure.put(0, 0, new Shape(randomColor()));
-      figure.put(0, 1, new Shape(randomColor()));
-      figure.put(0, 2, new Shape(randomColor()));
+      figure.put(0, 0, new Shape(randomComplexColor()));
+      figure.put(0, 1, new Shape(randomComplexColor()));
+      figure.put(0, 2, new Shape(randomComplexColor()));
 
       return figure;
     }

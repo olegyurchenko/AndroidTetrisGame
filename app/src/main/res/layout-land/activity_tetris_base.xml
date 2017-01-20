@@ -47,6 +47,16 @@
 
     </LinearLayout>
 
+    <ua.probe.oleg.tetrisgamecollection.VerticalSeekBar
+        android:id="@+id/sppedSeekbar"
+        android:max="100"
+        android:layout_width="wrap_content"
+        android:progress="50"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_height="match_parent"/>
+
     <LinearLayout
         android:id="@+id/draw_layout"
         android:orientation="horizontal"
@@ -54,9 +64,19 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/btnRotate"
-        android:layout_weight="1">
+        android:layout_weight="2">
+
     </LinearLayout>
 
+    <ua.probe.oleg.tetrisgamecollection.VerticalSeekBar
+        android:id="@+id/complexSeekbar"
+        android:max="100"
+        android:layout_width="wrap_content"
+        android:progress="50"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_height="match_parent"/>
 
     <LinearLayout
         android:id="@+id/btnPanelRight"
