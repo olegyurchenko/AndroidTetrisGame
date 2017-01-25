@@ -486,6 +486,7 @@ public class TetrisBase {
     private boolean modified = false;
     Context context;
     Rect rect;
+    Rect bounds;
     Paint paint;
     protected Glass glass;
     final int minInterval = 250, maxInterval = 2250;
@@ -578,6 +579,7 @@ public class TetrisBase {
       context = c;
       glass = onGlassCreate();
       paint = new Paint();
+      bounds = new Rect();
       state = State.PAUSED;
     }
     /*============================================================*/
@@ -668,7 +670,6 @@ public class TetrisBase {
         else
           text = context.getString(R.string.finished);
 
-        Rect bounds = new Rect();
 
         paint.setTypeface(Typeface.DEFAULT);// your preference here
         paint.setTextSize(40);// have this the same as your text size
