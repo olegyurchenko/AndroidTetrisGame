@@ -6,4 +6,6 @@
     <string name="score">Score</string>
     <string name="complex">Complex</string>
     <string name="speed">Speed</string>
+    <string name="paused">Paused</string>
+    <string name="finished">Finished</string>
 </resources>

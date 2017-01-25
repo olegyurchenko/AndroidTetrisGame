@@ -7,6 +7,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.util.Log;
 
 import java.util.*;
@@ -658,6 +659,36 @@ public class TetrisBase {
         //nextFigure.onDraw(canvas, nextFigureX, nextFigureY, glass.getShapeWidth(), glass.getShapeHeight());
       }
 
+      if(state == State.PAUSED || state == State.FINISHED)
+      {
+        String text;
+
+        if(state == State.PAUSED)
+          text = context.getString(R.string.paused);
+        else
+          text = context.getString(R.string.finished);
+
+        Rect bounds = new Rect();
+
+        paint.setTypeface(Typeface.DEFAULT);// your preference here
+        paint.setTextSize(40);// have this the same as your text size
+        paint.getTextBounds(text, 0, text.length(), bounds);
+
+        Rect glassRect = glass.getRect();
+        int x = glassRect.left + (glassRect.width() - bounds.width()) / 2;
+        int y = glassRect.top + (glassRect.height() - bounds.height())/ 2;
+
+
+        bounds.set(glassRect.left, y - bounds.height() * 2, glassRect.right, y + bounds.height());
+
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        canvas.drawRect(bounds, paint);
+
+        paint.setColor(Color.BLACK);
+        canvas.drawText(text, x, y, paint);
+      }
+
       if(showRating)
       {
         paint.setColor(Color.BLUE);
@@ -752,6 +783,9 @@ public class TetrisBase {
       if(nextFigure == null)
         nextFigure = onNewFigure();
 
+      if(state != State.WORKED)
+        return;
+
       if(glass.getActiveFigure() == null)
       {
 
@@ -763,6 +797,8 @@ public class TetrisBase {
         {
 
           if (!glass.put(nextFigure)) {
+            state = State.FINISHED;
+            glass.setModified(true);
 //          Log.d("Game", "Error add figure");
           } else {
 //          Log.d("Game", "Add figure Ok");
@@ -771,9 +807,8 @@ public class TetrisBase {
         }
       }
       else
-      if(state == State.WORKED) {
-        if(!glass.moveDown())
-          state = State.FINISHED;
+      {
+        glass.moveDown();
       }
 
       setModified(glass.isModified());
