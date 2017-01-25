@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.util.Log;
 
@@ -155,6 +156,9 @@ public class TetrisBase {
     private Paint paint, guidePaint;
     private long score;
     private long scoreScale = 100;
+    private Path path;
+
+    private boolean drawGuideLines = true;
 
     HashMap<Integer, Shape> shapeMap;
 
@@ -168,7 +172,9 @@ public class TetrisBase {
       guidePaint = new Paint();
       guidePaint.setColor(Color.BLACK);
       guidePaint.setStyle(Paint.Style.STROKE);
-      guidePaint.setPathEffect(new DashPathEffect(new float[] {10 ,50}, 0));
+      guidePaint.setPathEffect(new DashPathEffect(new float[] {20 ,30}, 0));
+
+      path = new Path();
 
       score = 0;
 
@@ -264,29 +270,38 @@ public class TetrisBase {
         //Draw guide lines
 
 
-        int gx = x;
-        int gy = y;
+        if(drawGuideLines) {
+          int gx = x, gy;
 
-        //Left
-        for(int i = 0; i < activeFigure.getRowCount(); i++)
-        {
-          if(activeFigure.get(0, i) != null)
-            break;
-          gy += shapeHeight;
+          //Left
+          gy = y + activeFigure.getRowCount() * shapeHeight;
+          for (int i = activeFigure.getRowCount() - 1; i >= 0; i--) {
+            if (activeFigure.get(0, i) != null)
+              break;
+            gy -= shapeHeight;
+          }
+          path.reset();
+          path.moveTo(gx, gy + shapeHeight / 2);
+          path.lineTo(gx, rect.bottom);
+          canvas.drawPath(path, guidePaint);
+          //canvas.drawLine(gx, gy, gx, rect.bottom, guidePaint);
+
+          //Right
+          gy = y + activeFigure.getRowCount() * shapeHeight;
+          for (int i = activeFigure.getRowCount() - 1; i >= 0; i--) {
+            if (activeFigure.get(activeFigure.getColumnCount() - 1, i) != null)
+              break;
+            gy -= shapeHeight;
+          }
+
+          gx += activeFigure.getColumnCount() * shapeWidth;
+
+          path.reset();
+          path.moveTo(gx, gy + shapeHeight / 2);
+          path.lineTo(gx, rect.bottom);
+          canvas.drawPath(path, guidePaint);
+          //canvas.drawLine(gx, gy, gx, rect.bottom, guidePaint);
         }
-        canvas.drawLine(gx, gy, gx, rect.bottom, guidePaint);
-
-        //Right
-        gy = y;
-        for(int i = 0; i < activeFigure.getRowCount(); i++)
-        {
-          if(activeFigure.get(activeFigure.getColumnCount() - 1, i) != null)
-            break;
-          gy += shapeHeight;
-        }
-
-        gx += activeFigure.getColumnCount() * shapeWidth;
-        canvas.drawLine(gx, gy, gx, rect.bottom, guidePaint);
 
       }
 
@@ -475,8 +490,16 @@ public class TetrisBase {
     final int minInterval = 250, maxInterval = 2250;
     protected int interval = 1000; //ms
     private long lastTime = 0;
-    protected int defaultColumnCount = 6, defaultRowCount = 12;
+    protected int defaultColumnCount = 8, defaultRowCount = 16;
     protected int complexRate = 50, speedRate = 50;
+    enum State
+    {
+      PAUSED,
+      WORKED,
+      FINISHED
+    };
+
+    protected State state = State.PAUSED;
 
     boolean showNextFigure = true;
     Figure nextFigure;
@@ -554,6 +577,7 @@ public class TetrisBase {
       context = c;
       glass = onGlassCreate();
       paint = new Paint();
+      state = State.PAUSED;
     }
     /*============================================================*/
     protected Glass onGlassCreate()
@@ -673,26 +697,54 @@ public class TetrisBase {
     /*============================================================*/
     public void moveLeft()
     {
-      glass.moveLeft();
-      setModified(glass.isModified());
+      if(state == State.PAUSED)
+      {
+        state = State.WORKED;
+      }
+      else
+      if(state == State.WORKED) {
+        glass.moveLeft();
+        setModified(glass.isModified());
+      }
     }
     /*============================================================*/
     public void moveRight()
     {
-      glass.moveRight();
-      setModified(glass.isModified());
+      if(state == State.PAUSED)
+      {
+        state = State.WORKED;
+      }
+      else
+      if(state == State.WORKED) {
+        glass.moveRight();
+        setModified(glass.isModified());
+      }
     }
     /*============================================================*/
     public void moveDown()
     {
-      glass.moveBottom();
-      setModified(glass.isModified());
+      if(state == State.PAUSED)
+      {
+        state = State.WORKED;
+      }
+      else
+      if(state == State.WORKED) {
+        glass.moveBottom();
+        setModified(glass.isModified());
+      }
     }
     /*============================================================*/
     public void rotate()
     {
-      glass.rotate();
-      setModified(glass.isModified());
+      if(state == State.PAUSED)
+      {
+        state = State.WORKED;
+      }
+      else
+      if(state == State.WORKED) {
+        glass.rotate();
+        setModified(glass.isModified());
+      }
     }
     /*============================================================*/
     protected void nextInterval()
@@ -719,14 +771,16 @@ public class TetrisBase {
         }
       }
       else
-        glass.moveDown();
+      if(state == State.WORKED) {
+        if(!glass.moveDown())
+          state = State.FINISHED;
+      }
 
       setModified(glass.isModified());
     }
 
   }
   /*-----------------------------------------------------------------------------------------------*/
-
 
 }
 
