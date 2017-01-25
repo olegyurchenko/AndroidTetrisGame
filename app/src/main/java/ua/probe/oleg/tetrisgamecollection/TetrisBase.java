@@ -3,6 +3,7 @@ package ua.probe.oleg.tetrisgamecollection;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
@@ -151,7 +152,7 @@ public class TetrisBase {
     Figure activeFigure = null;
     Cell activeFigurePosition = new Cell();
     boolean modified = false;
-    private Paint paint;
+    private Paint paint, guidePaint;
     private long score;
     private long scoreScale = 100;
 
@@ -163,6 +164,11 @@ public class TetrisBase {
       rowCount = rows;
       shapeMap = new HashMap<Integer, Shape>();
       paint = new Paint();
+
+      guidePaint = new Paint();
+      guidePaint.setColor(Color.BLACK);
+      guidePaint.setStyle(Paint.Style.STROKE);
+      guidePaint.setPathEffect(new DashPathEffect(new float[] {10 ,50}, 0));
 
       score = 0;
 
@@ -255,6 +261,33 @@ public class TetrisBase {
 
         canvas.drawText("Figure: x = " + x + ", y = " + y, x, y + textSize, p);
         */
+        //Draw guide lines
+
+
+        int gx = x;
+        int gy = y;
+
+        //Left
+        for(int i = 0; i < activeFigure.getRowCount(); i++)
+        {
+          if(activeFigure.get(0, i) != null)
+            break;
+          gy += shapeHeight;
+        }
+        canvas.drawLine(gx, gy, gx, rect.bottom, guidePaint);
+
+        //Right
+        gy = y;
+        for(int i = 0; i < activeFigure.getRowCount(); i++)
+        {
+          if(activeFigure.get(activeFigure.getColumnCount() - 1, i) != null)
+            break;
+          gy += shapeHeight;
+        }
+
+        gx += activeFigure.getColumnCount() * shapeWidth;
+        canvas.drawLine(gx, gy, gx, rect.bottom, guidePaint);
+
       }
 
       setModified(false);
@@ -483,20 +516,23 @@ public class TetrisBase {
     }
     /*============================================================*/
     static int colors[] = {
-      Color.CYAN,
-      Color.MAGENTA,
-      Color.BLUE,
-      Color.GRAY,
-      Color.GREEN,
-      Color.RED,
-      Color.YELLOW,
-      Color.rgb(244, 125, 66),
-      Color.rgb(123, 229, 206),
-      Color.rgb(187, 123, 229),
-      Color.rgb(142, 58, 125),
-      Color.rgb(37, 102, 74),
-      Color.rgb(2, 53, 58), //Color.BLACK,
-      Color.rgb(215, 235, 237) //WHITE
+      Color.rgb(0xff, 0, 0),
+      Color.rgb(0, 0xff, 0),
+      Color.rgb(0, 0, 0xff),
+      Color.rgb(0xff, 0xff, 0),
+      Color.rgb(0xff, 0, 0xff),
+      Color.rgb(0, 0xff, 0xff),
+      Color.rgb(0, 0, 0),
+      Color.rgb(0xA0, 0xA0, 0xA0),
+      Color.rgb(0xff, 0x80, 0),
+      Color.rgb(0xff, 0, 0x80),
+      Color.rgb(0x80, 0xff, 0),
+      Color.rgb(0, 0xff, 0x80),
+      Color.rgb(0x80, 0, 0xff),
+      Color.rgb(0x0, 0x80, 0xff),
+      Color.rgb(0xff, 0x80, 0x80),
+      Color.rgb(0x80, 0xff, 0x80),
+      Color.rgb(0x80, 0x80, 0xff),
     };
     /*============================================================*/
     int randomColor()
