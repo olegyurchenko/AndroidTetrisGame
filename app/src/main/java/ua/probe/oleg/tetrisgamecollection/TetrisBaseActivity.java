@@ -4,16 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 
 
 import java.util.Timer;
@@ -25,7 +21,6 @@ public class TetrisBaseActivity extends Activity
   protected TetrisBase.Controller gameController;
   protected View drawView = null;
   protected String sectionName = "TetrisBase";
-  private SharedPreferences preferences;
 
   Timer myTimer = new Timer(); // Создаем таймер
   Handler uiHandler = new Handler();
@@ -65,7 +60,7 @@ public class TetrisBaseActivity extends Activity
     btn.setOnClickListener(this);
 
     gameController = onGameControllerCreate();
-    preferences = getSharedPreferences(sectionName, MODE_PRIVATE);;
+    SharedPreferences preferences = getSharedPreferences(sectionName, MODE_PRIVATE);
     gameController.setSpeedRate(preferences.getInt("speedRate", 50));
     gameController.setComplexRate(preferences.getInt("complexRate", 50));
 /*
