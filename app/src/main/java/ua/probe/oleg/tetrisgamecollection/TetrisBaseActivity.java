@@ -13,10 +13,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,11 +25,6 @@ public class TetrisBaseActivity extends Activity
 
   Timer myTimer = new Timer(); // Создаем таймер
   Handler uiHandler = new Handler();
-  /**
-   * ATTENTION: This was auto-generated to implement the App Indexing API.
-   * See https://g.co/AppIndexing/AndroidStudio for more information.
-   */
-  private GoogleApiClient client;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +60,16 @@ public class TetrisBaseActivity extends Activity
     btn = (Button) findViewById(R.id.btnSettings);
     btn.setOnClickListener(this);
 
-    gameController = onGameControllerCreate();
+    gameController = (TetrisBase.Controller) getLastNonConfigurationInstance();
 
-    SharedPreferences preferences = getSharedPreferences(sectionName, MODE_PRIVATE);
-    gameController.setSpeedRate(preferences.getInt("speedRate", 50));
-    gameController.setComplexRate(preferences.getInt("complexRate", 50));
+    if(gameController == null) {
+
+      gameController = onGameControllerCreate();
+
+      SharedPreferences preferences = getSharedPreferences(sectionName, MODE_PRIVATE);
+      gameController.setSpeedRate(preferences.getInt("speedRate", 50));
+      gameController.setComplexRate(preferences.getInt("complexRate", 50));
+    }
 /*
     SeekBar seekBar;
 
@@ -110,11 +106,12 @@ public class TetrisBaseActivity extends Activity
       }
     }, 100, 10); // интервал - 100 миллисекунд, 0 миллисекунд до первого запуска.
 
-    // ATTENTION: This was auto-generated to implement the App Indexing API.
-    // See https://g.co/AppIndexing/AndroidStudio for more information.
-    client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
   }
 
+  @Override
+  public Object onRetainNonConfigurationInstance() {
+    return gameController;
+  }
 
   protected TetrisBase.Controller onGameControllerCreate() {
     return new TetrisBase.Controller(this);
@@ -204,41 +201,6 @@ public class TetrisBaseActivity extends Activity
 
   }
 
-  /**
-   * ATTENTION: This was auto-generated to implement the App Indexing API.
-   * See https://g.co/AppIndexing/AndroidStudio for more information.
-   */
-  public Action getIndexApiAction() {
-    Thing object = new Thing.Builder()
-      .setName("TetrisBase Page") // TODO: Define a title for the content shown.
-      // TODO: Make sure this auto-generated URL is correct.
-      .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-      .build();
-    return new Action.Builder(Action.TYPE_VIEW)
-      .setObject(object)
-      .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-      .build();
-  }
-
-  @Override
-  public void onStart() {
-    super.onStart();
-
-    // ATTENTION: This was auto-generated to implement the App Indexing API.
-    // See https://g.co/AppIndexing/AndroidStudio for more information.
-    client.connect();
-    AppIndex.AppIndexApi.start(client, getIndexApiAction());
-  }
-
-  @Override
-  public void onStop() {
-    super.onStop();
-
-    // ATTENTION: This was auto-generated to implement the App Indexing API.
-    // See https://g.co/AppIndexing/AndroidStudio for more information.
-    AppIndex.AppIndexApi.end(client, getIndexApiAction());
-    client.disconnect();
-  }
 
   class DrawView extends View {
 
