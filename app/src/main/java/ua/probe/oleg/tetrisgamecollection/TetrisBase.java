@@ -727,6 +727,16 @@ public class TetrisBase {
     {
     }
     /*============================================================*/
+    public void toglePause()
+    {
+      if(state == State.WORKED)
+        state = State.PAUSED;
+      else
+      if(state == State.PAUSED)
+        state = State.WORKED;
+
+    }
+    /*============================================================*/
     public void moveLeft()
     {
       if(state == State.PAUSED)

@@ -7,15 +7,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerHorizontal="true"
-    android:gravity="bottom"
-    android:layout_above="@+id/btnRotate">
+    android:layout_above="@+id/btnRotate"
+    >
 
     <LinearLayout
-        android:id="@+id/btnPanelLeft"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="4">
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:gravity="bottom">
 
         <Button
             android:layout_height="wrap_content"
@@ -47,16 +47,6 @@
 
     </LinearLayout>
 
-    <ua.probe.oleg.tetrisgamecollection.VerticalSeekBar
-        android:id="@+id/sppedSeekbar"
-        android:max="100"
-        android:layout_width="wrap_content"
-        android:progress="50"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        android:layout_height="match_parent"/>
-
     <LinearLayout
         android:id="@+id/draw_layout"
         android:orientation="horizontal"
@@ -68,22 +58,35 @@
 
     </LinearLayout>
 
-    <ua.probe.oleg.tetrisgamecollection.VerticalSeekBar
-        android:id="@+id/complexSeekbar"
-        android:max="100"
-        android:layout_width="wrap_content"
-        android:progress="50"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        android:layout_height="match_parent"/>
-
     <LinearLayout
-        android:id="@+id/btnPanelRight"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="4">
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:drawableTop="@drawable/ic_pause"
+            android:id="@+id/btnPause"
+            style="@style/Widget.AppCompat.Button.Borderless">
+        </Button>
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:drawableTop="@drawable/ic_settings"
+            android:id="@+id/btnSettings"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            >
+        </Button>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:gravity="bottom">
 
         <Button
             android:layout_height="wrap_content"

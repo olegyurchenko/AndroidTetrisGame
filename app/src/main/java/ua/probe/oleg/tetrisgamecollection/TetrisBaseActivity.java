@@ -20,7 +20,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class TetrisBaseActivity extends Activity
-  implements View.OnTouchListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener
+  implements View.OnTouchListener, View.OnClickListener/*, SeekBar.OnSeekBarChangeListener*/
 {
   protected TetrisBase.Controller gameController;
   protected View drawView = null;
@@ -36,7 +36,6 @@ public class TetrisBaseActivity extends Activity
     setContentView(R.layout.activity_tetris_base);
 
     Button btn;
-    SeekBar seekBar;
 
     //Buttons
     btn = (Button) findViewById(R.id.btnLeft1);
@@ -59,10 +58,18 @@ public class TetrisBaseActivity extends Activity
     btn = (Button) findViewById(R.id.btnRotate2);
     btn.setOnClickListener(this);
 
+    btn = (Button) findViewById(R.id.btnPause);
+    btn.setOnClickListener(this);
+
+    btn = (Button) findViewById(R.id.btnSettings);
+    btn.setOnClickListener(this);
+
     gameController = onGameControllerCreate();
     preferences = getSharedPreferences(sectionName, MODE_PRIVATE);;
     gameController.setSpeedRate(preferences.getInt("speedRate", 50));
     gameController.setComplexRate(preferences.getInt("complexRate", 50));
+/*
+    SeekBar seekBar;
 
     seekBar = (SeekBar)findViewById(R.id.sppedSeekbar);
     seekBar.setProgress(gameController.getSpeedRate());
@@ -71,7 +78,7 @@ public class TetrisBaseActivity extends Activity
     seekBar = (SeekBar)findViewById(R.id.complexSeekbar);
     seekBar.setProgress(gameController.getComplexRate());
     seekBar.setOnSeekBarChangeListener(this);
-
+*/
     drawView = new DrawView(this);
 
 
@@ -107,7 +114,7 @@ public class TetrisBaseActivity extends Activity
     return new TetrisBase.Controller(this);
   }
 
-
+/*
   @Override
   public void onStopTrackingTouch(SeekBar seekBar) {
   }
@@ -137,6 +144,7 @@ public class TetrisBaseActivity extends Activity
 
     ed.commit();
   }
+*/
 
   @Override
   public boolean onTouch(View v, MotionEvent event)
@@ -180,7 +188,18 @@ public class TetrisBaseActivity extends Activity
       case R.id.btnRotate2:
         gameController.rotate();
         break;
+      case R.id.btnPause:
+        gameController.toglePause();
+        break;
+      case R.id.btnSettings:
+        onSettings();
+        break;
     }
+  }
+
+  public void onSettings()
+  {
+
   }
 
   class DrawView extends View {
