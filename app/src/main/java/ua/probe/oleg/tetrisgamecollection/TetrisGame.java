@@ -192,22 +192,22 @@ public class TetrisGame extends TetrisBase
 
     };
 
-    Controller(Context c)
+    Controller(Context c, String sectionName)
     {
-      super(c);
+      super(c, sectionName);
     }
 
     byte[] randomFigure()
     {
       int n = (int)(Math.random() * 1000.0);
-      n %= (figures.length * complexRate) / 100;
+      n %= (figures.length * settings.complexRate) / 100;
       return figures[n % figures.length];
     }
 
     @Override
     protected Glass onGlassCreate()
     {
-      return new TetrisGlass(defaultColumnCount, defaultRowCount);
+      return new TetrisGlass(settings.columnCount, settings.rowCount);
     }
 
     @Override

@@ -168,15 +168,15 @@ public class ColumnusGame extends TetrisBase {
   public static class Controller extends TetrisBase.Controller
   {
 
-    Controller(Context c)
+    Controller(Context c, String sectionName)
     {
-      super(c);
+      super(c, sectionName);
     }
 
     @Override
     protected Glass onGlassCreate()
     {
-      return new ColumnusGlass(defaultColumnCount, defaultRowCount);
+      return new ColumnusGlass(settings.columnCount, settings.rowCount);
     }
 
     @Override

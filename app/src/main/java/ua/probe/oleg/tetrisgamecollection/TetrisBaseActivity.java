@@ -2,6 +2,7 @@ package ua.probe.oleg.tetrisgamecollection;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.net.Uri;
@@ -65,10 +66,6 @@ public class TetrisBaseActivity extends Activity
     if(gameController == null) {
 
       gameController = onGameControllerCreate();
-
-      SharedPreferences preferences = getSharedPreferences(sectionName, MODE_PRIVATE);
-      gameController.setSpeedRate(preferences.getInt("speedRate", 50));
-      gameController.setComplexRate(preferences.getInt("complexRate", 50));
     }
 /*
     SeekBar seekBar;
@@ -114,7 +111,7 @@ public class TetrisBaseActivity extends Activity
   }
 
   protected TetrisBase.Controller onGameControllerCreate() {
-    return new TetrisBase.Controller(this);
+    return new TetrisBase.Controller(this, sectionName);
   }
 
 /*
@@ -198,9 +195,24 @@ public class TetrisBaseActivity extends Activity
   }
 
   public void onSettings() {
-
+    Intent intent = new Intent(this, SettingsActivity.class);
+    Bundle b = new Bundle();
+    b.putString("sectionName", sectionName);
+    intent.putExtras(b);
+    startActivityForResult(intent, 1);
   }
 
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    switch(requestCode) {
+      case 1:
+        if(Activity.RESULT_OK == resultCode)
+        {
+          gameController.onSettingsChanged();
+        }
+        break;
+    }
+  }
 
   class DrawView extends View {
 

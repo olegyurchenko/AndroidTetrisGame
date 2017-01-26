@@ -1,6 +1,7 @@
 package ua.probe.oleg.tetrisgamecollection;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -481,19 +482,88 @@ public class TetrisBase {
 
   }
   /*-----------------------------------------------------------------------------------------------*/
+  static public class Settings
+  {
+    public final int MinColumns = 3, MaxColumns = 20;
+    public final int MinRows = 5, MaxRows = 30;
+
+    public int speedRate = 50;
+    public int complexRate = 50;
+    public int columnCount = 8, rowCount = 16;
+    public boolean showNextFigure = true;
+    public boolean showRating = true;
+    public boolean drawGuideLines = true;
+
+    private void check()
+    {
+      if(speedRate <= 0)
+        speedRate = 1;
+      if(speedRate > 100)
+        speedRate = 100;
+      if(complexRate <= 0)
+        complexRate = 1;
+      if(complexRate > 100)
+        complexRate = 100;
+      if(columnCount < MinColumns)
+        columnCount = MinColumns;
+      if(rowCount > MaxColumns)
+        rowCount = MaxColumns;
+      if(rowCount < MinRows)
+        rowCount = MinRows;
+      if(rowCount > MaxRows)
+        rowCount = MaxRows;
+    }
+
+    public void load(Context context, String sectionName)
+    {
+      SharedPreferences preferences = context.getSharedPreferences(sectionName, Context.MODE_PRIVATE);
+      speedRate = preferences.getInt("speedRate", 50);
+      complexRate = preferences.getInt("complexRate", 50);
+      columnCount = preferences.getInt("columnCount", 8);
+      rowCount = preferences.getInt("rowCount", 16);
+      showNextFigure = preferences.getBoolean("showNextFigure", true);
+      showRating = preferences.getBoolean("showRating", true);
+      drawGuideLines = preferences.getBoolean("drawGuideLines", true);
+      check();
+    }
+
+
+    public void save(Context context, String sectionName)
+    {
+      SharedPreferences preferences = context.getSharedPreferences(sectionName, Context.MODE_PRIVATE);
+      SharedPreferences.Editor ed = preferences.edit();
+
+      check();
+      ed.putInt("speedRate", speedRate);
+      ed.putInt("complexRate", complexRate);
+      ed.putInt("columnCount", columnCount);
+      ed.putInt("rowCount", rowCount);
+      ed.putBoolean("showNextFigure", showNextFigure);
+      ed.putBoolean("showRating", showRating);
+      ed.putBoolean("drawGuideLines", drawGuideLines);
+
+      ed.apply();
+    }
+  }
+  /*-----------------------------------------------------------------------------------------------*/
   static public class Controller
   {
     private boolean modified = false;
     Context context;
+    String sectionName;
     Rect rect;
     Rect bounds;
     Paint paint;
-    protected Glass glass;
+    Glass glass;
     final int minInterval = 250, maxInterval = 2250;
-    protected int interval = 1000; //ms
+
+    private int interval = 1000; //ms
     private long lastTime = 0;
-    protected int defaultColumnCount = 8, defaultRowCount = 16;
-    protected int complexRate = 50, speedRate = 50;
+
+    Settings settings;
+
+    //protected int defaultColumnCount = 8, defaultRowCount = 16;
+    //protected int complexRate = 50, speedRate = 50;
     enum State
     {
       PAUSED,
@@ -501,23 +571,68 @@ public class TetrisBase {
       FINISHED
     };
 
-    protected State state = State.PAUSED;
+    State state = State.PAUSED;
 
-    boolean showNextFigure = true;
+    //boolean showNextFigure = true;
     Figure nextFigure;
     int nextFigureX, nextFigureY;
-    boolean showRating = true;
+    //boolean showRating = true;
     int ratingX, ratingY;
 
+    /*============================================================*/
+    Controller(Context c, String sectionName)
+    {
+      context = c;
+      this.sectionName = sectionName;
+      settings = new Settings();
+      settings.load(context, sectionName);
+      glass = onGlassCreate();
+      paint = new Paint();
+      bounds = new Rect();
+      state = State.PAUSED;
+      setup();
+    }
+    /*============================================================*/
+    private void setup()
+    {
+      interval = minInterval + ((maxInterval - minInterval) * (100 - settings.speedRate)) / 100;
+      //Log.d("GameController", "interval=" + interval);
+      glass.setScoreScale(settings.complexRate * settings.speedRate);
+    }
+    /*============================================================*/
+    public void onSettingsChanged()
+    {
+      settings.load(context, sectionName);
+      Glass old = glass;
+      glass = onGlassCreate();
+      nextFigure = null;
+      glass.setRect(old.getRect());
+      setup();
+      setModified(true);
+    }
+    /*============================================================*/
+    protected Glass onGlassCreate()
+    {
+      return new Glass(settings.columnCount, settings.rowCount);
+    }
+    /*============================================================*/
+    protected Figure onNewFigure() {
+      Figure figure = new Figure();
+      figure.put(0, 0, new Shape(Color.GREEN, Color.BLACK));
+      figure.put(0, 1, new Shape(Color.RED, Color.BLACK));
+      figure.put(0, 2, new Shape(Color.BLUE, Color.BLACK));
+
+      return figure;
+    }
     /*============================================================*/
     boolean isModified() {return modified;}
     /*============================================================*/
     void setModified(boolean m) {modified = m;}
     /*============================================================*/
-    int getComplexRate() {return complexRate;}
+    //int getComplexRate() {return complexRate;}
     /*============================================================*/
-    void setComplexRate(int r)
-    {
+    /*
+    void setComplexRate(int r)     {
       if(r > 0 && r <= 100)
       {
         complexRate = r;
@@ -525,9 +640,11 @@ public class TetrisBase {
         setModified(true);
       }
     }
+    */
     /*============================================================*/
-    int getSpeedRate() {return speedRate;}
+    //int getSpeedRate() {return speedRate;}
     /*============================================================*/
+    /*
     void setSpeedRate(int r)
     {
       if(r > 0 && r <= 199)
@@ -539,6 +656,7 @@ public class TetrisBase {
         setModified(true);
       }
     }
+    */
     /*============================================================*/
     static int colors[] = {
       Color.rgb(0xff, 0, 0),
@@ -569,36 +687,14 @@ public class TetrisBase {
     int randomComplexColor()
     {
       int n = (int)(Math.random() * 1000.0);
-      int d =  (colors.length * complexRate) / 100;
+      int d =  (colors.length * settings.complexRate) / 100;
       n %= d < 1 ? 1 : d;
       return colors[n % colors.length];
     }
     /*============================================================*/
-    Controller(Context c)
-    {
-      context = c;
-      glass = onGlassCreate();
-      paint = new Paint();
-      bounds = new Rect();
-      state = State.PAUSED;
-    }
-    /*============================================================*/
-    protected Glass onGlassCreate()
-    {
-      return new Glass(defaultColumnCount, defaultRowCount);
-    }
-    /*============================================================*/
-    protected Figure onNewFigure() {
-      Figure figure = new Figure();
-      figure.put(0, 0, new Shape(Color.GREEN, Color.BLACK));
-      figure.put(0, 1, new Shape(Color.RED, Color.BLACK));
-      figure.put(0, 2, new Shape(Color.BLUE, Color.BLACK));
-
-      return figure;
-    }
-    /*============================================================*/
     public void setSize(int w, int h)
     {
+      Log.d("setSize", "w=" + w + " h=" + h);
       rect = new Rect(0, 0, w, h);
       geometryInit();
     }
@@ -655,7 +751,7 @@ public class TetrisBase {
       }
 
       glass.onDraw(canvas);
-      if(nextFigure != null && showNextFigure)
+      if(nextFigure != null && settings.showNextFigure)
       {
         nextFigure.onDraw(canvas, nextFigureX, nextFigureY, 20, 20);
         //nextFigure.onDraw(canvas, nextFigureX, nextFigureY, glass.getShapeWidth(), glass.getShapeHeight());
@@ -690,15 +786,15 @@ public class TetrisBase {
         canvas.drawText(text, x, y, paint);
       }
 
-      if(showRating)
+      if(settings.showRating)
       {
         paint.setColor(Color.BLUE);
         paint.setTextSize(30);
 
         int y = ratingY + 30;
-        canvas.drawText(context.getString(R.string.speed) + ": " + speedRate + "%", ratingX, y, paint);
+        canvas.drawText(context.getString(R.string.speed) + ": " + settings.speedRate + "%", ratingX, y, paint);
         y += 30;
-        canvas.drawText(context.getString(R.string.complex) + ": " + complexRate + "%", ratingX, y, paint);
+        canvas.drawText(context.getString(R.string.complex) + ": " + settings.complexRate + "%", ratingX, y, paint);
         y += 30;
         canvas.drawText(context.getString(R.string.score) + ": " + glass.getScore(), ratingX, y, paint);
       }

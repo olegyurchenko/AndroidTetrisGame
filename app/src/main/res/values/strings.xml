@@ -8,4 +8,5 @@
     <string name="speed">Speed</string>
     <string name="paused">Paused</string>
     <string name="finished">Finished</string>
+    <string name="show_next_figure">Show next figure</string>
 </resources>

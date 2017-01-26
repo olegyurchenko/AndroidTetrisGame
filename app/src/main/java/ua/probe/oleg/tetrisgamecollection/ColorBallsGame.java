@@ -227,15 +227,15 @@ public class ColorBallsGame extends TetrisBase {
   /*-----------------------------------------------------------------------------------------------*/
   public static class Controller extends TetrisBase.Controller {
 
-    Controller(Context c)
+    Controller(Context c, String sectionName)
     {
-      super(c);
+      super(c, sectionName);
     }
 
     @Override
     protected Glass onGlassCreate()
     {
-      return new BallsGlass(defaultColumnCount, defaultRowCount);
+      return new BallsGlass(settings.columnCount, settings.rowCount);
     }
 
     @Override
