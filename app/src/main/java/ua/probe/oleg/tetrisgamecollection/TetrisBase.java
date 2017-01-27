@@ -10,6 +10,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.*;
 
@@ -843,8 +844,10 @@ public class TetrisBase {
     /*============================================================*/
     public void toglePause()
     {
-      if(state == State.WORKED)
+      if(state == State.WORKED) {
         state = State.PAUSED;
+        Toast.makeText(context, context.getString(R.string.paused), Toast.LENGTH_SHORT).show();
+      }
       else
       if(state == State.PAUSED)
         state = State.WORKED;
@@ -925,6 +928,7 @@ public class TetrisBase {
             state = State.FINISHED;
             glass.setModified(true);
 //          Log.d("Game", "Error add figure");
+            Toast.makeText(context, context.getString(R.string.finished), Toast.LENGTH_SHORT).show();
           } else {
 //          Log.d("Game", "Add figure Ok");
             nextFigure = onNewFigure();

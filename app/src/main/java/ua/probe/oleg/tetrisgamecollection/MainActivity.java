@@ -72,7 +72,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
   protected void startTetris()
   {
-    Toast.makeText(getApplicationContext(), "You selected " + getString(R.string.action_tetris), Toast.LENGTH_LONG).show();
+    Toast.makeText(getApplicationContext(), "You selected " + getString(R.string.action_tetris), Toast.LENGTH_SHORT).show();
     // Создаем объект Intent для вызова новой Activity
     Intent intent = new Intent(this, TetrisActivity.class);
     // запуск activity
@@ -81,7 +81,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
   protected void startColumnus()
   {
-    Toast.makeText(getApplicationContext(), "You selected " + getString(R.string.action_columnus), Toast.LENGTH_LONG).show();
+    Toast.makeText(getApplicationContext(), "You selected " + getString(R.string.action_columnus), Toast.LENGTH_SHORT).show();
     // Создаем объект Intent для вызова новой Activity
     Intent intent = new Intent(this, ColumnusActivity.class);
     // запуск activity
@@ -90,7 +90,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
   protected void startColorBalls()
   {
-    Toast.makeText(getApplicationContext(), "You selected " + getString(R.string.action_color_balls), Toast.LENGTH_LONG).show();
+    Toast.makeText(getApplicationContext(), "You selected " + getString(R.string.action_color_balls), Toast.LENGTH_SHORT).show();
     // Создаем объект Intent для вызова новой Activity
     Intent intent = new Intent(this, ColorBallsActivity.class);
     // запуск activity
