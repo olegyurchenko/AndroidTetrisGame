@@ -10,8 +10,51 @@
 
     <TableLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TableRow>
+        android:layout_height="wrap_content"
+        >
+        <TableRow android:gravity="center_vertical">
+            <TextView
+                android:text="@string/column_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <SeekBar
+                android:layout_width="200dp"
+                android:max="100"
+                android:progress="50"
+                android:id="@+id/seek_columns"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_height="50dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_columns"
+                android:text="8"/>
+
+        </TableRow>
+        <TableRow android:gravity="center_vertical">
+            <TextView
+                android:text="@string/row_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <SeekBar
+                android:layout_width="200dp"
+                android:max="100"
+                android:progress="50"
+                android:id="@+id/seek_rows"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_height="50dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_rows"
+                android:text="8"/>
+
+        </TableRow>
+        <TableRow android:gravity="center_vertical">
 
 
             <TextView
@@ -20,25 +63,25 @@
                 android:layout_height="wrap_content"/>
 
             <SeekBar
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="200dp"
-                android:layout_height="wrap_content"
                 android:max="100"
                 android:progress="50"
-                android:id="@+id/seekSpeed"
+                android:id="@+id/seek_speed"
                 android:labelFor="@+id/speel_label"
                 android:maxWidth="300dp"
-                android:minHeight="2dp"/>
+                android:minHeight="2dp"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_height="50dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/speel_label"
+                android:id="@+id/text_speed"
                 android:text="%"/>
 
         </TableRow>
 
-        <TableRow>
+        <TableRow android:gravity="center_vertical">
             <TextView
                 android:text="@string/complex"
                 android:layout_width="wrap_content"
@@ -47,10 +90,10 @@
             <SeekBar
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="200dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:max="100"
                 android:progress="50"
-                android:id="@+id/seekComplex"
+                android:id="@+id/seek_complex"
                 android:labelFor="@+id/speel_label"
                 android:maxWidth="300dp"
                 android:minHeight="2dp"/>
@@ -59,26 +102,57 @@
                 android:text="%"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/complex_label"/>
+                android:id="@+id/text_complex"/>
 
         </TableRow>
 
-        <TableRow>
-
-            <Switch
+        <TableRow android:gravity="center_vertical">
+            <TextView
                 android:text="@string/show_next_figure"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="wrap_content"/>
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
                 android:id="@+id/switch_next_figure"
-                android:layout_span="2"
                 />
         </TableRow>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
+        <TableRow android:gravity="center_vertical">
+            <TextView
+                android:text="@string/show_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:id="@+id/switch_show_score"
+                />
         </TableRow>
+
+        <TableRow android:gravity="center_vertical">
+            <TextView
+                android:text="@string/show_guide_lines"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:id="@+id/switch_show_guide_line"
+                />
+        </TableRow>
+
+        <TableRow android:gravity="center_vertical">
+
+            <Button
+                android:text="@string/reset_to_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_default"
+                android:onClick="onClick"
+                android:layout_span="2"/>
+        </TableRow>
+
     </TableLayout>
 
     <LinearLayout
@@ -91,14 +165,15 @@
             android:text="Cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnCancel"
+            android:id="@+id/btn_cancel"
             android:onClick="onClick"/>
 
         <Button
             android:text="Ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnOk"
-            android:onClick="onClick"/>
+            android:id="@+id/btn_ok"
+            android:onClick="onClick"
+            />
     </LinearLayout>
 </LinearLayout>

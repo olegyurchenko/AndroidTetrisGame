@@ -491,8 +491,8 @@ public class TetrisBase {
     public int complexRate = 50;
     public int columnCount = 8, rowCount = 16;
     public boolean showNextFigure = true;
-    public boolean showRating = true;
-    public boolean drawGuideLines = true;
+    public boolean showScore = true;
+    public boolean showGuideLines = true;
 
     private void check()
     {
@@ -506,8 +506,8 @@ public class TetrisBase {
         complexRate = 100;
       if(columnCount < MinColumns)
         columnCount = MinColumns;
-      if(rowCount > MaxColumns)
-        rowCount = MaxColumns;
+      if(columnCount > MaxColumns)
+        columnCount = MaxColumns;
       if(rowCount < MinRows)
         rowCount = MinRows;
       if(rowCount > MaxRows)
@@ -522,8 +522,8 @@ public class TetrisBase {
       columnCount = preferences.getInt("columnCount", 8);
       rowCount = preferences.getInt("rowCount", 16);
       showNextFigure = preferences.getBoolean("showNextFigure", true);
-      showRating = preferences.getBoolean("showRating", true);
-      drawGuideLines = preferences.getBoolean("drawGuideLines", true);
+      showScore = preferences.getBoolean("showScore", true);
+      showGuideLines = preferences.getBoolean("showGuideLines", true);
       check();
     }
 
@@ -539,8 +539,8 @@ public class TetrisBase {
       ed.putInt("columnCount", columnCount);
       ed.putInt("rowCount", rowCount);
       ed.putBoolean("showNextFigure", showNextFigure);
-      ed.putBoolean("showRating", showRating);
-      ed.putBoolean("drawGuideLines", drawGuideLines);
+      ed.putBoolean("showScore", showScore);
+      ed.putBoolean("showGuideLines", showGuideLines);
 
       ed.apply();
     }
@@ -576,7 +576,7 @@ public class TetrisBase {
     //boolean showNextFigure = true;
     Figure nextFigure;
     int nextFigureX, nextFigureY;
-    //boolean showRating = true;
+    //boolean showScore = true;
     int ratingX, ratingY;
 
     /*============================================================*/
@@ -603,11 +603,11 @@ public class TetrisBase {
     public void onSettingsChanged()
     {
       settings.load(context, sectionName);
-      Glass old = glass;
       glass = onGlassCreate();
       nextFigure = null;
-      glass.setRect(old.getRect());
+      state = State.PAUSED;
       setup();
+      geometryInit();
       setModified(true);
     }
     /*============================================================*/
@@ -709,22 +709,40 @@ public class TetrisBase {
         x = border;
         w = rect.width() - 2 * border;
         h = (w / glass.getColumnCount()) * glass.getRowCount();
-        y = border + 3 * w / glass.getColumnCount();
-        glass.setRect(
-          new Rect(x, y, x + w, y + h)
-        );
+        w = (h / glass.getRowCount()) * glass.getColumnCount();
+        y = border + 3 * 20;
 
         nextFigureX = x ;
         nextFigureY = border;
 
         ratingX = x;
         ratingY = y + h;
+
+        glass.setRect(
+          new Rect(x, y, x + w, y + h) );
+
+        if(y + h > rect.height())
+        {
+          h = rect.height() - y;
+          w = (h / glass.getRowCount()) * glass.getColumnCount();
+          h = (w / glass.getColumnCount()) * glass.getRowCount();
+
+          glass.setRect(
+            new Rect(x, y, x + w, y + h) );
+
+          nextFigureX = x + w + border;
+          nextFigureY = border;
+
+          ratingX = x + w + border;
+          ratingY = border + glass.getShapeWidth() * 3;
+        }
       }
       else
       { //Horisontal
         x = y = border;
         h = rect.height() - 2 * border;
         w = (h / glass.getRowCount()) * glass.getColumnCount();
+        h = (w / glass.getColumnCount()) * glass.getRowCount();
         glass.setRect(
           new Rect(x, y, x + w, y + h)
         );
@@ -786,7 +804,7 @@ public class TetrisBase {
         canvas.drawText(text, x, y, paint);
       }
 
-      if(settings.showRating)
+      if(settings.showScore)
       {
         paint.setColor(Color.BLUE);
         paint.setTextSize(30);
