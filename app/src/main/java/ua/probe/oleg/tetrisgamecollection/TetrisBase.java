@@ -826,11 +826,13 @@ public class TetrisBase {
         y += 30;
         canvas.drawText(context.getString(R.string.score) + ": " + glass.getScore(), ratingX, y, paint);
         y += 30;
+        /*
         if(accelerometer != null)
         {
           Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
           canvas.drawText(String.format("x=%1$.01f y=%2$.01f z=%3$.01f", o.x, o.y, o.z), ratingX, y, paint);
         }
+        */
       }
     }
 
