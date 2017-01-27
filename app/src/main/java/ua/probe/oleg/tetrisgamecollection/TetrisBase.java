@@ -494,6 +494,8 @@ public class TetrisBase {
     public boolean showNextFigure = true;
     public boolean showScore = true;
     public boolean showGuideLines = true;
+    public boolean useAccelerometer = true;
+    public boolean useTouch = true;
 
     private void check()
     {
@@ -525,6 +527,8 @@ public class TetrisBase {
       showNextFigure = preferences.getBoolean("showNextFigure", true);
       showScore = preferences.getBoolean("showScore", true);
       showGuideLines = preferences.getBoolean("showGuideLines", true);
+      useAccelerometer = preferences.getBoolean("useAccelerometer", true);
+      useTouch = preferences.getBoolean("useTouch", true);
       check();
     }
 
@@ -542,6 +546,8 @@ public class TetrisBase {
       ed.putBoolean("showNextFigure", showNextFigure);
       ed.putBoolean("showScore", showScore);
       ed.putBoolean("showGuideLines", showGuideLines);
+      ed.putBoolean("useAccelerometer", useAccelerometer);
+      ed.putBoolean("useTouch", useTouch);
 
       ed.apply();
     }
@@ -570,7 +576,7 @@ public class TetrisBase {
       PAUSED,
       WORKED,
       FINISHED
-    };
+    }
 
     State state = State.PAUSED;
 
@@ -579,6 +585,7 @@ public class TetrisBase {
     int nextFigureX, nextFigureY;
     //boolean showScore = true;
     int ratingX, ratingY;
+    Accelerometer accelerometer;
 
     /*============================================================*/
     Controller(Context c, String sectionName)
@@ -592,6 +599,8 @@ public class TetrisBase {
       bounds = new Rect();
       state = State.PAUSED;
       setup();
+      if(settings.useAccelerometer)
+        accelerometer = new Accelerometer(context);
     }
     /*============================================================*/
     private void setup()
@@ -816,9 +825,27 @@ public class TetrisBase {
         canvas.drawText(context.getString(R.string.complex) + ": " + settings.complexRate + "%", ratingX, y, paint);
         y += 30;
         canvas.drawText(context.getString(R.string.score) + ": " + glass.getScore(), ratingX, y, paint);
+        y += 30;
+        if(accelerometer != null)
+        {
+          Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
+          canvas.drawText(String.format("x=%1$.01f y=%2$.01f z=%3$.01f", o.x, o.y, o.z), ratingX, y, paint);
+        }
       }
     }
 
+    /*============================================================*/
+    public void onPause()
+    {
+      if(accelerometer != null)
+        accelerometer.onPause();
+    }
+    /*============================================================*/
+    public void onResume()
+    {
+      if(accelerometer != null)
+        accelerometer.onResume();
+    }
     /*============================================================*/
     public void onQuant()
     {

@@ -110,42 +110,22 @@ public class TetrisBaseActivity extends Activity
     return gameController;
   }
 
-  protected TetrisBase.Controller onGameControllerCreate() {
+  protected TetrisBase.Controller onGameControllerCreate()
+  {
     return new TetrisBase.Controller(this, sectionName);
   }
-
-/*
   @Override
-  public void onStopTrackingTouch(SeekBar seekBar) {
-  }
-
-  @Override
-  public void onStartTrackingTouch(SeekBar seekBar) {
-  }
-
-  @Override
-  public void onProgressChanged(SeekBar seekBar, int progress,
-                                boolean fromUser)
+  protected void onResume()
   {
-    int id = seekBar.getId();
-    SharedPreferences.Editor ed = preferences.edit();
-
-    switch(id)
-    {
-      case R.id.sppedSeekbar:
-        gameController.setSpeedRate(progress);
-        ed.putInt("speedRate", gameController.getSpeedRate());
-        break;
-      case R.id.complexSeekbar:
-        gameController.setComplexRate(progress);
-        ed.putInt("complexRate", gameController.getComplexRate());
-        break;
-    }
-
-    ed.commit();
+    super.onResume();
+    gameController.onResume();
   }
-*/
-
+  @Override
+  protected void onPause()
+  {
+    super.onPause();
+    gameController.onPause();
+  }
   @Override
   public boolean onTouch(View v, MotionEvent event) {
     float x = event.getX();
