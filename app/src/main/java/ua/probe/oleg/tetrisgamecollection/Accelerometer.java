@@ -21,6 +21,7 @@ public class Accelerometer {
   private float[] valuesAccel = new float[3];
   private float[] valuesMagnet = new float[3];
   private int rotation;
+  private boolean modified;
   /*============================================================*/
   public class Orientation
   {
@@ -41,6 +42,8 @@ public class Accelerometer {
     sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
     sensorAccel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     sensorMagnet = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+    modified = false;
   }
   /*============================================================*/
   public void onPause()
@@ -56,6 +59,16 @@ public class Accelerometer {
     WindowManager windowManager = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE));
     Display display = windowManager.getDefaultDisplay();
     rotation = display.getRotation();
+  }
+  /*============================================================*/
+  public void setModified(boolean m)
+  {
+    modified = m;
+  }
+  /*============================================================*/
+  public boolean isModified()
+  {
+    return modified;
   }
   /*============================================================*/
   float[] r = new float[9];
@@ -74,6 +87,7 @@ public class Accelerometer {
     valuesResult[1] = (float) Math.toDegrees(valuesResult[1]);
     valuesResult[2] = (float) Math.toDegrees(valuesResult[2]);
 
+    setModified(false);
     return new Orientation(valuesResult);
   }
   /*============================================================*/
@@ -109,10 +123,11 @@ public class Accelerometer {
     }
     SensorManager.remapCoordinateSystem(inR, x_axis, y_axis, outR);
     SensorManager.getOrientation(outR, valuesResult2);
-    valuesResult2[0] = (float) Math.toDegrees(valuesResult2[0]);
-    valuesResult2[1] = (float) Math.toDegrees(valuesResult2[1]);
-    valuesResult2[2] = (float) Math.toDegrees(valuesResult2[2]);
+    //valuesResult2[0] = (float) Math.toDegrees(valuesResult2[0]);
+    //valuesResult2[1] = (float) Math.toDegrees(valuesResult2[1]);
+    //valuesResult2[2] = (float) Math.toDegrees(valuesResult2[2]);
 
+    setModified(false);
     return new Orientation(valuesResult2);
   }
   /*============================================================*/
@@ -129,11 +144,13 @@ public class Accelerometer {
           for (int i=0; i < 3; i++){
             valuesAccel[i] = event.values[i];
           }
+          setModified(true);
           break;
         case Sensor.TYPE_MAGNETIC_FIELD:
           for (int i=0; i < 3; i++){
             valuesMagnet[i] = event.values[i];
           }
+          setModified(true);
           break;
       }
     }

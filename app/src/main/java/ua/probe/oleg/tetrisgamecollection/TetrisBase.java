@@ -778,11 +778,43 @@ public class TetrisBase {
         glass.setRect(rect);
       }
 
+      Rect glassRect = glass.getRect();
       glass.onDraw(canvas);
       if(nextFigure != null && settings.showNextFigure)
       {
         nextFigure.onDraw(canvas, nextFigureX, nextFigureY, 20, 20);
         //nextFigure.onDraw(canvas, nextFigureX, nextFigureY, glass.getShapeWidth(), glass.getShapeHeight());
+      }
+
+      if(settings.useAccelerometer && accelerometer != null)
+      {
+        //paint.setStrokeWidth(5);
+
+        Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
+        if(Math.abs(o.y) >= Math.PI / 4)
+        {
+          paint.setColor(Color.BLACK);
+          paint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+          float l = glass.getShapeHeight() * 3;
+
+          int left = 0;
+          int top = glassRect.top;
+          if (o.y < 0) {
+            left = glassRect.right;
+          } else {
+            left = glassRect.left;
+          }
+
+          int right = left + (int) (Math.sin(o.y) * l);
+          int bottom = top + (int) (Math.cos(o.y) * l);
+
+          canvas.drawLine(left, top,
+            right,
+            bottom,
+            paint);
+        }
+
       }
 
       if(state == State.PAUSED || state == State.FINISHED)
@@ -799,7 +831,6 @@ public class TetrisBase {
         paint.setTextSize(40);// have this the same as your text size
         paint.getTextBounds(text, 0, text.length(), bounds);
 
-        Rect glassRect = glass.getRect();
         int x = glassRect.left + (glassRect.width() - bounds.width()) / 2;
         int y = glassRect.top + (glassRect.height() - bounds.height())/ 2;
 
@@ -826,13 +857,13 @@ public class TetrisBase {
         y += 30;
         canvas.drawText(context.getString(R.string.score) + ": " + glass.getScore(), ratingX, y, paint);
         y += 30;
-        /*
+/*
         if(accelerometer != null)
         {
           Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
           canvas.drawText(String.format("x=%1$.01f y=%2$.01f z=%3$.01f", o.x, o.y, o.z), ratingX, y, paint);
         }
-        */
+*/
       }
     }
 
@@ -856,6 +887,10 @@ public class TetrisBase {
         lastTime = System.currentTimeMillis();
         nextInterval();
       }
+      if(settings.useAccelerometer
+        && accelerometer != null
+        && accelerometer.isModified())
+        setModified(true);
       //Log.d("TIME TEST", "Current sec = " + seconds);
     }
     /*============================================================*/
@@ -966,7 +1001,21 @@ public class TetrisBase {
       }
       else
       {
-        glass.moveDown();
+        if(settings.useAccelerometer && accelerometer != null)
+        {
+          Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
+          if(Math.abs(o.y) >= Math.PI / 4)
+          {
+            if(o.y < 0)
+              glass.moveLeft();
+            else
+              glass.moveRight();
+          }
+        }
+
+        if(glass.moveDown())
+        {
+        }
       }
 
       setModified(glass.isModified());
