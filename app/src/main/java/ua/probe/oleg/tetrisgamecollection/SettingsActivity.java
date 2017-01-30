@@ -1,7 +1,8 @@
 package ua.probe.oleg.tetrisgamecollection;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +12,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-public class SettingsActivity extends AppCompatActivity
+public class SettingsActivity extends Activity
   implements View.OnClickListener, SeekBar.OnSeekBarChangeListener
 {
   String sectionName;

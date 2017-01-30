@@ -5,7 +5,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbarAlwaysDrawHorizontalTrack="false">
+    android:scrollbarAlwaysDrawHorizontalTrack="false"
+    android:layout_marginLeft="20dp">
 
 
     <TableLayout
