@@ -12,36 +12,37 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.util.SparseArray;
 import android.widget.Toast;
 
 import java.util.*;
 
 /**
- * Created by oleg on 13.01.17.
+ * TetrisBase - base classes for game collections
  */
 
-public class TetrisBase {
+class TetrisBase {
 
   /*-----------------------------------------------------------------------------------------------*/
-  static public class Cell
+  static class Cell
   {
-    protected int col, row;
-    public Cell() {col = row = 0;}
-    public Cell(int c, int r) {col = c; row = r;}
-    public Cell(Cell other) { col = other.col; row = other.row;}
+    int col, row;
+    Cell() {col = row = 0;}
+    Cell(int c, int r) {col = c; row = r;}
+    Cell(Cell other) { col = other.col; row = other.row;}
 
-    public int column() {return col;}
-    public int row() {return row;}
-    public void setColumn(int c) {col = c;}
-    public void setRow(int r) {row = r;}
+    int column() {return col;}
+    int row() {return row;}
+    void setColumn(int c) {col = c;}
+    void setRow(int r) {row = r;}
   }
   /*-----------------------------------------------------------------------------------------------*/
   static class Shape
   {
     int fillColor, borderColor;
 //    protected int width = 0, height = 0;
-    protected Paint paint = new Paint();
-    protected Rect rect = new Rect();
+    Paint paint = new Paint();
+    Rect rect = new Rect();
 
     Shape(int fColor, int bColor)
     {
@@ -87,32 +88,32 @@ public class TetrisBase {
   /*-----------------------------------------------------------------------------------------------*/
   static class Figure
   {
-    HashMap<Integer, Shape> shapeMap;
+    SparseArray<Shape> shapeMap;
     int columnCount = 0, rowCount = 0;
 
     Figure()
     {
-      shapeMap = new HashMap<Integer, Shape>();
+      shapeMap = new SparseArray<>();
     }
 
     Figure(Figure other)
     {
-      shapeMap = new HashMap<Integer, Shape>(other.shapeMap);
+      shapeMap = other.shapeMap.clone();
       columnCount = other.columnCount;
       rowCount = other.rowCount;
     }
 
-    protected int index(int column, int row)
+    int index(int column, int row)
     {
       return column + 1000000 * row;
     }
 
-    public Shape get(int column, int row)
+    Shape get(int column, int row)
     {
       return shapeMap.get(index(column, row));
     }
 
-    public void put(int column, int row, Shape s)
+    void put(int column, int row, Shape s)
     {
       shapeMap.put(index(column, row), s);
       if(column + 1 > columnCount)
@@ -121,8 +122,8 @@ public class TetrisBase {
         rowCount = row + 1;
     }
 
-    public int getRowCount() {return rowCount;}
-    public int getColumnCount() {return columnCount;}
+    int getRowCount() {return rowCount;}
+    int getColumnCount() {return columnCount;}
 
     public Figure rotate()
     {
@@ -130,7 +131,7 @@ public class TetrisBase {
       return new Figure(this);
     }
 
-    public void onDraw(Canvas canvas, int left, int top, int shapeWidth, int shapeHeight)
+    void onDraw(Canvas canvas, int left, int top, int shapeWidth, int shapeHeight)
     {
 
       for(int r = 0; r < rowCount; r++)
@@ -165,13 +166,13 @@ public class TetrisBase {
 
     private boolean drawGuideLines = true;
 
-    HashMap<Integer, Shape> shapeMap;
+    SparseArray<Shape> shapeMap;
 
     Glass(int columns, int rows)
     {
       columnCount = columns;
       rowCount = rows;
-      shapeMap = new HashMap<Integer, Shape>();
+      shapeMap = new SparseArray<>();
       paint = new Paint();
 
       guidePaint = new Paint();
@@ -182,46 +183,36 @@ public class TetrisBase {
       path = new Path();
 
       score = 0;
-
-      //Test shapes
-      for(int i = 0; i < 0; i++)
-      {
-        int c = i % columnCount;
-        int r = i / columnCount;
-        Shape s = new Shape();
-        put(c, r, s);
-      }
     }
 
     public boolean isModified() {return modified;}
     protected void setModified(boolean m) {modified = m;}
 
-    public void setRect(Rect r)
+    void setRect(Rect r)
     {
       rect = r;
     }
 
-    public Rect getRect()
+    Rect getRect()
     {
       return  rect;
     }
 
-    public long getScore() {return score;}
-    protected void addRemovedShapes(int shapes) {
-      //TODO: waight koefficient
+    long getScore() {return score;}
+    void addRemovedShapes(int shapes) {
       score += shapes * 17 * scoreScale;
     }
-    public void setScoreScale(long s)
+    void setScoreScale(long s)
     {
       scoreScale = s;
     }
 
-    public int getRowCount() {return rowCount;}
-    public int getColumnCount() {return columnCount;}
-    public int getShapeWidth() { return rect.width() / columnCount;}
-    public int getShapeHeight() {return rect.height() / rowCount;}
+    int getRowCount() {return rowCount;}
+    int getColumnCount() {return columnCount;}
+    int getShapeWidth() { return rect.width() / columnCount;}
+    int getShapeHeight() {return rect.height() / rowCount;}
 
-    public void onDraw(Canvas canvas)
+    void onDraw(Canvas canvas)
     {
       Figure figure = this.activeFigure; //Thread safe
 
@@ -314,12 +305,12 @@ public class TetrisBase {
       setModified(false);
     }
 
-    protected int index(int column, int row)
+    private int index(int column, int row)
     {
       return column + 1000000 * row;
     }
 
-    public Shape get(int column, int row)
+    Shape get(int column, int row)
     {
       if(column < 0
         || column >= columnCount
@@ -330,7 +321,7 @@ public class TetrisBase {
       return shapeMap.get(index(column, row));
     }
 
-    public void put(int column, int row, Shape s)
+    void put(int column, int row, Shape s)
     {
       if(column < 0
         || column >= columnCount
@@ -378,10 +369,10 @@ public class TetrisBase {
       return true;
     }
 
-    public Figure getActiveFigure() {return activeFigure;}
+    Figure getActiveFigure() {return activeFigure;}
 
 
-    public boolean moveLeft()
+    boolean moveLeft()
     {
       if(activeFigure == null)
         return false;
@@ -396,7 +387,7 @@ public class TetrisBase {
       return false;
     }
 
-    public boolean moveRight()
+    boolean moveRight()
     {
       if(activeFigure == null)
         return false;
@@ -412,7 +403,7 @@ public class TetrisBase {
     }
 
 
-    public boolean rotate()
+    boolean rotate()
     {
       if(activeFigure == null)
         return false;
@@ -426,7 +417,7 @@ public class TetrisBase {
       return false;
     }
 
-    public boolean moveDown()
+    boolean moveDown()
     {
       if(activeFigure == null)
         return false;
@@ -445,7 +436,7 @@ public class TetrisBase {
       return false;
     }
 
-    public boolean moveBottom()
+    boolean moveBottom()
     {
       if(activeFigure == null)
         return false;
@@ -483,22 +474,21 @@ public class TetrisBase {
     {
       return false;
     }
-
   }
   /*-----------------------------------------------------------------------------------------------*/
-  static public class Settings
+  static class Settings
   {
-    public final int MinColumns = 3, MaxColumns = 20;
-    public final int MinRows = 5, MaxRows = 30;
+    final int MinColumns = 3, MaxColumns = 20;
+    final int MinRows = 5, MaxRows = 30;
 
-    public int speedRate = 50;
-    public int complexRate = 50;
-    public int columnCount = 8, rowCount = 16;
-    public boolean showNextFigure = true;
-    public boolean showScore = true;
-    public boolean showGuideLines = true;
-    public boolean useAccelerometer = true;
-    public boolean useTouch = true;
+    int speedRate = 50;
+    int complexRate = 50;
+    int columnCount = 8, rowCount = 16;
+    boolean showNextFigure = true;
+    boolean showScore = true;
+    boolean showGuideLines = true;
+    boolean useAccelerometer = true;
+    boolean useTouch = true;
 
     private void check()
     {
@@ -520,7 +510,7 @@ public class TetrisBase {
         rowCount = MaxRows;
     }
 
-    public void load(Context context, String sectionName)
+    void load(Context context, String sectionName)
     {
       SharedPreferences preferences = context.getSharedPreferences(sectionName, Context.MODE_PRIVATE);
       speedRate = preferences.getInt("speedRate", 50);
@@ -536,7 +526,7 @@ public class TetrisBase {
     }
 
 
-    public void save(Context context, String sectionName)
+    void save(Context context, String sectionName)
     {
       SharedPreferences preferences = context.getSharedPreferences(sectionName, Context.MODE_PRIVATE);
       SharedPreferences.Editor ed = preferences.edit();
@@ -556,7 +546,7 @@ public class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  static public class Controller
+  static class Controller
   {
     private boolean modified = false;
     Context context;
@@ -616,7 +606,7 @@ public class TetrisBase {
       glass.setScoreScale(settings.complexRate * settings.speedRate);
     }
     /*============================================================*/
-    public void onSettingsChanged()
+    void onSettingsChanged()
     {
       settings.load(context, sectionName);
       glass = onGlassCreate();
@@ -708,14 +698,14 @@ public class TetrisBase {
       return colors[n % colors.length];
     }
     /*============================================================*/
-    public void setSize(int w, int h)
+    void setSize(int w, int h)
     {
       Log.d("setSize", "w=" + w + " h=" + h);
       rect = new Rect(0, 0, w, h);
       geometryInit();
     }
     /*============================================================*/
-    protected void geometryInit()
+    void geometryInit()
     {
       int x, y, w, h;
       int border = 20;
@@ -771,7 +761,7 @@ public class TetrisBase {
 
     }
     /*============================================================*/
-    public void onDraw(Canvas canvas)
+    void onDraw(Canvas canvas)
     {
       Figure figure = this.nextFigure; //For thread safe
 
@@ -829,7 +819,7 @@ public class TetrisBase {
           /*
             Draw row
           */
-          Bitmap bitmap = null;
+          Bitmap bitmap;
           if (o.y < 0)
           { //Left
             bitmap = leftArrowBitmap;
@@ -884,10 +874,10 @@ public class TetrisBase {
         canvas.drawText(context.getString(R.string.complex) + ": " + settings.complexRate + "%", ratingX, y, paint);
         y += 30;
         canvas.drawText(context.getString(R.string.score) + ": " + glass.getScore(), ratingX, y, paint);
-        y += 30;
 /*
         if(accelerometer != null)
         {
+          y += 30;
           Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
           canvas.drawText(String.format("x=%1$.01f y=%2$.01f z=%3$.01f", o.x, o.y, o.z), ratingX, y, paint);
         }
@@ -896,19 +886,19 @@ public class TetrisBase {
     }
 
     /*============================================================*/
-    public void onPause()
+    void onPause()
     {
       if(accelerometer != null)
         accelerometer.onPause();
     }
     /*============================================================*/
-    public void onResume()
+    void onResume()
     {
       if(accelerometer != null)
         accelerometer.onResume();
     }
     /*============================================================*/
-    public void onQuant()
+    void onQuant()
     {
       if(System.currentTimeMillis() - lastTime >= interval)
       {
@@ -939,19 +929,19 @@ public class TetrisBase {
       //Log.d("TIME TEST", "Current sec = " + seconds);
     }
     /*============================================================*/
-    public void onTouchDown(float x, float y)
+    void onTouchDown(float x, float y)
     {
     }
     /*============================================================*/
-    public void onTouchUp(float x, float y)
+    void onTouchUp(float x, float y)
     {
     }
     /*============================================================*/
-    public void onTouchMove(float x, float y)
+    void onTouchMove(float x, float y)
     {
     }
     /*============================================================*/
-    public void toglePause()
+    void toglePause()
     {
       if(state == State.WORKED) {
         state = State.PAUSED;
@@ -963,7 +953,7 @@ public class TetrisBase {
 
     }
     /*============================================================*/
-    public void moveLeft()
+    void moveLeft()
     {
       if(state == State.PAUSED)
       {
@@ -976,7 +966,7 @@ public class TetrisBase {
       }
     }
     /*============================================================*/
-    public void moveRight()
+    void moveRight()
     {
       if(state == State.PAUSED)
       {
@@ -989,7 +979,7 @@ public class TetrisBase {
       }
     }
     /*============================================================*/
-    public void moveDown()
+    void moveDown()
     {
       if(state == State.PAUSED)
       {
@@ -1002,7 +992,7 @@ public class TetrisBase {
       }
     }
     /*============================================================*/
-    public void rotate()
+    void rotate()
     {
       if(state == State.PAUSED)
       {
@@ -1015,7 +1005,7 @@ public class TetrisBase {
       }
     }
     /*============================================================*/
-    protected void nextInterval()
+    void nextInterval()
     {
       if(nextFigure == null)
         nextFigure = onNewFigure();
@@ -1058,9 +1048,7 @@ public class TetrisBase {
           }
         }
 
-        if(glass.moveDown())
-        {
-        }
+        glass.moveDown();
       }
 
       setModified(glass.isModified());
