@@ -21,7 +21,10 @@ public class Accelerometer {
   private float[] valuesAccel = new float[3];
   private float[] valuesMagnet = new float[3];
   private int rotation;
-  private boolean modified;
+  private boolean modified, shakeDetected;
+  private float currentAccel = SensorManager.GRAVITY_EARTH;
+  private long shakeTime = 0;
+  final long SHAKE_TIMEOUT = 500;
   /*============================================================*/
   public class Orientation
   {
@@ -61,14 +64,24 @@ public class Accelerometer {
     rotation = display.getRotation();
   }
   /*============================================================*/
-  public void setModified(boolean m)
+  public synchronized void setModified(boolean m)
   {
     modified = m;
   }
   /*============================================================*/
-  public boolean isModified()
+  public synchronized boolean isModified()
   {
     return modified;
+  }
+  /*============================================================*/
+  public synchronized void setShakeDetected(boolean s)
+  {
+    shakeDetected = s;
+  }
+  /*============================================================*/
+  public synchronized boolean isShakeDetected()
+  {
+    return shakeDetected;
   }
   /*============================================================*/
   float[] r = new float[9];
@@ -145,6 +158,17 @@ public class Accelerometer {
             valuesAccel[i] = event.values[i];
           }
           setModified(true);
+          float accel = (float) Math.sqrt((double) (valuesAccel[0] * valuesAccel[0]
+            + valuesAccel[1] * valuesAccel[1]
+            + valuesAccel[2] * valuesAccel[2]));
+          if (accel - currentAccel > 4) {
+            // SHAKE EVENT
+            long t = System.currentTimeMillis();
+            if(t - shakeTime >= SHAKE_TIMEOUT)
+              setShakeDetected(true);
+            shakeTime = t;
+          }
+          currentAccel = accel;
           break;
         case Sensor.TYPE_MAGNETIC_FIELD:
           for (int i=0; i < 3; i++){

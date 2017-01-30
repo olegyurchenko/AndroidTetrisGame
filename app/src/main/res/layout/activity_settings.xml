@@ -2,10 +2,10 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:scrollbarAlwaysDrawHorizontalTrack="false">
 
 
     <TableLayout
@@ -139,6 +139,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:id="@+id/switch_show_guide_line"
+                />
+        </TableRow>
+
+        <TableRow android:gravity="center_vertical">
+            <TextView
+                android:text="@string/use_accelerometer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:id="@+id/switch_use_accelerometer"
+                />
+        </TableRow>
+
+        <TableRow android:gravity="center_vertical">
+            <TextView
+                android:text="@string/use_touch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:id="@+id/switch_use_touch"
                 />
         </TableRow>
 

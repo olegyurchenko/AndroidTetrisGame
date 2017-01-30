@@ -2,6 +2,8 @@ package ua.probe.oleg.tetrisgamecollection;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -586,6 +588,7 @@ public class TetrisBase {
     //boolean showScore = true;
     int ratingX, ratingY;
     Accelerometer accelerometer;
+    Bitmap leftArrowBitmap, rightArrowBitmap;
 
     /*============================================================*/
     Controller(Context c, String sectionName)
@@ -599,6 +602,8 @@ public class TetrisBase {
       bounds = new Rect();
       state = State.PAUSED;
       setup();
+      leftArrowBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_left);
+      rightArrowBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_right);
       if(settings.useAccelerometer)
         accelerometer = new Accelerometer(context);
     }
@@ -793,6 +798,10 @@ public class TetrisBase {
         Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
         if(Math.abs(o.y) >= Math.PI / 4)
         {
+          /*
+          Draw gravity line
+          */
+          /*
           paint.setColor(Color.BLACK);
           paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
@@ -812,6 +821,22 @@ public class TetrisBase {
           canvas.drawLine(left, top,
             right,
             bottom,
+            paint);
+          */
+          /*
+            Draw row
+          */
+          Bitmap bitmap = null;
+          if (o.y < 0)
+          { //Left
+            bitmap = leftArrowBitmap;
+          } else
+          { //Right
+            bitmap = rightArrowBitmap;
+          }
+          canvas.drawBitmap(bitmap,
+            glassRect.right - bitmap.getWidth(),
+            glassRect.top,
             paint);
         }
 
@@ -887,10 +912,27 @@ public class TetrisBase {
         lastTime = System.currentTimeMillis();
         nextInterval();
       }
+
+
       if(settings.useAccelerometer
-        && accelerometer != null
-        && accelerometer.isModified())
-        setModified(true);
+        && accelerometer != null)
+      {
+        if(accelerometer.isModified())
+          setModified(true);
+        if(accelerometer.isShakeDetected())
+        {
+          accelerometer.setShakeDetected(false);
+          if(state == State.PAUSED)
+          {
+            state = State.WORKED;
+          }
+          else
+          if(state == State.WORKED)
+          {
+            glass.rotate();
+          }
+        }
+      }
       //Log.d("TIME TEST", "Current sec = " + seconds);
     }
     /*============================================================*/

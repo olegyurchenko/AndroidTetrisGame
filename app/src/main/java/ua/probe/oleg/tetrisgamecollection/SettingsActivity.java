@@ -19,7 +19,7 @@ public class SettingsActivity extends AppCompatActivity
   SeekBar columnsBar, rowsBar, speedBar, complexBar;
   TetrisBase.Settings settings;
   TextView columnsLabel, rowsLabel, speedLabel, complexLabel;
-  Switch showNextFigureSwitch, showScoreSwitch, showGudeLinesSwitch;
+  Switch showNextFigureSwitch, showScoreSwitch, showGudeLinesSwitch, useAccelerometerSwitch, useTouchSwitch;
 
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -49,6 +49,8 @@ public class SettingsActivity extends AppCompatActivity
     showNextFigureSwitch = (Switch) findViewById(R.id.switch_next_figure);
     showScoreSwitch = (Switch) findViewById(R.id.switch_show_score);
     showGudeLinesSwitch = (Switch) findViewById(R.id.switch_show_guide_line);
+    useAccelerometerSwitch = (Switch) findViewById(R.id.switch_use_accelerometer);
+    useTouchSwitch = (Switch) findViewById(R.id.switch_use_touch);
 
     columnsBar.setMax(settings.MaxColumns - settings.MinColumns);
     rowsBar.setMax(settings.MaxRows - settings.MinRows);
@@ -74,6 +76,8 @@ public class SettingsActivity extends AppCompatActivity
     showNextFigureSwitch.setChecked(settings.showNextFigure);
     showScoreSwitch.setChecked(settings.showScore);
     showGudeLinesSwitch.setChecked(settings.showGuideLines);
+    useAccelerometerSwitch.setChecked(settings.useAccelerometer);
+    useTouchSwitch.setChecked(settings.useTouch);
 
     //speedEdit.setText("" + settings.speedRate);
     //complexEdit.setText("" + settings.complexRate);
@@ -100,9 +104,11 @@ public class SettingsActivity extends AppCompatActivity
       settings.showNextFigure = showNextFigureSwitch.isChecked();
       settings.showScore = showScoreSwitch.isChecked();
       settings.showGuideLines = showGudeLinesSwitch.isChecked();
+      settings.useAccelerometer = useAccelerometerSwitch.isChecked();
+      settings.useTouch = useTouchSwitch.isChecked();
 
-      Log.d("onClick", "settings.columnCount=" + settings.columnCount);
-      Log.d("onClick", "settings.rowCount=" + settings.rowCount);
+      //Log.d("onClick", "settings.columnCount=" + settings.columnCount);
+      //Log.d("onClick", "settings.rowCount=" + settings.rowCount);
       settings.save(this, sectionName);
     }
 

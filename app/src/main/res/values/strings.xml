@@ -15,5 +15,7 @@
     <string name="row_count">Row count</string>
     <string name="show_guide_lines">Show gude lines</string>
     <string name="show_score">Show score</string>
+    <string name="use_accelerometer">Use accelerometer</string>
+    <string name="use_touch">Use touch</string>
     <string name="reset_to_default">Reset to default</string>
 </resources>
