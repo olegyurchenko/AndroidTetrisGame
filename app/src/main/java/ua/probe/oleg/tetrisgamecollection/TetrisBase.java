@@ -223,6 +223,8 @@ public class TetrisBase {
 
     public void onDraw(Canvas canvas)
     {
+      Figure figure = this.activeFigure; //Thread safe
+
       // перенастраивам кисть на заливку
       paint.setColor(fillColor);
       paint.setStyle(Paint.Style.FILL);
@@ -258,11 +260,11 @@ public class TetrisBase {
         }
       }
 
-      if(activeFigure != null)
+      if(figure != null)
       {
         int x = rect.left + activeFigurePosition.column() * shapeWidth;
         int y = rect.top + activeFigurePosition.row() * shapeHeight;
-        activeFigure.onDraw(canvas, x, y, shapeWidth, shapeHeight);
+        figure.onDraw(canvas, x, y, shapeWidth, shapeHeight);
 
         /*
         //Debug
@@ -279,9 +281,9 @@ public class TetrisBase {
           int gx = x, gy;
 
           //Left
-          gy = y + activeFigure.getRowCount() * shapeHeight;
-          for (int i = activeFigure.getRowCount() - 1; i >= 0; i--) {
-            if (activeFigure.get(0, i) != null)
+          gy = y + figure.getRowCount() * shapeHeight;
+          for (int i = figure.getRowCount() - 1; i >= 0; i--) {
+            if (figure.get(0, i) != null)
               break;
             gy -= shapeHeight;
           }
@@ -292,14 +294,14 @@ public class TetrisBase {
           //canvas.drawLine(gx, gy, gx, rect.bottom, guidePaint);
 
           //Right
-          gy = y + activeFigure.getRowCount() * shapeHeight;
-          for (int i = activeFigure.getRowCount() - 1; i >= 0; i--) {
-            if (activeFigure.get(activeFigure.getColumnCount() - 1, i) != null)
+          gy = y + figure.getRowCount() * shapeHeight;
+          for (int i = figure.getRowCount() - 1; i >= 0; i--) {
+            if (figure.get(figure.getColumnCount() - 1, i) != null)
               break;
             gy -= shapeHeight;
           }
 
-          gx += activeFigure.getColumnCount() * shapeWidth;
+          gx += figure.getColumnCount() * shapeWidth;
 
           path.reset();
           path.moveTo(gx, gy + shapeHeight / 2);
@@ -307,7 +309,6 @@ public class TetrisBase {
           canvas.drawPath(path, guidePaint);
           //canvas.drawLine(gx, gy, gx, rect.bottom, guidePaint);
         }
-
       }
 
       setModified(false);
@@ -772,6 +773,8 @@ public class TetrisBase {
     /*============================================================*/
     public void onDraw(Canvas canvas)
     {
+      Figure figure = this.nextFigure; //For thread safe
+
       if(glass.getRect() == null)
       {
         if(rect == null)
@@ -785,9 +788,9 @@ public class TetrisBase {
 
       Rect glassRect = glass.getRect();
       glass.onDraw(canvas);
-      if(nextFigure != null && settings.showNextFigure)
+      if(figure != null && settings.showNextFigure)
       {
-        nextFigure.onDraw(canvas, nextFigureX, nextFigureY, 20, 20);
+        figure.onDraw(canvas, nextFigureX, nextFigureY, 20, 20);
         //nextFigure.onDraw(canvas, nextFigureX, nextFigureY, glass.getShapeWidth(), glass.getShapeHeight());
       }
 
