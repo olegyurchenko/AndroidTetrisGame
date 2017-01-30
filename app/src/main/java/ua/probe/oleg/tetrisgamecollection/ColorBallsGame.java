@@ -9,13 +9,13 @@ import android.graphics.Rect;
 import java.util.ArrayList;
 
 /**
- * Created by oleg on 16.01.17.
+ * Color balls classes
  */
 
-public class ColorBallsGame extends TetrisBase {
+class ColorBallsGame extends TetrisBase {
 
   /*-----------------------------------------------------------------------------------------------*/
-  public static class Ball extends TetrisBase.Shape
+  private static class Ball extends TetrisBase.Shape
   {
     Ball(int color)
     {
@@ -39,7 +39,7 @@ public class ColorBallsGame extends TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  public static class BallsFigure extends Figure
+  private static class BallsFigure extends Figure
   {
     @Override
     public Figure rotate()
@@ -57,9 +57,9 @@ public class ColorBallsGame extends TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  public static class BallsGlass extends TetrisBase.Glass
+  private static class BallsGlass extends TetrisBase.Glass
   {
-    public BallsGlass(int colCount, int rowCount)
+    BallsGlass(int colCount, int rowCount)
     {
       super(colCount, rowCount);
     }
@@ -69,11 +69,11 @@ public class ColorBallsGame extends TetrisBase {
     {
       int modifications = 0;
 
-      boolean modified;
+      //boolean modified;
 
 
       //do {
-        modified = false;
+        //modified = false;
 
         for (int row = 0; row < rowCount; row ++)
         {
@@ -88,7 +88,7 @@ public class ColorBallsGame extends TetrisBase {
               //Found pended block
               put(column, row + 1, s);
               put(column, row, null);
-              modified = true;
+              //modified = true;
               modifications ++;
               continue;
             }
@@ -101,7 +101,7 @@ public class ColorBallsGame extends TetrisBase {
               //Found pended block
               put(column - 1, row + 1, s);
               put(column, row, null);
-              modified = true;
+              //modified = true;
               modifications ++;
               continue;
             }
@@ -114,9 +114,8 @@ public class ColorBallsGame extends TetrisBase {
               //Found pended block
               put(column + 1, row + 1, s);
               put(column, row, null);
-              modified = true;
+              //modified = true;
               modifications ++;
-              continue;
             }
 
           }
@@ -126,7 +125,7 @@ public class ColorBallsGame extends TetrisBase {
 
       //} while (modified);
 
-      ArrayList<Cell> list = new ArrayList<Cell>();
+      ArrayList<Cell> list = new ArrayList<>();
 
       //2) Find 3 or more colors and remove it
       for(int row = 0; row < rowCount; row ++) {
@@ -225,7 +224,7 @@ public class ColorBallsGame extends TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  public static class Controller extends TetrisBase.Controller {
+  static class Controller extends TetrisBase.Controller {
 
     Controller(Context c, String sectionName)
     {

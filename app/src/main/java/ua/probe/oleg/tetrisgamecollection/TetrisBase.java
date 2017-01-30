@@ -56,12 +56,6 @@ class TetrisBase {
       borderColor = Color.BLACK;
     }
 
-    Shape()
-    {
-      fillColor = Color.WHITE;
-      borderColor = Color.BLACK;
-    }
-
     Shape(Shape other)
     {
       fillColor = other.fillColor;
