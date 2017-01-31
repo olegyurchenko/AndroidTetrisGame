@@ -434,7 +434,7 @@ class TetrisBase {
         return false;
 
       boolean result = moveDown();
-      while(true) {
+      while(result) {
         if(!moveDown())
           break;
       }
