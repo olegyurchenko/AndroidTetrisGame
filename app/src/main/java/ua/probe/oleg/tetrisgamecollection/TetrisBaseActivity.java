@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +25,7 @@ public class TetrisBaseActivity extends Activity
   protected View drawView = null;
   protected String sectionName = "TetrisBase";
 
-  Timer myTimer = new Timer(); // Создаем таймер
+  Timer myTimer;
   Handler uiHandler = new Handler();
 
   @Override
@@ -101,9 +102,12 @@ public class TetrisBaseActivity extends Activity
   @Override
   protected void onResume()
   {
+    Log.d("TetrisBaseActivity", "onResume()");
+
     super.onResume();
     gameController.onResume();
 
+    myTimer = new Timer(); // Создаем таймер
     myTimer.schedule(new TimerTask() { // Определяем задачу
       @Override
       public void run() {
@@ -117,13 +121,17 @@ public class TetrisBaseActivity extends Activity
         });
       }
     }, 100, 10); // интервал - 100 миллисекунд, 0 миллисекунд до первого запуска.
+
+    Log.d("TetrisBaseActivity", "onResume() end");
   }
   @Override
   protected void onPause()
   {
+    Log.d("TetrisBaseActivity", "onPause()");
     super.onPause();
     gameController.onPause();
     myTimer.cancel();
+    Log.d("TetrisBaseActivity", "onPause() end");
   }
   @Override
   public boolean onTouch(View v, MotionEvent event) {
