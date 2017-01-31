@@ -434,8 +434,9 @@ class TetrisBase {
         return false;
 
       boolean result = moveDown();
-      while (moveDown())
-      {
+      while(true) {
+        if(!moveDown())
+          break;
       }
       return result;
     }
@@ -927,10 +928,17 @@ class TetrisBase {
       if(glass.activeFigure == null)
         return null;
 
+      Cell c = new Cell(glass.activeFigurePosition);
+      if(glass.activeFigure.getColumnCount() < 3 && c.column() > 0)
+        c.setColumn(c.column() - 1);
+      if(glass.activeFigure.getRowCount() < 3 && c.row() > 0)
+        c.setRow(c.row() - 1);
+
+
       int x = glass.rect.left + glass.activeFigurePosition.column() * glass.getShapeWidth();
       int y = glass.rect.top + glass.activeFigurePosition.row() * glass.getShapeHeight();
-      int w = glass.activeFigure.getColumnCount() * glass.getShapeWidth();
-      int h = glass.activeFigure.getRowCount() * glass.getShapeHeight();
+      int w = 3 * glass.getShapeWidth();
+      int h = 3 * glass.getShapeHeight();
 
       return new Rect(x, y, x+w, y + h);
     }
@@ -940,7 +948,8 @@ class TetrisBase {
     void onTouchDown(float x, float y)
     {
       //Log.d("onTouchDown", String.format("x=%.0f y=%.0f", x, y));
-      if(state == State.PAUSED || state == State.WORKED)
+      if( settings.useTouch &&
+        (state == State.PAUSED || state == State.WORKED) )
       {
         Rect r = activeFigireRect();
         //Log.d("onTouchDown", String.format("left=%d top=%d right=%d down=%d", r.left, r.top, r.right, r.bottom));

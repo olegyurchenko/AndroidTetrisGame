@@ -5,20 +5,20 @@ import android.graphics.Color;
 import android.util.Log;
 
 /**
- * Created by oleg on 16.01.17.
+ * Tetris game logic
  */
 
-public class TetrisGame extends TetrisBase
+class TetrisGame extends TetrisBase
 {
   /*-----------------------------------------------------------------------------------------------*/
-  public static class TetrisFigure extends TetrisBase.Figure
+  private static class TetrisFigure extends TetrisBase.Figure
   {
 
-    protected TetrisFigure() {
+    TetrisFigure() {
       super();
     }
 
-    public TetrisFigure(byte data[], int color)
+    TetrisFigure(byte data[], int color)
     {
       super();
 
@@ -36,7 +36,7 @@ public class TetrisGame extends TetrisBase
       }
     }
 
-    public void strip()
+    void strip()
     {
       for(int row = 0; row < rowCount; row ++)
       {
@@ -124,9 +124,9 @@ public class TetrisGame extends TetrisBase
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  public static class TetrisGlass extends TetrisBase.Glass
+  private static class TetrisGlass extends TetrisBase.Glass
   {
-    public TetrisGlass(int colCount, int rowCount)
+    TetrisGlass(int colCount, int rowCount)
     {
       super(colCount, rowCount);
     }
@@ -163,7 +163,7 @@ public class TetrisGame extends TetrisBase
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  public static class Controller extends TetrisBase.Controller
+  static class Controller extends TetrisBase.Controller
   {
     static byte figures[][] = {
 
@@ -172,7 +172,6 @@ public class TetrisGame extends TetrisBase
       //2x2
       {0b11},
       {0b11, 0b01},
-      {0b11, 0b10},
       {0b11, 0b11},
       //3x2
       {0b111},
