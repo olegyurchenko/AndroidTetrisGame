@@ -15,8 +15,6 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.widget.Toast;
 
-import java.util.*;
-
 /**
  * TetrisBase - base classes for game collections
  */
@@ -562,6 +560,7 @@ class TetrisBase {
     {
       PAUSED,
       WORKED,
+      TRACKED,
       FINISHED
     }
 
@@ -923,79 +922,175 @@ class TetrisBase {
       //Log.d("TIME TEST", "Current sec = " + seconds);
     }
     /*============================================================*/
+    Rect activeFigireRect()
+    {
+      if(glass.activeFigure == null)
+        return null;
+
+      int x = glass.rect.left + glass.activeFigurePosition.column() * glass.getShapeWidth();
+      int y = glass.rect.top + glass.activeFigurePosition.row() * glass.getShapeHeight();
+      int w = glass.activeFigure.getColumnCount() * glass.getShapeWidth();
+      int h = glass.activeFigure.getRowCount() * glass.getShapeHeight();
+
+      return new Rect(x, y, x+w, y + h);
+    }
+    /*============================================================*/
+    int trackX, trackY, trackDx, trackDy;
+
     void onTouchDown(float x, float y)
     {
+      //Log.d("onTouchDown", String.format("x=%.0f y=%.0f", x, y));
+      if(state == State.PAUSED || state == State.WORKED)
+      {
+        Rect r = activeFigireRect();
+        //Log.d("onTouchDown", String.format("left=%d top=%d right=%d down=%d", r.left, r.top, r.right, r.bottom));
+        if(r != null && r.contains((int)x, (int)y))
+        {
+          state = State.TRACKED;
+          trackX = (int) x;
+          trackY = (int) y;
+          trackDx = trackX - r.left;
+          trackDy = trackY - r.top;
+        }
+      }
     }
     /*============================================================*/
     void onTouchUp(float x, float y)
     {
+      if(state == State.TRACKED)
+      {
+        state = State.WORKED;
+      }
     }
     /*============================================================*/
     void onTouchMove(float x, float y)
     {
+      if(state == State.TRACKED)
+      {
+        int w = glass.getShapeWidth();
+        int h = glass.getShapeHeight();
+        if(Math.abs(x - trackX) >= w
+          || Math.abs(y - trackY) >= h)
+        {
+          Cell c = new Cell(glass.activeFigurePosition);
+          c.setColumn(c.column() + ((int) x - trackX)/w);
+          c.setRow(c.row() + ((int) y - trackY)/h);
+
+          //Log.d("onTouchMove", String.format("x=%.0f y=%.0f col=%d row=%d", x, y, c.column(), c.row()));
+          //Log.d("onTouchMove", String.format("dc=%d dr=%d", ((int) x - trackX)/w, ((int) y - trackY)/h));
+
+          if(glass.validPosition(c.column(), c.row(), glass.activeFigure))
+          {
+            trackX = (int) x;
+            trackY = (int) y;
+            glass.activeFigurePosition = c;
+            glass.setModified(true);
+            setModified(true);
+          }
+        }
+      }
     }
     /*============================================================*/
     void toglePause()
     {
-      if(state == State.WORKED) {
-        state = State.PAUSED;
-        Toast.makeText(context, context.getString(R.string.paused), Toast.LENGTH_SHORT).show();
+      /*
+      switch(state)
+      {
+        case PAUSED:
+          break;
+        case WORKED:
+          break;
+        case TRACKED:
+          break;
+        case FINISHED:
+          break;
       }
-      else
-      if(state == State.PAUSED)
-        state = State.WORKED;
+      */
+      switch(state)
+      {
+        case PAUSED:
+          state = State.WORKED;
+          break;
+        case WORKED:
+        case TRACKED:
+          state = State.PAUSED;
+          Toast.makeText(context, context.getString(R.string.paused), Toast.LENGTH_SHORT).show();
+          break;
+        case FINISHED:
+          break;
+      }
 
     }
     /*============================================================*/
     void moveLeft()
     {
-      if(state == State.PAUSED)
+      switch(state)
       {
-        state = State.WORKED;
-      }
-      else
-      if(state == State.WORKED) {
-        glass.moveLeft();
-        setModified(glass.isModified());
+        case PAUSED:
+          state = State.WORKED;
+          break;
+        case WORKED:
+          glass.moveLeft();
+          setModified(glass.isModified());
+          break;
+        case TRACKED:
+          break;
+        case FINISHED:
+          break;
       }
     }
     /*============================================================*/
     void moveRight()
     {
-      if(state == State.PAUSED)
+      switch(state)
       {
-        state = State.WORKED;
-      }
-      else
-      if(state == State.WORKED) {
-        glass.moveRight();
-        setModified(glass.isModified());
+        case PAUSED:
+          state = State.WORKED;
+          break;
+        case WORKED:
+          glass.moveRight();
+          setModified(glass.isModified());
+          break;
+        case TRACKED:
+          break;
+        case FINISHED:
+          break;
       }
     }
     /*============================================================*/
     void moveDown()
     {
-      if(state == State.PAUSED)
+      switch(state)
       {
-        state = State.WORKED;
-      }
-      else
-      if(state == State.WORKED) {
-        glass.moveBottom();
-        setModified(glass.isModified());
+        case PAUSED:
+          state = State.WORKED;
+          break;
+        case WORKED:
+          glass.moveBottom();
+          setModified(glass.isModified());
+          break;
+        case TRACKED:
+          break;
+        case FINISHED:
+          break;
       }
     }
     /*============================================================*/
     void rotate()
     {
-      if(state == State.PAUSED)
+      switch(state)
       {
-        state = State.WORKED;
-      }
-      else
-      if(state == State.WORKED) {
-        glass.rotate();
-        setModified(glass.isModified());
+        case PAUSED:
+          state = State.WORKED;
+          break;
+        case WORKED:
+          glass.rotate();
+          setModified(glass.isModified());
+          break;
+        case TRACKED:
+          break;
+        case FINISHED:
+          break;
       }
     }
     /*============================================================*/

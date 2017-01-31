@@ -87,22 +87,6 @@ public class TetrisBaseActivity extends Activity
     layout.addView(drawView);
 
     drawView.setOnTouchListener(this);
-
-
-    myTimer.schedule(new TimerTask() { // Определяем задачу
-      @Override
-      public void run() {
-        gameController.onQuant();
-        uiHandler.post(new Runnable() {
-          @Override
-          public void run() {
-            if (gameController.isModified())
-              drawView.invalidate();
-          }
-        });
-      }
-    }, 100, 10); // интервал - 100 миллисекунд, 0 миллисекунд до первого запуска.
-
   }
 
   @Override
@@ -119,12 +103,27 @@ public class TetrisBaseActivity extends Activity
   {
     super.onResume();
     gameController.onResume();
+
+    myTimer.schedule(new TimerTask() { // Определяем задачу
+      @Override
+      public void run() {
+        gameController.onQuant();
+        uiHandler.post(new Runnable() {
+          @Override
+          public void run() {
+            if (gameController.isModified())
+              drawView.invalidate();
+          }
+        });
+      }
+    }, 100, 10); // интервал - 100 миллисекунд, 0 миллисекунд до первого запуска.
   }
   @Override
   protected void onPause()
   {
     super.onPause();
     gameController.onPause();
+    myTimer.cancel();
   }
   @Override
   public boolean onTouch(View v, MotionEvent event) {
