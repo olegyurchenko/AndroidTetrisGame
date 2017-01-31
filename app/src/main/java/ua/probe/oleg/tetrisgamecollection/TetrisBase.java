@@ -1125,7 +1125,7 @@ class TetrisBase {
             state = State.FINISHED;
             glass.setModified(true);
 //          Log.d("Game", "Error add figure");
-            Toast.makeText(context, context.getString(R.string.finished), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, context.getString(R.string.finished), Toast.LENGTH_SHORT).show();
           } else {
 //          Log.d("Game", "Add figure Ok");
             nextFigure = onNewFigure();
