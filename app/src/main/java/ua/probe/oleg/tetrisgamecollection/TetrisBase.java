@@ -95,7 +95,7 @@ class TetrisBase {
       rowCount = other.rowCount;
     }
 
-    private int index(int column, int row)
+    int index(int column, int row)
     {
       return column + 1000000 * row;
     }
@@ -152,13 +152,14 @@ class TetrisBase {
     Cell activeFigurePosition = new Cell();
     boolean modified = false;
     private Paint paint, guidePaint;
+    private Path guidePath;
+
     private long score;
     private long scoreScale = 100;
-    private Path path;
 
     private boolean drawGuideLines = true;
 
-    SparseArray<Shape> shapeMap;
+    private SparseArray<Shape> shapeMap;
 
     Glass(int columns, int rows)
     {
@@ -172,7 +173,7 @@ class TetrisBase {
       guidePaint.setStyle(Paint.Style.STROKE);
       guidePaint.setPathEffect(new DashPathEffect(new float[] {20 ,30}, 0));
 
-      path = new Path();
+      guidePath = new Path();
 
       score = 0;
     }
@@ -270,10 +271,10 @@ class TetrisBase {
               break;
             gy -= shapeHeight;
           }
-          path.reset();
-          path.moveTo(gx, gy + shapeHeight / 2);
-          path.lineTo(gx, rect.bottom);
-          canvas.drawPath(path, guidePaint);
+          guidePath.reset();
+          guidePath.moveTo(gx, gy + shapeHeight / 2);
+          guidePath.lineTo(gx, rect.bottom);
+          canvas.drawPath(guidePath, guidePaint);
           //canvas.drawLine(gx, gy, gx, rect.bottom, guidePaint);
 
           //Right
@@ -286,10 +287,10 @@ class TetrisBase {
 
           gx += figure.getColumnCount() * shapeWidth;
 
-          path.reset();
-          path.moveTo(gx, gy + shapeHeight / 2);
-          path.lineTo(gx, rect.bottom);
-          canvas.drawPath(path, guidePaint);
+          guidePath.reset();
+          guidePath.moveTo(gx, gy + shapeHeight / 2);
+          guidePath.lineTo(gx, rect.bottom);
+          canvas.drawPath(guidePath, guidePaint);
           //canvas.drawLine(gx, gy, gx, rect.bottom, guidePaint);
         }
       }
@@ -335,9 +336,11 @@ class TetrisBase {
       if(column + f.getColumnCount() > columnCount || column < 0)
         return false;
 
-      for(int r = 0; r < f.getRowCount(); r++)
+      int fRowCount = f.getRowCount();
+      int fColumnCount = f.getColumnCount();
+      for(int r = 0; r < fRowCount; r++)
       {
-        for(int c = 0; c < f.getColumnCount(); c++)
+        for(int c = 0; c < fColumnCount; c++)
         {
           if(get(c + column, r + row) != null && f.get(c, r) != null)
             return false;
