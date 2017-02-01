@@ -6,16 +6,16 @@ import android.graphics.Color;
 import java.util.ArrayList;
 
 /**
- * Created by oleg on 16.01.17.
+ * Columnus game logic.
  */
 
-public class ColumnusGame extends TetrisBase {
+class ColumnusGame extends TetrisBase {
 
   /*-----------------------------------------------------------------------------------------------*/
-  public static class ColumnusFigure extends Figure
+  private static class ColumnusFigure extends Figure
   {
     @Override
-    public Figure rotate()
+    public Figure rotateRight()
     {
       Figure f = new ColumnusFigure();
       for(int row = 0; row < rowCount; row ++)
@@ -28,11 +28,26 @@ public class ColumnusGame extends TetrisBase {
 
       return f;
     }
+
+    @Override
+    public Figure rotateLeft()
+    {
+      Figure f = new ColumnusFigure();
+      for(int row = 0; row < rowCount; row ++)
+      {
+        int destRow = row - 1;
+        if(destRow < 0)
+          destRow = rowCount - 1;
+        f.put(0, destRow, get(0, row));
+      }
+
+      return f;
+    }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  public static class ColumnusGlass extends TetrisBase.Glass
+  private static class ColumnusGlass extends TetrisBase.Glass
   {
-    public ColumnusGlass(int colCount, int rowCount)
+    ColumnusGlass(int colCount, int rowCount)
     {
       super(colCount, rowCount);
     }

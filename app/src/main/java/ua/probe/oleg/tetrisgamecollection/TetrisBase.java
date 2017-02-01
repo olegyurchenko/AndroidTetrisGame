@@ -117,7 +117,13 @@ class TetrisBase {
     int getRowCount() {return rowCount;}
     int getColumnCount() {return columnCount;}
 
-    public Figure rotate()
+    public Figure rotateLeft()
+    {
+      //Pure abstract
+      return new Figure(this);
+    }
+
+    public Figure rotateRight()
     {
       //Pure abstract
       return new Figure(this);
@@ -398,11 +404,11 @@ class TetrisBase {
     }
 
 
-    boolean rotate()
+    boolean rotateRight()
     {
       if(activeFigure == null)
         return false;
-      Figure f = activeFigure.rotate();
+      Figure f = activeFigure.rotateRight();
       if(validPosition(activeFigurePosition.column(), activeFigurePosition.row(), f))
       {
         activeFigure = f;
@@ -410,6 +416,25 @@ class TetrisBase {
         return true;
       }
       return false;
+    }
+
+    boolean rotateLeft()
+    {
+      if(activeFigure == null)
+        return false;
+      Figure f = activeFigure.rotateLeft();
+      if(validPosition(activeFigurePosition.column(), activeFigurePosition.row(), f))
+      {
+        activeFigure = f;
+        setModified(true);
+        return true;
+      }
+      return false;
+    }
+
+    boolean rotate()
+    {
+      return rotateRight();
     }
 
     boolean moveDown()
@@ -927,17 +952,10 @@ class TetrisBase {
       //Log.d("TIME TEST", "Current sec = " + seconds);
     }
     /*============================================================*/
-    Rect activeFigireRect()
+    Rect activeFigureRect()
     {
       if(glass.activeFigure == null)
         return null;
-
-      Cell c = new Cell(glass.activeFigurePosition);
-      if(glass.activeFigure.getColumnCount() < 3 && c.column() > 0)
-        c.setColumn(c.column() - 1);
-      if(glass.activeFigure.getRowCount() < 3 && c.row() > 0)
-        c.setRow(c.row() - 1);
-
 
       int x = glass.rect.left + glass.activeFigurePosition.column() * glass.getShapeWidth();
       int y = glass.rect.top + glass.activeFigurePosition.row() * glass.getShapeHeight();
@@ -957,9 +975,16 @@ class TetrisBase {
         && id == 0
         && (state == State.PAUSED || state == State.WORKED) )
       { //First finger
-        Rect r = activeFigireRect();
+        int sw = glass.getShapeWidth();
+        int sh = glass.getShapeHeight();
+        Rect r = activeFigureRect();
+
+        r.left -= sw;
+        r.right += sw;
+        r.top -= sh;
+        r.bottom += sh;
         //Log.d("onTouchDown", String.format("left=%d top=%d right=%d down=%d", r.left, r.top, r.right, r.bottom));
-        if(r != null && r.contains((int)x, (int)y))
+        if(r.contains((int)x, (int)y))
         {
           state = State.TRACKED;
           trackX = (int) x;
@@ -1031,7 +1056,84 @@ class TetrisBase {
         //Log.d("onTouchMove", String.format("2nd finger id=%d x=%.0f y=%.0f", id, x, y));
         if(Math.sqrt(w * w + h * h) >= 3 * glass.getShapeWidth())
         {
-          glass.rotate();
+          Rect r = activeFigureRect();
+          int quadrant = 0;
+          //1 2 3
+          //4[0]5
+          //6 7 8
+          if(trackY2 < r.top)
+          {
+            if(trackX2 < r.left)
+              quadrant = 1;
+            else
+            if(trackX2 > r.right)
+              quadrant = 3;
+            else
+              quadrant = 2;
+          }
+          else
+          if(trackY2 > r.bottom)
+          {
+            if(trackX2 < r.left)
+              quadrant = 6;
+            else
+            if(trackX2 > r.right)
+              quadrant = 8;
+            else
+              quadrant = 7;
+          }
+          else
+          {
+            if(trackX2 < r.left)
+              quadrant = 4;
+            else
+            if(trackX2 > r.right)
+              quadrant = 5;
+            else
+              quadrant = 0;
+          }
+
+          boolean left = false;
+          switch (quadrant)
+          {
+            case 1:
+              if(w <= 0 && h >= 0)
+                left = true;
+              break;
+            case 2:
+              if(w < 0)
+                left = true;
+              break;
+            case 3:
+              if(w <= 0 && h <= 0)
+                left = true;
+              break;
+            case 4:
+              if(h > 0)
+                left = true;
+              break;
+            case 5:
+              if(h < 0)
+                left = true;
+              break;
+            case 6:
+              if(w >= 0 && h >= 0)
+                left = true;
+              break;
+            case 7:
+              if(w > 0)
+                left = true;
+              break;
+            case 8:
+              if(w >= 0 && h <= 0)
+                left = true;
+              break;
+          }
+
+          if(left)
+            glass.rotateLeft();
+          else
+            glass.rotateRight();
           trackX2 = (int) x;
           trackY2 = (int) y;
         }

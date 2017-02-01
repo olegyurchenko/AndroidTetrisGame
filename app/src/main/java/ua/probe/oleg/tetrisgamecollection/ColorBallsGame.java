@@ -42,7 +42,7 @@ class ColorBallsGame extends TetrisBase {
   private static class BallsFigure extends Figure
   {
     @Override
-    public Figure rotate()
+    public Figure rotateLeft()
     {
       Figure f = new BallsFigure();
       for(int row = 0; row < rowCount; row ++)
@@ -50,6 +50,21 @@ class ColorBallsGame extends TetrisBase {
         int destRow = row + 1;
         if(destRow >= rowCount)
           destRow = 0;
+        f.put(0, destRow, get(0, row));
+      }
+
+      return f;
+    }
+
+    @Override
+    public Figure rotateRight()
+    {
+      Figure f = new BallsFigure();
+      for(int row = 0; row < rowCount; row ++)
+      {
+        int destRow = row - 1;
+        if(destRow < 0)
+          destRow = rowCount - 1;
         f.put(0, destRow, get(0, row));
       }
 

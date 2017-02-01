@@ -107,7 +107,25 @@ class TetrisGame extends TetrisBase
     }
 
     @Override
-    public Figure rotate()
+    public Figure rotateLeft()
+    {
+      TetrisFigure f = new TetrisFigure();
+      for(int row = 0; row < rowCount; row ++)
+      {
+        for (int column = 0; column < columnCount; column ++)
+        {
+          Shape s = get(column, row);
+          if(s != null) {
+            f.put(row, columnCount - column, s);
+          }
+        }
+      }
+      f.strip();
+      return f;
+    }
+
+    @Override
+    public Figure rotateRight()
     {
       TetrisFigure f = new TetrisFigure();
       for(int row = 0; row < rowCount; row ++)
@@ -219,9 +237,9 @@ class TetrisGame extends TetrisBase
     protected Figure onNewFigure() {
       Figure figure = new TetrisFigure(randomFigure(), randomColor());
 
-      int n = (int)(Math.random() * 1000.0) % 2;
+      int n = (int)(Math.random() * 1000.0) % 3;
       for(int i = 0; i < n; i++)
-        figure = figure.rotate();
+        figure = figure.rotateRight();
 
       return figure;
     }
