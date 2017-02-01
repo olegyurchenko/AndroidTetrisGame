@@ -24,7 +24,7 @@ class TetrisBase {
   /*-----------------------------------------------------------------------------------------------*/
   static class Cell
   {
-    int col, row;
+    private int col, row;
     Cell() {col = row = 0;}
     Cell(int c, int r) {col = c; row = r;}
     Cell(Cell other) { col = other.col; row = other.row;}
@@ -95,7 +95,7 @@ class TetrisBase {
       rowCount = other.rowCount;
     }
 
-    int index(int column, int row)
+    private int index(int column, int row)
     {
       return column + 1000000 * row;
     }
