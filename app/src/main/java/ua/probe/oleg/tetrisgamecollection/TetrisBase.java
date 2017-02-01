@@ -1037,19 +1037,6 @@ class TetrisBase {
     /*============================================================*/
     void toglePause()
     {
-      /*
-      switch(state)
-      {
-        case PAUSED:
-          break;
-        case WORKED:
-          break;
-        case TRACKED:
-          break;
-        case FINISHED:
-          break;
-      }
-      */
       switch(state)
       {
         case PAUSED:
