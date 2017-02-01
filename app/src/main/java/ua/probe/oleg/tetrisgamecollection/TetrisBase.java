@@ -562,6 +562,7 @@ class TetrisBase {
       PAUSED,
       WORKED,
       TRACKED,
+      ROTATED,
       FINISHED
     }
 
@@ -943,14 +944,16 @@ class TetrisBase {
       return new Rect(x, y, x+w, y + h);
     }
     /*============================================================*/
-    int trackX, trackY, trackDx, trackDy;
+    int trackX, trackY;
+    int trackX2, trackY2;
 
-    void onTouchDown(float x, float y)
+    void onTouchDown(int id, float x, float y)
     {
-      //Log.d("onTouchDown", String.format("x=%.0f y=%.0f", x, y));
-      if( settings.useTouch &&
-        (state == State.PAUSED || state == State.WORKED) )
-      {
+      //Log.d("onTouchDown", String.format("id=%d x=%.0f y=%.0f", id, x, y));
+      if( settings.useTouch
+        && id == 0
+        && (state == State.PAUSED || state == State.WORKED) )
+      { //First finger
         Rect r = activeFigireRect();
         //Log.d("onTouchDown", String.format("left=%d top=%d right=%d down=%d", r.left, r.top, r.right, r.bottom));
         if(r != null && r.contains((int)x, (int)y))
@@ -958,24 +961,42 @@ class TetrisBase {
           state = State.TRACKED;
           trackX = (int) x;
           trackY = (int) y;
-          trackDx = trackX - r.left;
-          trackDy = trackY - r.top;
         }
+        else
+        {
+          state = State.ROTATED;
+          trackX2 = (int) x;
+          trackY2 = (int) y;
+        }
+      }
+
+      if( settings.useTouch
+        && (state == State.TRACKED) )
+      { //Second finger
+        trackX2 = (int) x;
+        trackY2 = (int) y;
+        //Log.d("onTouchDown", String.format("2nd finger id=%d x=%.0f y=%.0f", id, x, y));
       }
     }
     /*============================================================*/
-    void onTouchUp(float x, float y)
+    void onTouchUp(int id, float x, float y)
     {
-      if(state == State.TRACKED)
+      if(state == State.TRACKED && id == 0)
+      {
+        state = State.WORKED;
+      }
+
+      if(state == State.ROTATED)
       {
         state = State.WORKED;
       }
     }
     /*============================================================*/
-    void onTouchMove(float x, float y)
+    void onTouchMove(int id, float x, float y)
     {
-      if(state == State.TRACKED)
-      {
+      //Log.d("onTouchMove", String.format("id=%d x=%.0f y=%.0f", id, x, y));
+      if(state == State.TRACKED && id == 0)
+      { //First finger
         int w = glass.getShapeWidth();
         int h = glass.getShapeHeight();
         if(Math.abs(x - trackX) >= w
@@ -996,6 +1017,20 @@ class TetrisBase {
             glass.setModified(true);
             setModified(true);
           }
+        }
+      }
+
+      if((state == State.TRACKED && id != 0)
+        || state == State.ROTATED)
+      { //Second finger
+        double w = x - trackX2;
+        double h = y - trackY2;
+        //Log.d("onTouchMove", String.format("2nd finger id=%d x=%.0f y=%.0f", id, x, y));
+        if(Math.sqrt(w * w + h * h) >= 3 * glass.getShapeWidth())
+        {
+          glass.rotate();
+          trackX2 = (int) x;
+          trackY2 = (int) y;
         }
       }
     }
@@ -1022,6 +1057,7 @@ class TetrisBase {
           break;
         case WORKED:
         case TRACKED:
+        case ROTATED:
           state = State.PAUSED;
           Toast.makeText(context, context.getString(R.string.paused), Toast.LENGTH_SHORT).show();
           break;
@@ -1044,6 +1080,8 @@ class TetrisBase {
           break;
         case TRACKED:
           break;
+        case ROTATED:
+          break;
         case FINISHED:
           break;
       }
@@ -1062,6 +1100,8 @@ class TetrisBase {
           break;
         case TRACKED:
           break;
+        case ROTATED:
+          break;
         case FINISHED:
           break;
       }
@@ -1079,6 +1119,8 @@ class TetrisBase {
           setModified(glass.isModified());
           break;
         case TRACKED:
+          break;
+        case ROTATED:
           break;
         case FINISHED:
           break;

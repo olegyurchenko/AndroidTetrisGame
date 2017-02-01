@@ -135,19 +135,31 @@ public class TetrisBaseActivity extends Activity
   }
   @Override
   public boolean onTouch(View v, MotionEvent event) {
-    float x = event.getX();
-    float y = event.getY();
+    int actionMask = event.getActionMasked();
+    int pointerIndex = event.getActionIndex();
+    int pointerId = event.getPointerId(pointerIndex);
+    int pointerCount = event.getPointerCount();
+    float x = event.getX(pointerIndex);
+    float y = event.getY(pointerIndex);
 
-    switch (event.getAction()) {
+    switch (actionMask) {
       case MotionEvent.ACTION_DOWN: // нажатие
-        gameController.onTouchDown(x, y);
+      case MotionEvent.ACTION_POINTER_DOWN:
+        gameController.onTouchDown(pointerId, x, y);
         break;
       case MotionEvent.ACTION_MOVE: // движение
-        gameController.onTouchMove(x, y);
+        for(int i = 0; i < pointerCount; i++)
+        {
+          x = event.getX(i);
+          y = event.getY(i);
+          pointerId = event.getPointerId(i);
+          gameController.onTouchMove(pointerId, x, y);
+        }
         break;
       case MotionEvent.ACTION_UP: // отпускание
       case MotionEvent.ACTION_CANCEL:
-        gameController.onTouchUp(x, y);
+      case MotionEvent.ACTION_POINTER_UP:
+        gameController.onTouchUp(pointerId, x, y);
         break;
     }
     return true;
