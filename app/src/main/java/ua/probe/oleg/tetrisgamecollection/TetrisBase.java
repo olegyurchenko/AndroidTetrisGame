@@ -574,7 +574,7 @@ class TetrisBase {
     int ratingX, ratingY;
     Accelerometer accelerometer;
     Bitmap leftArrowBitmap, rightArrowBitmap;
-
+    final double ROTATION_ANGLE = Math.PI / 6; //30 degree
     /*============================================================*/
     Controller(Context c, String sectionName)
     {
@@ -783,7 +783,7 @@ class TetrisBase {
         //paint.setStrokeWidth(5);
 
         Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
-        if(Math.abs(o.y) >= Math.PI / 4)
+        if(Math.abs(o.y) >= ROTATION_ANGLE)
         {
           /*
           Draw gravity line
@@ -1137,7 +1137,7 @@ class TetrisBase {
         if(settings.useAccelerometer && accelerometer != null)
         {
           Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
-          if(Math.abs(o.y) >= Math.PI / 4)
+          if(Math.abs(o.y) >= ROTATION_ANGLE)
           {
             if(o.y < 0)
               glass.moveLeft();
