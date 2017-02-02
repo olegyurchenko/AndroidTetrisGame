@@ -21,10 +21,11 @@ public class Accelerometer {
   private float[] valuesAccel = new float[3];
   private float[] valuesMagnet = new float[3];
   private int rotation;
-  private boolean modified, shakeDetected;
+  private boolean modified, shakeDetected, shakeX, shakeY, shakeZ;
   private float currentAccel = SensorManager.GRAVITY_EARTH;
   private long shakeTime = 0;
   private final long SHAKE_TIMEOUT = 500;
+  private final float DHAKE_THRESHOLD = 4.0f;
   /*============================================================*/
   public class Orientation
   {
@@ -47,6 +48,8 @@ public class Accelerometer {
     sensorMagnet = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
     modified = false;
+    shakeDetected = false;
+    shakeX = shakeY = shakeZ = false;
   }
   /*============================================================*/
   public void onPause()
@@ -62,6 +65,7 @@ public class Accelerometer {
     WindowManager windowManager = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE));
     Display display = windowManager.getDefaultDisplay();
     rotation = display.getRotation();
+    shakeTime = System.currentTimeMillis();
   }
   /*============================================================*/
   public synchronized void setModified(boolean m)
@@ -74,14 +78,37 @@ public class Accelerometer {
     return modified;
   }
   /*============================================================*/
-  public synchronized void setShakeDetected(boolean s)
+  private synchronized void setShakeDetected(boolean s, boolean x, boolean y, boolean z)
   {
     shakeDetected = s;
+    shakeX = x;
+    shakeY = y;
+    shakeZ = z;
+  }
+  /*============================================================*/
+  public void clearShakeDetected()
+  {
+    setShakeDetected(false, false, false, false);
   }
   /*============================================================*/
   public synchronized boolean isShakeDetected()
   {
     return shakeDetected;
+  }
+  /*============================================================*/
+  public synchronized boolean isShakeX()
+  {
+    return shakeX;
+  }
+  /*============================================================*/
+  public synchronized boolean isShakeY()
+  {
+    return shakeY;
+  }
+  /*============================================================*/
+  public synchronized boolean isShakeZ()
+  {
+    return shakeZ;
   }
   /*============================================================*/
   float[] r = new float[9];
@@ -154,21 +181,35 @@ public class Accelerometer {
     public void onSensorChanged(SensorEvent event) {
       switch (event.sensor.getType()) {
         case Sensor.TYPE_ACCELEROMETER:
-          for (int i=0; i < 3; i++){
-            valuesAccel[i] = event.values[i];
-          }
           setModified(true);
-          float accel = (float) Math.sqrt((double) (valuesAccel[0] * valuesAccel[0]
+
+          double accel = Math.sqrt((double) (event.values[0] * event.values[0]
+            + event.values[1] * event.values[1]
+            + event.values[2] * event.values[2]));
+
+          double currentAccel = Math.sqrt((double) (valuesAccel[0] * valuesAccel[0]
             + valuesAccel[1] * valuesAccel[1]
             + valuesAccel[2] * valuesAccel[2]));
-          if (accel - currentAccel > 4) {
+
+          if (accel - currentAccel > DHAKE_THRESHOLD)
+          {
             // SHAKE EVENT
             long t = System.currentTimeMillis();
             if(t - shakeTime >= SHAKE_TIMEOUT)
-              setShakeDetected(true);
+            {
+              double threshold = DHAKE_THRESHOLD;
+              boolean sx = Math.abs(valuesAccel[1] - event.values[1]) >= threshold;
+              boolean sy = Math.abs(valuesAccel[2] - event.values[2]) >= threshold;;
+              boolean sz = Math.abs(valuesAccel[0] - event.values[0]) >= threshold;;
+
+              setShakeDetected(true, sx, sy, sz);
+            }
+
             shakeTime = t;
           }
-          currentAccel = accel;
+          valuesAccel[0] = event.values[0];
+          valuesAccel[1] = event.values[1];
+          valuesAccel[2] = event.values[2];
           break;
         case Sensor.TYPE_MAGNETIC_FIELD:
           for (int i=0; i < 3; i++){

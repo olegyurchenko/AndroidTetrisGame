@@ -919,7 +919,7 @@ class TetrisBase {
         accelerometer.onResume();
     }
     /*============================================================*/
-    void onQuant()
+    void onTimer()
     {
       if(System.currentTimeMillis() - lastTime >= interval)
       {
@@ -935,7 +935,6 @@ class TetrisBase {
           setModified(true);
         if(accelerometer.isShakeDetected())
         {
-          accelerometer.setShakeDetected(false);
           if(state == State.PAUSED)
           {
             state = State.WORKED;
@@ -943,8 +942,12 @@ class TetrisBase {
           else
           if(state == State.WORKED)
           {
-            glass.rotate();
+            if(accelerometer.isShakeY())
+              rotate();
+            if(accelerometer.isShakeX())
+              moveDown();
           }
+          accelerometer.clearShakeDetected();
         }
       }
       //Log.d("TIME TEST", "Current sec = " + seconds);

@@ -3,9 +3,7 @@ package ua.probe.oleg.tetrisgamecollection;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -111,7 +109,7 @@ public class TetrisBaseActivity extends Activity
     myTimer.schedule(new TimerTask() { // Определяем задачу
       @Override
       public void run() {
-        gameController.onQuant();
+        gameController.onTimer();
         uiHandler.post(new Runnable() {
           @Override
           public void run() {
