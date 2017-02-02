@@ -602,7 +602,7 @@ class TetrisBase {
     //boolean showScore = true;
     int ratingX, ratingY;
     Accelerometer accelerometer;
-    Bitmap leftArrowBitmap, rightArrowBitmap;
+    Bitmap leftArrowBitmap, rightArrowBitmap, touchBitmap, rotateBitmap, moveBitmap, screenRotationBitmap;
     final double ROTATION_ANGLE = Math.PI / 6; //30 degree
     /*============================================================*/
     Controller(Context c, String sectionName)
@@ -618,6 +618,11 @@ class TetrisBase {
       setup();
       leftArrowBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_left);
       rightArrowBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_right);
+      touchBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_touch);
+      rotateBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_rotate);
+      moveBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_move);
+      screenRotationBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_screen_rotation);
+
       if(settings.useAccelerometer)
         accelerometer = new Accelerometer(context);
     }
@@ -807,55 +812,48 @@ class TetrisBase {
         //nextFigure.onDraw(canvas, nextFigureX, nextFigureY, glass.getShapeWidth(), glass.getShapeHeight());
       }
 
+      Bitmap leftBmp = null, rightBmp = null;
+      if(state == State.TRACKED)
+      {
+        leftBmp = touchBitmap;
+        rightBmp = moveBitmap;
+      }
+      else
+      if(state == State.ROTATED)
+      {
+        leftBmp = touchBitmap;
+        rightBmp = rotateBitmap;
+      }
+      else
       if(settings.useAccelerometer && accelerometer != null)
       {
-        //paint.setStrokeWidth(5);
-
         Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
         if(Math.abs(o.y) >= ROTATION_ANGLE)
         {
-          /*
-          Draw gravity line
-          */
-          /*
-          paint.setColor(Color.BLACK);
-          paint.setStyle(Paint.Style.FILL_AND_STROKE);
+          leftBmp = screenRotationBitmap;
 
-          float l = glass.getShapeHeight() * 3;
-
-          int left = 0;
-          int top = glassRect.top;
-          if (o.y < 0) {
-            left = glassRect.right;
-          } else {
-            left = glassRect.left;
-          }
-
-          int right = left + (int) (Math.sin(o.y) * l);
-          int bottom = top + (int) (Math.cos(o.y) * l);
-
-          canvas.drawLine(left, top,
-            right,
-            bottom,
-            paint);
-          */
-          /*
-            Draw row
-          */
-          Bitmap bitmap;
           if (o.y < 0)
           { //Left
-            bitmap = leftArrowBitmap;
+            rightBmp = leftArrowBitmap;
           } else
           { //Right
-            bitmap = rightArrowBitmap;
+            rightBmp = rightArrowBitmap;
           }
-          canvas.drawBitmap(bitmap,
-            glassRect.right - bitmap.getWidth(),
-            glassRect.top,
-            paint);
         }
+      }
 
+      if(leftBmp != null) {
+        canvas.drawBitmap(leftBmp,
+          glassRect.left,
+          glassRect.top,
+          paint);
+      }
+
+      if(rightBmp != null) {
+        canvas.drawBitmap(rightBmp,
+          glassRect.right - rightBmp.getWidth(),
+          glassRect.top,
+          paint);
       }
 
       if(state == State.PAUSED || state == State.FINISHED)

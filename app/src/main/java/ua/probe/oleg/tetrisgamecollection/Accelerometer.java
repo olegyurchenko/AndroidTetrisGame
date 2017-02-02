@@ -24,7 +24,7 @@ public class Accelerometer {
   private boolean modified, shakeDetected;
   private float currentAccel = SensorManager.GRAVITY_EARTH;
   private long shakeTime = 0;
-  final long SHAKE_TIMEOUT = 500;
+  private final long SHAKE_TIMEOUT = 500;
   /*============================================================*/
   public class Orientation
   {
