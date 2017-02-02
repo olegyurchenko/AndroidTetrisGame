@@ -977,8 +977,11 @@ class TetrisBase {
     int trackX, trackY;
     int trackX2, trackY2;
 
-    void onTouchDown(int id, float x, float y)
+    void onTouchDown(int id, float fx, float fy)
     {
+      int x = Math.round(fx);
+      int y = Math.round(fy);
+
       //Log.d("onTouchDown", String.format("id=%d x=%.0f y=%.0f", id, x, y));
       if( settings.useTouch
         && id == 0
@@ -993,25 +996,25 @@ class TetrisBase {
         r.top -= sh;
         r.bottom += sh;
         //Log.d("onTouchDown", String.format("left=%d top=%d right=%d down=%d", r.left, r.top, r.right, r.bottom));
-        if(r.contains((int)x, (int)y))
+        if(r.contains(x, y))
         {
           state = State.TRACKED;
-          trackX = (int) x;
-          trackY = (int) y;
+          trackX = x;
+          trackY = y;
         }
         else
         {
           state = State.ROTATED;
-          trackX2 = (int) x;
-          trackY2 = (int) y;
+          trackX2 = x;
+          trackY2 = y;
         }
       }
 
       if( settings.useTouch
         && (state == State.TRACKED) )
       { //Second finger
-        trackX2 = (int) x;
-        trackY2 = (int) y;
+        trackX2 = x;
+        trackY2 = y;
         //Log.d("onTouchDown", String.format("2nd finger id=%d x=%.0f y=%.0f", id, x, y));
       }
     }
@@ -1029,9 +1032,11 @@ class TetrisBase {
       }
     }
     /*============================================================*/
-    void onTouchMove(int id, float x, float y)
+    void onTouchMove(int id, float fx, float fy)
     {
       //Log.d("onTouchMove", String.format("id=%d x=%.0f y=%.0f", id, x, y));
+      int x = Math.round(fx);
+      int y = Math.round(fy);
       if(state == State.TRACKED && id == 0)
       { //First finger
         int w = glass.getShapeWidth();
@@ -1040,16 +1045,16 @@ class TetrisBase {
           || Math.abs(y - trackY) >= h)
         {
           Cell c = new Cell(glass.activeFigurePosition);
-          c.setColumn(c.column() + ((int) x - trackX)/w);
-          c.setRow(c.row() + ((int) y - trackY)/h);
+          c.setColumn(c.column() + (x - trackX)/w);
+          c.setRow(c.row() + (y - trackY)/h);
 
           //Log.d("onTouchMove", String.format("x=%.0f y=%.0f col=%d row=%d", x, y, c.column(), c.row()));
           //Log.d("onTouchMove", String.format("dc=%d dr=%d", ((int) x - trackX)/w, ((int) y - trackY)/h));
 
           if(glass.validPosition(c.column(), c.row(), glass.activeFigure))
           {
-            trackX = (int) x;
-            trackY = (int) y;
+            trackX = x;
+            trackY = y;
             glass.activeFigurePosition = c;
             glass.setModified(true);
             setModified(true);
@@ -1066,7 +1071,7 @@ class TetrisBase {
         if(Math.sqrt(w * w + h * h) >= 3 * glass.getShapeWidth())
         {
           Rect r = activeFigureRect();
-          int quadrant = 0;
+          int quadrant;
           //1 2 3
           //4[0]5
           //6 7 8
@@ -1143,8 +1148,8 @@ class TetrisBase {
             glass.rotateLeft();
           else
             glass.rotateRight();
-          trackX2 = (int) x;
-          trackY2 = (int) y;
+          trackX2 = x;
+          trackY2 = y;
         }
       }
     }
