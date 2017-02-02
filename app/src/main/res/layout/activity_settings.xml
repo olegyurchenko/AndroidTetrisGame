@@ -177,6 +177,18 @@
         </TableRow>
 
         <TableRow android:gravity="center_vertical">
+            <TextView
+                android:text="@string/use_shake"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:id="@+id/switch_use_shake"
+                />
+        </TableRow>
+
+        <TableRow android:gravity="center_vertical">
 
             <Button
                 android:text="@string/reset_to_default"

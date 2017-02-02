@@ -510,6 +510,7 @@ class TetrisBase {
     boolean showGuideLines = true;
     boolean useAccelerometer = true;
     boolean useTouch = true;
+    boolean useShake = true;
 
     private void check()
     {
@@ -543,6 +544,7 @@ class TetrisBase {
       showGuideLines = preferences.getBoolean("showGuideLines", true);
       useAccelerometer = preferences.getBoolean("useAccelerometer", true);
       useTouch = preferences.getBoolean("useTouch", true);
+      useShake = preferences.getBoolean("useShake", true);
       check();
     }
 
@@ -562,6 +564,7 @@ class TetrisBase {
       ed.putBoolean("showGuideLines", showGuideLines);
       ed.putBoolean("useAccelerometer", useAccelerometer);
       ed.putBoolean("useTouch", useTouch);
+      ed.putBoolean("useShake", useShake);
 
       ed.apply();
     }
@@ -623,7 +626,7 @@ class TetrisBase {
       moveBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_move);
       screenRotationBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_screen_rotation);
 
-      if(settings.useAccelerometer)
+      if(settings.useAccelerometer || settings.useShake)
         accelerometer = new Accelerometer(context);
     }
     /*============================================================*/
@@ -928,7 +931,7 @@ class TetrisBase {
       }
 
 
-      if(settings.useAccelerometer
+      if(settings.useShake
         && accelerometer != null)
       {
         if(accelerometer.isModified())

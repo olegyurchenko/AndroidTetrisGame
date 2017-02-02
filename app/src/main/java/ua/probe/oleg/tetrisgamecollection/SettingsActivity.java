@@ -20,7 +20,8 @@ public class SettingsActivity extends Activity
   SeekBar columnsBar, rowsBar, speedBar, complexBar;
   TetrisBase.Settings settings;
   TextView columnsLabel, rowsLabel, speedLabel, complexLabel;
-  Switch showNextFigureSwitch, showScoreSwitch, showGudeLinesSwitch, useAccelerometerSwitch, useTouchSwitch;
+  Switch showNextFigureSwitch, showScoreSwitch, showGudeLinesSwitch,
+    useAccelerometerSwitch, useTouchSwitch, useShakeSwitch;
 
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -52,6 +53,7 @@ public class SettingsActivity extends Activity
     showGudeLinesSwitch = (Switch) findViewById(R.id.switch_show_guide_line);
     useAccelerometerSwitch = (Switch) findViewById(R.id.switch_use_accelerometer);
     useTouchSwitch = (Switch) findViewById(R.id.switch_use_touch);
+    useShakeSwitch = (Switch) findViewById(R.id.switch_use_shake);
 
     columnsBar.setMax(settings.MaxColumns - settings.MinColumns);
     rowsBar.setMax(settings.MaxRows - settings.MinRows);
@@ -79,6 +81,7 @@ public class SettingsActivity extends Activity
     showGudeLinesSwitch.setChecked(settings.showGuideLines);
     useAccelerometerSwitch.setChecked(settings.useAccelerometer);
     useTouchSwitch.setChecked(settings.useTouch);
+    useShakeSwitch.setChecked(settings.useShake);
 
     //speedEdit.setText("" + settings.speedRate);
     //complexEdit.setText("" + settings.complexRate);
@@ -107,6 +110,7 @@ public class SettingsActivity extends Activity
       settings.showGuideLines = showGudeLinesSwitch.isChecked();
       settings.useAccelerometer = useAccelerometerSwitch.isChecked();
       settings.useTouch = useTouchSwitch.isChecked();
+      settings.useShake = useShakeSwitch.isChecked();
 
       //Log.d("onClick", "settings.columnCount=" + settings.columnCount);
       //Log.d("onClick", "settings.rowCount=" + settings.rowCount);
@@ -143,10 +147,10 @@ public class SettingsActivity extends Activity
         rowsLabel.setText(progress + settings.MinRows + "");
         break;
       case R.id.seek_speed:
-        speedLabel.setText(progress + "%");
+        speedLabel.setText(progress + "");
         break;
       case R.id.seek_complex:
-        complexLabel.setText(progress + "%");
+        complexLabel.setText(progress + "");
         break;
     }
   }
