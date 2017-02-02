@@ -945,11 +945,16 @@ class TetrisBase {
           else
           if(state == State.WORKED)
           {
-            if(accelerometer.isShakeY())
+            //if(accelerometer.isShakeY())
               rotate();
-            if(accelerometer.isShakeX())
-              moveDown();
+            //if(accelerometer.isShakeX())
+            //  moveDown();
           }
+          Log.d("ShakeDetected", String.format("%s%s%s",
+            accelerometer.isShakeX() ? "X " : "",
+            accelerometer.isShakeY() ? "Y " : "",
+            accelerometer.isShakeZ() ? "Z " : "")
+            );
           accelerometer.clearShakeDetected();
         }
       }
