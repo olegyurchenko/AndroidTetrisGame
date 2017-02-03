@@ -19,4 +19,9 @@
     <string name="use_touch">Use touch</string>
     <string name="use_shake">Use shake</string>
     <string name="reset_to_default">Reset to default</string>
+    <string name="help">Help</string>
+    <string name="tetris_section_name">Tetris</string>
+    <string name="columnus_section_name">Columnus</string>
+    <string name="color_balls_section_name">ColorBalls</string>
+
 </resources>

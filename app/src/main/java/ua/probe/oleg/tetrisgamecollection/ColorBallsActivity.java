@@ -10,7 +10,7 @@ public class ColorBallsActivity extends TetrisBaseActivity
 {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    sectionName = "ColorBalls";
+    sectionName = getString(R.string.color_balls_section_name);
     super.onCreate(savedInstanceState);
 
   }

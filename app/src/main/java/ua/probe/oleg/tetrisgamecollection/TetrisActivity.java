@@ -10,7 +10,7 @@ public class TetrisActivity extends TetrisBaseActivity
 {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    sectionName = "Tetris";
+    sectionName = getString(R.string.tetris_section_name);
     super.onCreate(savedInstanceState);
   }
   @Override

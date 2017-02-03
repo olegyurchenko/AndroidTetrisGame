@@ -10,7 +10,7 @@ public class ColumnusActivity extends TetrisBaseActivity
 {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    sectionName = "Columnus";
+    sectionName = getString(R.string.columnus_section_name);
     super.onCreate(savedInstanceState);
   }
 

@@ -4,32 +4,101 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:gravity="center">
 
-    <Button
-        android:id="@+id/btnTetris"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.14"
-        android:text="@string/action_tetris"
-        android:textSize="8pt">
-    </Button>
+        >
 
-    <Button
-        android:id="@+id/btnColumnus"
+        <Button
+            android:id="@+id/btn_tetris"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/action_tetris"
+            android:minHeight="73dp"
+            >
+        </Button>
+
+        <Button
+            android:drawableLeft="@drawable/ic_settings"
+            android:text=""
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="62dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_tetris_settings"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.14"
-        android:text="@string/action_columnus"
-        android:textSize="8pt">
-    </Button>
+        >
 
-    <Button
-        android:id="@+id/btnColorBall"
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/action_columnus"
+            android:id="@+id/btn_columnus"
+            android:minHeight="73dp"
+            >
+        </Button>
+
+        <Button
+            android:drawableLeft="@drawable/ic_settings"
+            android:text=""
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="62dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_columnus_settings"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.14"
-        android:text="@string/action_color_balls"
-        android:textSize="8pt">
-    </Button>
+        >
+
+        <Button
+            android:id="@+id/btn_color_ball"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/action_color_balls"
+            android:minHeight="73dp"
+            >
+        </Button>
+
+        <Button
+            android:drawableLeft="@drawable/ic_settings"
+            android:text=""
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="62dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_color_ball_settings"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:drawableLeft="@drawable/ic_help"
+            android:text="@string/help"
+            android:layout_width="167dp"
+            android:layout_height="71dp"
+            android:id="@+id/btn_help"
+            android:minHeight="90dp"
+            android:minWidth="90dp"/>
+    </LinearLayout>
 </LinearLayout>
