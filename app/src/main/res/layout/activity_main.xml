@@ -15,6 +15,7 @@
 
         <Button
             android:id="@+id/btn_tetris"
+            android:drawableLeft="@mipmap/ic_game_tetris"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -45,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/action_columnus"
+            android:drawableLeft="@mipmap/ic_game_columnus"
             android:id="@+id/btn_columnus"
             android:minHeight="73dp"
             >
@@ -71,6 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableLeft="@mipmap/ic_game_color_balls"
             android:text="@string/action_color_balls"
             android:minHeight="73dp"
             >

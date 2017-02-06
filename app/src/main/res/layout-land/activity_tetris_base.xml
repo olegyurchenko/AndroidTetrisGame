@@ -72,6 +72,21 @@
         <Button
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:drawableTop="@drawable/ic_create"
+            android:id="@+id/btnCreate"
+            style="@style/Widget.AppCompat.Button.Borderless">
+        </Button>
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:drawableTop="@drawable/ic_magic"
+            android:id="@+id/btnMagic"
+            style="@style/Widget.AppCompat.Button.Borderless">
+        </Button>
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:drawableTop="@drawable/ic_settings"
             android:id="@+id/btnSettings"
             style="@style/Widget.AppCompat.Button.Borderless"

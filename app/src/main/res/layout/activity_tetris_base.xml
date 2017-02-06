@@ -21,6 +21,20 @@
             android:text=""
             style="@style/Widget.AppCompat.Button.Borderless"/>
         <Button
+            android:drawableTop="@drawable/ic_create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnCreate"
+            android:text=""
+            style="@style/Widget.AppCompat.Button.Borderless"/>
+        <Button
+            android:drawableTop="@drawable/ic_magic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnMagic"
+            android:text=""
+            style="@style/Widget.AppCompat.Button.Borderless"/>
+        <Button
             android:drawableTop="@drawable/ic_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
