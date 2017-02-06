@@ -21,7 +21,7 @@ class ColorBallsGame extends TetrisBase {
     {
       super(color, Color.BLACK);
     }
-
+    Ball() {super();}
     @Override
     void onDraw(Canvas canvas, int x, int y, int width, int height)
     {
@@ -69,6 +69,11 @@ class ColorBallsGame extends TetrisBase {
       }
 
       return f;
+    }
+
+    Shape onNewShape()
+    {
+      return new Ball();
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
@@ -236,6 +241,11 @@ class ColorBallsGame extends TetrisBase {
 
       return modifications > 0 || !list.isEmpty();
 
+    }
+
+    Shape onNewShape()
+    {
+      return new Ball();
     }
   }
   /*-----------------------------------------------------------------------------------------------*/

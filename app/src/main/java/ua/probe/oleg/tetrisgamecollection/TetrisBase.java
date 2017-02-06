@@ -74,6 +74,12 @@ class TetrisBase {
       borderColor = other.borderColor;
     }
 
+    Shape()
+    {
+      fillColor = Color.WHITE;
+      borderColor = Color.BLACK;
+    }
+
     public int color() {return fillColor;}
 
     void onDraw(Canvas canvas, int x, int y, int width, int height)
@@ -170,6 +176,11 @@ class TetrisBase {
       }
     }
 
+    Shape onNewShape()
+    {
+      return new Shape();
+    }
+
     void save(DataOutputStream dos) throws IOException
     {
       dos.writeInt(columnCount);
@@ -196,7 +207,7 @@ class TetrisBase {
       for(int i = 0; i < size; i++)
       {
         int key = dis.readInt();
-        Shape s = new Shape(Color.BLACK);
+        Shape s = onNewShape();
         s.load(dis);
         shapeMap.put(key, s);
       }
@@ -558,6 +569,11 @@ class TetrisBase {
       activeFigurePosition = new Cell();
     }
 
+    Shape onNewShape()
+    {
+      return new Shape();
+    }
+
     void save(DataOutputStream dos) throws IOException
     {
       dos.writeInt(columnCount);
@@ -586,7 +602,7 @@ class TetrisBase {
       for(int i = 0; i < size; i++)
       {
         int key = dis.readInt();
-        Shape s = new Shape(Color.BLACK);
+        Shape s = onNewShape();
         s.load(dis);
         shapeMap.put(key, s);
       }
@@ -1456,6 +1472,17 @@ class TetrisBase {
       {
         dos.writeByte(0);
       }
+
+      if(nextFigure != null)
+      {
+        dos.writeByte(1);
+        nextFigure.save(dos);
+      }
+      else
+      {
+        dos.writeByte(0);
+      }
+
     }
 
     void load(DataInputStream dis)  throws IOException
@@ -1466,6 +1493,11 @@ class TetrisBase {
         glass.activeFigure = onNewFigure();
         glass.activeFigure.load(dis);
         glass.activeFigurePosition.load(dis);
+      }
+      if(dis.readByte() != 0)
+      {
+        nextFigure = onNewFigure();
+        nextFigure.load(dis);
       }
     }
   }
