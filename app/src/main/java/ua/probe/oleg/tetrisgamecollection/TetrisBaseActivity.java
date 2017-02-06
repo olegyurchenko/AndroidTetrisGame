@@ -199,6 +199,7 @@ public class TetrisBaseActivity extends Activity
         break;
       case R.id.btnMagic:
         //TODO:
+        gameController.onNewGame(0L);
         break;
     }
   }

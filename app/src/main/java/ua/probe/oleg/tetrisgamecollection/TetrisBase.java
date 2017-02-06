@@ -18,6 +18,7 @@ import android.widget.Toast;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Random;
 
 /**
  * TetrisBase - base classes for game collections
@@ -720,6 +721,7 @@ class TetrisBase {
     Accelerometer accelerometer;
     Bitmap leftArrowBitmap, rightArrowBitmap, touchBitmap, rotateBitmap, moveBitmap, screenRotationBitmap;
     final double ROTATION_ANGLE = Math.PI / 6; //30 degree
+    Random random;
     /*============================================================*/
     Controller(Context c, String sectionName)
     {
@@ -741,6 +743,8 @@ class TetrisBase {
 
       if(settings.useAccelerometer || settings.useShake)
         accelerometer = new Accelerometer(context);
+
+      random = new Random();
 
       load();
     }
@@ -832,16 +836,14 @@ class TetrisBase {
     /*============================================================*/
     int randomColor()
     {
-      int n = (int)(Math.random() * 1000.0);
-      return colors[n % colors.length];
+      return colors[random.nextInt(colors.length)];
     }
     /*============================================================*/
     int randomComplexColor()
     {
-      int n = (int)(Math.random() * 1000.0);
       int d =  (colors.length * settings.complexRate) / 100;
-      n %= d < 1 ? 1 : d;
-      return colors[n % colors.length];
+      int n = random.nextInt(d < 1 ? 1 : d);
+      return colors[n];
     }
     /*============================================================*/
     void setSize(int w, int h)
@@ -1424,6 +1426,12 @@ class TetrisBase {
       glass.onNewGame();
       nextFigure = null;
       setModified(true);
+    }
+    /*============================================================*/
+    void onNewGame(long randomSeed)
+    {
+      onNewGame();
+      random.setSeed(randomSeed);
     }
     /*============================================================*/
     void save()

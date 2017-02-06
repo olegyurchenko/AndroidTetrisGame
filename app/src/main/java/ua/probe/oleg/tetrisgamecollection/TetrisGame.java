@@ -222,7 +222,7 @@ class TetrisGame extends TetrisBase
 
     byte[] randomFigure()
     {
-      int n = (int)(Math.random() * 1000.0);
+      int n = random.nextInt(1000);
       n %= (figures.length * settings.complexRate) / 100;
       return figures[n % figures.length];
     }
@@ -237,7 +237,7 @@ class TetrisGame extends TetrisBase
     protected Figure onNewFigure() {
       Figure figure = new TetrisFigure(randomFigure(), randomColor());
 
-      int n = (int)(Math.random() * 1000.0) % 3;
+      int n = random.nextInt(1000) % 3;
       for(int i = 0; i < n; i++)
         figure = figure.rotateRight();
 
