@@ -60,6 +60,12 @@ public class TetrisBaseActivity extends Activity
     btn = (Button) findViewById(R.id.btnSettings);
     btn.setOnClickListener(this);
 
+    btn = (Button) findViewById(R.id.btnCreate);
+    btn.setOnClickListener(this);
+
+    btn = (Button) findViewById(R.id.btnMagic);
+    btn.setOnClickListener(this);
+
     gameController = (TetrisBase.Controller) getLastNonConfigurationInstance();
 
     if(gameController == null) {
@@ -187,6 +193,12 @@ public class TetrisBaseActivity extends Activity
         break;
       case R.id.btnSettings:
         onSettings();
+        break;
+      case R.id.btnCreate:
+        gameController.onNewGame();
+        break;
+      case R.id.btnMagic:
+        //TODO:
         break;
     }
   }

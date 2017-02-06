@@ -15,6 +15,10 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.widget.Toast;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 /**
  * TetrisBase - base classes for game collections
  */
@@ -33,6 +37,16 @@ class TetrisBase {
     int row() {return row;}
     void setColumn(int c) {col = c;}
     void setRow(int r) {row = r;}
+    void save(DataOutputStream dos) throws IOException
+    {
+      dos.writeInt(col);
+      dos.writeInt(row);
+    }
+    void load(DataInputStream dis)  throws IOException
+    {
+      col = dis.readInt();
+      row = dis.readInt();
+    }
   }
   /*-----------------------------------------------------------------------------------------------*/
   static class Shape
@@ -75,6 +89,15 @@ class TetrisBase {
       paint.setColor(borderColor);
       paint.setStyle(Paint.Style.STROKE);
       canvas.drawRect(rect, paint);
+    }
+
+    void save(DataOutputStream dos) throws IOException
+    {
+      dos.writeInt(fillColor);
+    }
+    void load(DataInputStream dis)  throws IOException
+    {
+      fillColor = dis.readInt();
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
@@ -146,6 +169,39 @@ class TetrisBase {
         }
       }
     }
+
+    void save(DataOutputStream dos) throws IOException
+    {
+      dos.writeInt(columnCount);
+      dos.writeInt(rowCount);
+
+      int size = shapeMap.size();
+      dos.writeInt(size);
+      for(int i = 0; i < size; i++)
+      {
+        int key = shapeMap.keyAt(i);
+        dos.writeInt(key);
+        Shape s = shapeMap.valueAt(i);
+        s.save(dos);
+
+      }
+
+    }
+    void load(DataInputStream dis)  throws IOException
+    {
+      shapeMap.clear();
+      columnCount = dis.readInt();
+      rowCount = dis.readInt();
+      int size = dis.readInt();
+      for(int i = 0; i < size; i++)
+      {
+        int key = dis.readInt();
+        Shape s = new Shape(Color.BLACK);
+        s.load(dis);
+        shapeMap.put(key, s);
+      }
+    }
+
   }
 
   /*-----------------------------------------------------------------------------------------------*/
@@ -495,6 +551,47 @@ class TetrisBase {
     {
       return false;
     }
+    void onNewGame()
+    {
+      shapeMap.clear();
+      activeFigure = null;
+      activeFigurePosition = new Cell();
+    }
+
+    void save(DataOutputStream dos) throws IOException
+    {
+      dos.writeInt(columnCount);
+      dos.writeInt(rowCount);
+
+      int size = shapeMap.size();
+      dos.writeInt(size);
+      for(int i = 0; i < size; i++)
+      {
+        int key = shapeMap.keyAt(i);
+        dos.writeInt(key);
+        Shape s = shapeMap.valueAt(i);
+        s.save(dos);
+      }
+      dos.writeLong(score);
+    }
+
+    void load(DataInputStream dis)  throws IOException
+    {
+      shapeMap.clear();
+      activeFigure = null;
+
+      columnCount = dis.readInt();
+      rowCount = dis.readInt();
+      int size = dis.readInt();
+      for(int i = 0; i < size; i++)
+      {
+        int key = dis.readInt();
+        Shape s = new Shape(Color.BLACK);
+        s.load(dis);
+        shapeMap.put(key, s);
+      }
+      score = dis.readLong();
+    }
   }
   /*-----------------------------------------------------------------------------------------------*/
   static class Settings
@@ -628,6 +725,8 @@ class TetrisBase {
 
       if(settings.useAccelerometer || settings.useShake)
         accelerometer = new Accelerometer(context);
+
+      load();
     }
     /*============================================================*/
     private void setup()
@@ -914,6 +1013,9 @@ class TetrisBase {
     {
       if(accelerometer != null)
         accelerometer.onPause();
+      save();
+      if(state != State.FINISHED)
+        state = State.PAUSED;
     }
     /*============================================================*/
     void onResume()
@@ -1299,7 +1401,73 @@ class TetrisBase {
 
       setModified(glass.isModified());
     }
+    /*============================================================*/
+    void onNewGame()
+    {
+      state = State.PAUSED;
+      glass.onNewGame();
+      nextFigure = null;
+      setModified(true);
+    }
+    /*============================================================*/
+    void save()
+    {
+      String filename = String.format("%s.bin", sectionName);
+      try {
 
+        DataOutputStream dos = new DataOutputStream(
+          context.openFileOutput(filename, Context.MODE_PRIVATE)
+        );
+
+        save(dos);
+      } catch (IOException e)
+        {
+          e.printStackTrace();
+        }
+    }
+
+    void load()
+    {
+      String filename = String.format("%s.bin", sectionName);
+      try {
+
+        DataInputStream dis = new DataInputStream(
+          context.openFileInput(filename)
+        );
+
+        load(dis);
+      } catch (IOException e)
+
+      {
+        e.printStackTrace();
+      }
+    }
+
+    void save(DataOutputStream dos) throws IOException
+    {
+      glass.save(dos);
+      if(glass.activeFigure != null)
+      {
+        dos.writeByte(1);
+        glass.activeFigure.save(dos);
+        glass.activeFigurePosition.save(dos);
+      }
+      else
+      {
+        dos.writeByte(0);
+      }
+    }
+
+    void load(DataInputStream dis)  throws IOException
+    {
+      glass.load(dis);
+      if(dis.readByte() != 0)
+      {
+        glass.activeFigure = onNewFigure();
+        glass.activeFigure.load(dis);
+        glass.activeFigurePosition.load(dis);
+      }
+    }
   }
   /*-----------------------------------------------------------------------------------------------*/
 
