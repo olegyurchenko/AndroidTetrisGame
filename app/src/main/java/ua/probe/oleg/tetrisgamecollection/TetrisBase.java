@@ -18,6 +18,8 @@ import android.widget.Toast;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Random;
 
 /**
@@ -568,6 +570,7 @@ class TetrisBase {
       shapeMap.clear();
       activeFigure = null;
       activeFigurePosition = new Cell();
+      score = 0;
     }
 
     Shape onNewShape()
@@ -1104,6 +1107,7 @@ class TetrisBase {
 
       //Log.d("onTouchDown", String.format("id=%d x=%.0f y=%.0f", id, x, y));
       if( settings.useTouch
+        && glass.activeFigure != null
         && id == 0
         && (state == State.PAUSED || state == State.WORKED) )
       { //First finger
@@ -1491,6 +1495,8 @@ class TetrisBase {
         dos.writeByte(0);
       }
 
+      ObjectOutputStream oos = new ObjectOutputStream(dos);
+      oos.writeObject(random);
     }
 
     void load(DataInputStream dis)  throws IOException
@@ -1506,6 +1512,14 @@ class TetrisBase {
       {
         nextFigure = onNewFigure();
         nextFigure.load(dis);
+      }
+
+      ObjectInputStream ois = new ObjectInputStream(dis);
+      try {
+        random = (Random) ois.readObject();
+      }
+      catch(ClassNotFoundException e)  {
+        Log.e("Game", e.getMessage());
       }
     }
   }
