@@ -1,7 +1,11 @@
 package ua.probe.oleg.tetrisgamecollection;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
@@ -10,10 +14,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 
-
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,6 +27,9 @@ public class TetrisBaseActivity extends Activity
   protected TetrisBase.Controller gameController;
   protected View drawView = null;
   protected String sectionName = "TetrisBase";
+  private LinearLayout magicLayout;
+  private EditText seedEdit;
+  private long randomSeed;
 
   Timer myTimer;
   Handler uiHandler = new Handler();
@@ -198,8 +206,11 @@ public class TetrisBaseActivity extends Activity
         gameController.onNewGame();
         break;
       case R.id.btnMagic:
-        //TODO:
-        gameController.onNewGame(0L);
+        //gameController.onNewGame(0L);
+        if(gameController.state != TetrisBase.Controller.State.PAUSED)
+          gameController.toglePause();
+        Dialog dialog = createMagicDialog();
+        dialog.show();
         break;
     }
   }
@@ -242,4 +253,45 @@ public class TetrisBaseActivity extends Activity
     }
 
   }
+
+  @SuppressLint("InflateParams")
+  public Dialog createMagicDialog()
+  {
+    AlertDialog.Builder adb = new AlertDialog.Builder(this);
+    adb.setTitle(R.string.new_game);
+    // создаем magicLayout из dialog.xml
+    magicLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.new_game_dialog, null);
+    // устанавливаем ее, как содержимое тела диалога
+    adb.setView(magicLayout);
+    // находим seedEdit
+    seedEdit = (EditText) magicLayout.findViewById(R.id.edit_seed);
+    seedEdit.setText(String.format(Locale.getDefault(), "%d", randomSeed));
+
+    adb.setPositiveButton(R.string.ok, magicDlgListener);
+    adb.setNegativeButton(R.string.cancel, magicDlgListener);
+
+    return adb.create();
+  }
+
+  DialogInterface.OnClickListener magicDlgListener = new DialogInterface.OnClickListener() {
+    public void onClick(DialogInterface dialog, int which) {
+      switch (which) {
+        // положительная кнопка
+        case Dialog.BUTTON_POSITIVE:
+          try {
+            randomSeed = Long.parseLong(seedEdit.getText().toString(), 10);
+          }
+          catch(NumberFormatException e) {
+            dialog.cancel();
+            break;
+          }
+          gameController.onNewGame(randomSeed);
+          break;
+        // негативная кнопка
+        case Dialog.BUTTON_NEGATIVE:
+        case Dialog.BUTTON_NEUTRAL:
+          break;
+      }
+    }
+  };
 }

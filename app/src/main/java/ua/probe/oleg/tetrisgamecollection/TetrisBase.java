@@ -1061,11 +1061,13 @@ class TetrisBase {
           setModified(true);
         if(accelerometer.isShakeDetected())
         {
+          /*
           if(state == State.PAUSED)
           {
             state = State.WORKED;
           }
           else
+          */
           if(state == State.WORKED)
           {
             //if(accelerometer.isShakeY())
