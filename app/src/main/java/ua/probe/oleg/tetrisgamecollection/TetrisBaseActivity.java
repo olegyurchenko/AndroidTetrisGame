@@ -265,7 +265,7 @@ public class TetrisBaseActivity extends Activity
     adb.setView(magicLayout);
     // находим seedEdit
     seedEdit = (EditText) magicLayout.findViewById(R.id.edit_seed);
-    seedEdit.setText(String.format(Locale.getDefault(), "%d", randomSeed));
+    seedEdit.setText(String.format(Locale.getDefault(), "%d", gameController.settings.randomSeed));
 
     adb.setPositiveButton(R.string.ok, magicDlgListener);
     adb.setNegativeButton(R.string.cancel, magicDlgListener);
@@ -285,6 +285,8 @@ public class TetrisBaseActivity extends Activity
             dialog.cancel();
             break;
           }
+          gameController.settings.randomSeed = randomSeed;
+          gameController.settings.save(getBaseContext(), sectionName);
           gameController.onNewGame(randomSeed);
           break;
         // негативная кнопка

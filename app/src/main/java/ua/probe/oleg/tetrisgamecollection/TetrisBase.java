@@ -20,6 +20,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -628,6 +629,7 @@ class TetrisBase {
     boolean useAccelerometer = true;
     boolean useTouch = true;
     boolean useShake = true;
+    long randomSeed;
 
     private void check()
     {
@@ -662,6 +664,7 @@ class TetrisBase {
       useAccelerometer = preferences.getBoolean("useAccelerometer", true);
       useTouch = preferences.getBoolean("useTouch", true);
       useShake = preferences.getBoolean("useShake", true);
+      randomSeed = preferences.getLong("randomSeed", 0);
       check();
     }
 
@@ -682,6 +685,7 @@ class TetrisBase {
       ed.putBoolean("useAccelerometer", useAccelerometer);
       ed.putBoolean("useTouch", useTouch);
       ed.putBoolean("useShake", useShake);
+      ed.putLong("randomSeed", randomSeed);
 
       ed.apply();
     }
@@ -1017,7 +1021,9 @@ class TetrisBase {
         y += 30;
         canvas.drawText(context.getString(R.string.complex) + ": " + settings.complexRate + "%", ratingX, y, paint);
         y += 30;
-        canvas.drawText(context.getString(R.string.score) + ": " + glass.getScore(), ratingX, y, paint);
+        canvas.drawText(context.getString(R.string.score) + ": "
+          + String.format(Locale.getDefault(), "%,d", glass.getScore()),
+          ratingX, y, paint);
 /*
         if(accelerometer != null)
         {
