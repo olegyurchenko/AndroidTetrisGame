@@ -1,5 +1,6 @@
 package ua.probe.oleg.tetrisgamecollection;
 
+import android.support.v7.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,7 +26,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TetrisBaseActivity extends Activity
+public class TetrisBaseActivity extends AppCompatActivity
   implements View.OnTouchListener, View.OnClickListener/*, SeekBar.OnSeekBarChangeListener*/ {
   protected TetrisBase.Controller gameController;
   protected View drawView = null;
@@ -67,8 +67,8 @@ public class TetrisBaseActivity extends Activity
     btn = (Button) findViewById(R.id.btnPause);
     btn.setOnClickListener(this);
 
-    btn = (Button) findViewById(R.id.btnSettings);
-    btn.setOnClickListener(this);
+//    btn = (Button) findViewById(R.id.btnSettings);
+//    btn.setOnClickListener(this);
 
     btn = (Button) findViewById(R.id.btnCreate);
     btn.setOnClickListener(this);
@@ -79,7 +79,8 @@ public class TetrisBaseActivity extends Activity
     btn = (Button) findViewById(R.id.btnUndo);
     btn.setOnClickListener(this);
 
-    gameController = (TetrisBase.Controller) getLastNonConfigurationInstance();
+    //gameController = (TetrisBase.Controller) getLastNonConfigurationInstance();
+    gameController = (TetrisBase.Controller) getLastCustomNonConfigurationInstance();
 
     if(gameController == null) {
 
@@ -108,7 +109,8 @@ public class TetrisBaseActivity extends Activity
   }
 
   @Override
-  public Object onRetainNonConfigurationInstance() {
+  //public Object onRetainNonConfigurationInstance() {
+  public Object onRetainCustomNonConfigurationInstance() {
     return gameController;
   }
 
@@ -237,9 +239,9 @@ public class TetrisBaseActivity extends Activity
       case R.id.btnPause:
         gameController.toglePause();
         break;
-      case R.id.btnSettings:
-        onSettings();
-        break;
+//      case R.id.btnSettings:
+//        onSettings();
+//        break;
       case R.id.btnCreate:
         gameController.onNewGame();
         break;
