@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +41,9 @@ public class TetrisBaseActivity extends AppCompatActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_tetris_base);
+
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
 
     Button btn;
 
@@ -86,17 +90,7 @@ public class TetrisBaseActivity extends AppCompatActivity
 
       gameController = onGameControllerCreate();
     }
-/*
-    SeekBar seekBar;
 
-    seekBar = (SeekBar)findViewById(R.id.sppedSeekbar);
-    seekBar.setProgress(gameController.getSpeedRate());
-    seekBar.setOnSeekBarChangeListener(this);
-
-    seekBar = (SeekBar)findViewById(R.id.complexSeekbar);
-    seekBar.setProgress(gameController.getComplexRate());
-    seekBar.setOnSeekBarChangeListener(this);
-*/
     drawView = new DrawView(this);
 
 
