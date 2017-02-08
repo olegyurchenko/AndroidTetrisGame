@@ -1441,10 +1441,11 @@ class TetrisBase {
     void onNewGame()
     {
       saveUndo();
+      onSettingsChanged();
       state = State.PAUSED;
-      glass.onNewGame();
-      nextFigure = null;
-      setModified(true);
+      //glass.onNewGame();
+      //nextFigure = null;
+      //setModified(true);
     }
     /*============================================================*/
     void onNewGame(long randomSeed)
