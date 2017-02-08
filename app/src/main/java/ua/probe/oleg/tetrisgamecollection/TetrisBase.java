@@ -1440,6 +1440,7 @@ class TetrisBase {
     /*============================================================*/
     void onNewGame()
     {
+      saveUndo();
       state = State.PAUSED;
       glass.onNewGame();
       nextFigure = null;
