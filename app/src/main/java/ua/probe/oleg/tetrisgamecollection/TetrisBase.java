@@ -584,9 +584,6 @@ class TetrisBase {
 
     void save(DataOutputStream dos) throws IOException
     {
-      dos.writeInt(columnCount);
-      dos.writeInt(rowCount);
-
       int size = shapeMap.size();
       dos.writeInt(size);
       for(int i = 0; i < size; i++)
@@ -604,8 +601,6 @@ class TetrisBase {
       shapeMap.clear();
       activeFigure = null;
 
-      columnCount = dis.readInt();
-      rowCount = dis.readInt();
       int size = dis.readInt();
       for(int i = 0; i < size; i++)
       {
@@ -1487,8 +1482,13 @@ class TetrisBase {
       }
     }
     /*============================================================*/
+    private final int STAR = 0xdeadbeef;
+    private final int STREAM_VERSION = 1;
+
     void save(DataOutputStream dos) throws IOException
     {
+      dos.writeInt(STAR);
+      dos.writeInt(STREAM_VERSION);
       glass.save(dos);
       if(glass.activeFigure != null)
       {
@@ -1517,6 +1517,17 @@ class TetrisBase {
     /*============================================================*/
     void load(DataInputStream dis)  throws IOException
     {
+      if(dis.readInt() != STAR)
+      {
+        Log.e("GameController.load()", "Invalid stream keyword");
+        return;
+      }
+      if(dis.readInt() != STREAM_VERSION)
+      {
+        Log.e("GameController.load()", "Invalid stream version");
+        return;
+      }
+
       glass.load(dis);
       if(dis.readByte() != 0)
       {
