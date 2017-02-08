@@ -15,6 +15,8 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Locale;
 import java.util.Random;
+import java.util.Stack;
 
 /**
  * TetrisBase - base classes for game collections
@@ -729,6 +732,8 @@ class TetrisBase {
     Bitmap leftArrowBitmap, rightArrowBitmap, touchBitmap, rotateBitmap, moveBitmap, screenRotationBitmap;
     final double ROTATION_ANGLE = Math.PI / 6; //30 degree
     Random random;
+    final int UNDO_SIZE = 32;
+    Stack<byte[]> undo;
     /*============================================================*/
     Controller(Context c, String sectionName)
     {
@@ -752,6 +757,7 @@ class TetrisBase {
         accelerometer = new Accelerometer(context);
 
       random = new Random();
+      undo = new Stack<>();
 
       load();
     }
@@ -1400,7 +1406,7 @@ class TetrisBase {
         }
         else
         {
-
+          saveUndo();
           if (!glass.put(nextFigure)) {
             state = State.FINISHED;
             glass.setModified(true);
@@ -1456,12 +1462,13 @@ class TetrisBase {
         );
 
         save(dos);
-      } catch (IOException e)
-        {
-          e.printStackTrace();
-        }
+        dos.flush();
+      }
+      catch (IOException e) {
+        e.printStackTrace();
+      }
     }
-
+    /*============================================================*/
     void load()
     {
       String filename = String.format("%s.bin", sectionName);
@@ -1472,13 +1479,12 @@ class TetrisBase {
         );
 
         load(dis);
-      } catch (IOException e)
-
-      {
+      }
+      catch (IOException e)  {
         e.printStackTrace();
       }
     }
-
+    /*============================================================*/
     void save(DataOutputStream dos) throws IOException
     {
       glass.save(dos);
@@ -1506,7 +1512,7 @@ class TetrisBase {
       ObjectOutputStream oos = new ObjectOutputStream(dos);
       oos.writeObject(random);
     }
-
+    /*============================================================*/
     void load(DataInputStream dis)  throws IOException
     {
       glass.load(dis);
@@ -1527,9 +1533,46 @@ class TetrisBase {
         random = (Random) ois.readObject();
       }
       catch(ClassNotFoundException e)  {
-        Log.e("Game", e.getMessage());
+        Log.e("load()", e.getMessage());
       }
     }
+    /*============================================================*/
+    void saveUndo() {
+      ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      DataOutputStream dos;
+      try {
+        dos = new DataOutputStream(bos);
+        save(dos);
+        dos.flush();
+        undo.push(bos.toByteArray());
+      }
+
+      catch (IOException e) {
+        Log.e("saveUndo()", e.getMessage());
+      }
+
+
+      while (undo.size() > UNDO_SIZE)
+      {
+        undo.remove(0);
+      }
+    }
+    /*============================================================*/
+    void onUndo() {
+      if (!undo.isEmpty()) {
+        ByteArrayInputStream bis = new ByteArrayInputStream(undo.pop());
+        DataInputStream dis;
+        try {
+          dis = new DataInputStream(bis);
+          load(dis);
+        } catch (IOException e) {
+          Log.e("saveUndo()", e.getMessage());
+        }
+
+        state = State.PAUSED;
+      }
+    }
+    /*============================================================*/
   }
   /*-----------------------------------------------------------------------------------------------*/
 

@@ -44,6 +44,41 @@
             android:layout_height="wrap_content"
             android:id="@+id/btnDown1">
         </Button>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="4">
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:drawableTop="@drawable/ic_pause"
+            android:id="@+id/btnPause"
+            style="@style/Widget.AppCompat.Button.Borderless">
+        </Button>
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:drawableTop="@drawable/ic_undo"
+            android:id="@+id/btnUndo"
+            style="@style/Widget.AppCompat.Button.Borderless">
+        </Button>
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:drawableTop="@drawable/ic_create"
+            android:id="@+id/btnCreate"
+            style="@style/Widget.AppCompat.Button.Borderless">
+        </Button>
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:drawableTop="@drawable/ic_magic"
+            android:id="@+id/btnMagic"
+            style="@style/Widget.AppCompat.Button.Borderless">
+        </Button>
 
     </LinearLayout>
 
@@ -61,28 +96,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="4">
-
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:drawableTop="@drawable/ic_pause"
-            android:id="@+id/btnPause"
-            style="@style/Widget.AppCompat.Button.Borderless">
-        </Button>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:drawableTop="@drawable/ic_create"
-            android:id="@+id/btnCreate"
-            style="@style/Widget.AppCompat.Button.Borderless">
-        </Button>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:drawableTop="@drawable/ic_magic"
-            android:id="@+id/btnMagic"
-            style="@style/Widget.AppCompat.Button.Borderless">
-        </Button>
 
         <Button
             android:layout_height="wrap_content"

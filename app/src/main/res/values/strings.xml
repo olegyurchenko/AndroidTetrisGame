@@ -27,5 +27,9 @@
     <string name="color_balls_section_name">ColorBalls</string>
     <string name="random_seed_value">Random seed value</string>
     <string name="new_game">New game</string>
+    <string name="pause">Pause</string>
+    <string name="undo">Undo</string>
+    <string name="select_game">Select game</string>
+    <string name="settings">Settings</string>
 
 </resources>

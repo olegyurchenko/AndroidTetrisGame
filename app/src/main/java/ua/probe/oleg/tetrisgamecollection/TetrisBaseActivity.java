@@ -11,13 +11,17 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 
+import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,9 +31,7 @@ public class TetrisBaseActivity extends Activity
   protected TetrisBase.Controller gameController;
   protected View drawView = null;
   protected String sectionName = "TetrisBase";
-  private LinearLayout magicLayout;
   private EditText seedEdit;
-  private long randomSeed;
 
   Timer myTimer;
   Handler uiHandler = new Handler();
@@ -72,6 +74,9 @@ public class TetrisBaseActivity extends Activity
     btn.setOnClickListener(this);
 
     btn = (Button) findViewById(R.id.btnMagic);
+    btn.setOnClickListener(this);
+
+    btn = (Button) findViewById(R.id.btnUndo);
     btn.setOnClickListener(this);
 
     gameController = (TetrisBase.Controller) getLastNonConfigurationInstance();
@@ -178,6 +183,39 @@ public class TetrisBaseActivity extends Activity
   }
 
   @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.item_pause:
+        gameController.toglePause();
+        return true;
+      case R.id.item_undo:
+        gameController.onUndo();
+        return true;
+      case R.id.item_new_game:
+        gameController.onNewGame();
+        return true;
+      case R.id.item_magic:
+        if(gameController.state != TetrisBase.Controller.State.PAUSED)
+          gameController.toglePause();
+        Dialog dialog = createMagicDialog();
+        dialog.show();
+        return true;
+      case R.id.item_settings:
+        onSettings();
+        return true;
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.tetris_base, menu);
+    return true;
+  }
+
+
+  @Override
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.btnLeft1:
@@ -211,6 +249,9 @@ public class TetrisBaseActivity extends Activity
           gameController.toglePause();
         Dialog dialog = createMagicDialog();
         dialog.show();
+        break;
+      case R.id.btnUndo:
+        gameController.onUndo();
         break;
     }
   }
@@ -260,7 +301,7 @@ public class TetrisBaseActivity extends Activity
     AlertDialog.Builder adb = new AlertDialog.Builder(this);
     adb.setTitle(R.string.new_game);
     // создаем magicLayout из dialog.xml
-    magicLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.new_game_dialog, null);
+    LinearLayout magicLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.new_game_dialog, null);
     // устанавливаем ее, как содержимое тела диалога
     adb.setView(magicLayout);
     // находим seedEdit
@@ -278,6 +319,7 @@ public class TetrisBaseActivity extends Activity
       switch (which) {
         // положительная кнопка
         case Dialog.BUTTON_POSITIVE:
+          long randomSeed;
           try {
             randomSeed = Long.parseLong(seedEdit.getText().toString(), 10);
           }

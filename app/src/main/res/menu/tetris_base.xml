@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".TetrisBaseActivity" >
+
+    <item android:title="@string/pause"
+          android:id="@+id/item_pause"
+          android:icon="@drawable/ic_pause"/>
+    <item android:title="@string/undo"
+          android:id="@+id/item_undo"
+          android:icon="@drawable/ic_undo"/>
+    <item android:title="@string/new_game"
+          android:id="@+id/item_new_game"
+          android:icon="@drawable/ic_new"/>
+    <item android:title="@string/select_game"
+          android:id="@+id/item_magic"
+          android:icon="@drawable/ic_magic"/>
+    <item android:title="@string/settings"
+          android:id="@+id/item_settings"
+          android:icon="@drawable/ic_settings"/>
+</menu>
