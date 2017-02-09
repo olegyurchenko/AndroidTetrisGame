@@ -4,9 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Color balls classes
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 class ColorBallsGame extends TetrisBase {
 
   /*-----------------------------------------------------------------------------------------------*/
-  private static class Ball extends TetrisBase.Shape
+  private static class Ball extends Square
   {
     Ball(int color)
     {
@@ -71,7 +71,7 @@ class ColorBallsGame extends TetrisBase {
       return f;
     }
 
-    Shape onNewShape()
+    Square onNewShape()
     {
       return new Ball();
     }
@@ -99,7 +99,7 @@ class ColorBallsGame extends TetrisBase {
         {
           for (int column = 0; column < columnCount; column++)
           {
-            Shape s = get(column, row);
+            Square s = get(column, row);
             if(s == null)
               continue;
             // [x]
@@ -151,15 +151,15 @@ class ColorBallsGame extends TetrisBase {
       for(int row = 0; row < rowCount; row ++) {
         for (int column = 0; column < columnCount; column++)
         {
-          Shape s = get(column, row);
+          Square s = get(column, row);
           if(s == null)
             continue;
 
           //[x][X][x]
           if(column > 0 && column < columnCount - 1)
           {
-            Shape l = get(column - 1, row);
-            Shape r = get(column + 1, row);
+            Square l = get(column - 1, row);
+            Square r = get(column + 1, row);
             if(l != null
               && r != null
               && l.color() == s.color()
@@ -177,8 +177,8 @@ class ColorBallsGame extends TetrisBase {
           //[x]
           if(row > 0 && row < rowCount - 1)
           {
-            Shape t = get(column, row - 1);
-            Shape b = get(column, row + 1);
+            Square t = get(column, row - 1);
+            Square b = get(column, row + 1);
             if(t != null
               && b != null
               && t.color() == s.color()
@@ -196,8 +196,8 @@ class ColorBallsGame extends TetrisBase {
           //      [x]
           if(row > 0 && row < rowCount - 1 && column > 0 && column < columnCount - 1)
           {
-            Shape t = get(column - 1, row - 1);
-            Shape b = get(column + 1, row + 1);
+            Square t = get(column - 1, row - 1);
+            Square b = get(column + 1, row + 1);
             if(t != null
               && b != null
               && t.color() == s.color()
@@ -215,8 +215,8 @@ class ColorBallsGame extends TetrisBase {
           //[x]
           if(row > 0 && row < rowCount - 1 && column > 0 && column < columnCount - 1)
           {
-            Shape t = get(column - 1, row + 1);
-            Shape b = get(column + 1, row - 1);
+            Square t = get(column - 1, row + 1);
+            Square b = get(column + 1, row - 1);
             if(t != null
               && b != null
               && t.color() == s.color()
@@ -243,7 +243,7 @@ class ColorBallsGame extends TetrisBase {
 
     }
 
-    Shape onNewShape()
+    Square onNewShape()
     {
       return new Ball();
     }
@@ -260,6 +260,23 @@ class ColorBallsGame extends TetrisBase {
     protected Glass onGlassCreate()
     {
       return new BallsGlass(settings.columnCount, settings.rowCount);
+    }
+
+    @Override
+    String[] ratingText()
+    {
+      String[] strings = super.ratingText();
+      Statistics statistics = glass.getStatistics();
+
+
+      if(strings.length > 3)
+      {
+        strings[3] = String.format(Locale.getDefault(), "%s: %,d",
+          context.getString(R.string.number_of_balls),
+          statistics.squareCount);
+      }
+
+      return strings;
     }
 
     @Override

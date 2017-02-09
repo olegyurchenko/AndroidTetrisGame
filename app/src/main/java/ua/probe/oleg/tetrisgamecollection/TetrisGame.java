@@ -1,8 +1,6 @@
 package ua.probe.oleg.tetrisgamecollection;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 
 /**
  * Tetris game logic
@@ -29,7 +27,7 @@ class TetrisGame extends TetrisBase
         {
           if((b & (1 << i)) != 0)
           {
-            put(i, row, new Shape(color));
+            put(i, row, new Square(color));
           }
         }
         row ++;
@@ -43,7 +41,7 @@ class TetrisGame extends TetrisBase
         boolean empty = true;
         for (int column = 0; column < columnCount; column ++)
         {
-          Shape s = shapeMap.get(index(column, row));
+          Square s = squareMap.get(index(column, row));
           if(s != null)
           {
             empty = false;
@@ -58,11 +56,11 @@ class TetrisGame extends TetrisBase
           for(int r = row + 1; r < rowCount; r ++) {
             for (int column = 0; column < columnCount; column++) {
               int idx = index(column, r);
-              Shape s = shapeMap.get(idx);
+              Square s = squareMap.get(idx);
               if (s != null)
               {
-                shapeMap.remove(idx);
-                shapeMap.put(index(column, r - 1), s);
+                squareMap.remove(idx);
+                squareMap.put(index(column, r - 1), s);
               }
             }
           }
@@ -76,7 +74,7 @@ class TetrisGame extends TetrisBase
         boolean empty = true;
         for(int row = 0; row < rowCount; row ++)
         {
-          Shape s = shapeMap.get(index(column, row));
+          Square s = squareMap.get(index(column, row));
           if(s != null)
           {
             empty = false;
@@ -92,11 +90,11 @@ class TetrisGame extends TetrisBase
             for(int row = 0; row < rowCount; row ++)
             {
               int idx = index(c, row);
-              Shape s = shapeMap.get(idx);
+              Square s = squareMap.get(idx);
               if (s != null)
               {
-                shapeMap.remove(idx);
-                shapeMap.put(index(c - 1, row), s);
+                squareMap.remove(idx);
+                squareMap.put(index(c - 1, row), s);
               }
             }
           }
@@ -114,7 +112,7 @@ class TetrisGame extends TetrisBase
       {
         for (int column = 0; column < columnCount; column ++)
         {
-          Shape s = get(column, row);
+          Square s = get(column, row);
           if(s != null) {
             f.put(row, columnCount - column, s);
           }
@@ -132,7 +130,7 @@ class TetrisGame extends TetrisBase
       {
         for (int column = 0; column < columnCount; column ++)
         {
-          Shape s = get(column, row);
+          Square s = get(column, row);
           if(s != null)
             f.put(rowCount - row, column, s);
         }

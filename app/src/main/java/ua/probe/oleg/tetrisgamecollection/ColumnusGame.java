@@ -1,7 +1,6 @@
 package ua.probe.oleg.tetrisgamecollection;
 
 import android.content.Context;
-import android.graphics.Color;
 
 import java.util.ArrayList;
 
@@ -68,7 +67,7 @@ class ColumnusGame extends TetrisBase {
 
         for (int row = rowCount - 2; row >= 0; row--) {
           for (int column = 0; column < columnCount; column++) {
-            Shape s = get(column, row);
+            Square s = get(column, row);
             if (s != null && get(column, row + 1) == null) {
               //Found pended block
               put(column, row + 1, s);
@@ -80,21 +79,21 @@ class ColumnusGame extends TetrisBase {
         }
       } while (modified);
 
-      ArrayList<Cell> list = new ArrayList<Cell>();
+      ArrayList<Cell> list = new ArrayList<>();
 
       //2) Find 3 or more colors and remove it
       for(int row = 0; row < rowCount; row ++) {
         for (int column = 0; column < columnCount; column++)
         {
-          Shape s = get(column, row);
+          Square s = get(column, row);
           if(s == null)
             continue;
 
           //[x][X][x]
           if(column > 0 && column < columnCount - 1)
           {
-            Shape l = get(column - 1, row);
-            Shape r = get(column + 1, row);
+            Square l = get(column - 1, row);
+            Square r = get(column + 1, row);
             if(l != null
               && r != null
               && l.color() == s.color()
@@ -112,8 +111,8 @@ class ColumnusGame extends TetrisBase {
           //[x]
           if(row > 0 && row < rowCount - 1)
           {
-            Shape t = get(column, row - 1);
-            Shape b = get(column, row + 1);
+            Square t = get(column, row - 1);
+            Square b = get(column, row + 1);
             if(t != null
               && b != null
               && t.color() == s.color()
@@ -131,8 +130,8 @@ class ColumnusGame extends TetrisBase {
           //      [x]
           if(row > 0 && row < rowCount - 1 && column > 0 && column < columnCount - 1)
           {
-            Shape t = get(column - 1, row - 1);
-            Shape b = get(column + 1, row + 1);
+            Square t = get(column - 1, row - 1);
+            Square b = get(column + 1, row + 1);
             if(t != null
               && b != null
               && t.color() == s.color()
@@ -150,8 +149,8 @@ class ColumnusGame extends TetrisBase {
           //[x]
           if(row > 0 && row < rowCount - 1 && column > 0 && column < columnCount - 1)
           {
-            Shape t = get(column - 1, row + 1);
-            Shape b = get(column + 1, row - 1);
+            Square t = get(column - 1, row + 1);
+            Square b = get(column + 1, row - 1);
             if(t != null
               && b != null
               && t.color() == s.color()
@@ -180,7 +179,7 @@ class ColumnusGame extends TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  public static class Controller extends TetrisBase.Controller
+  static class Controller extends TetrisBase.Controller
   {
 
     Controller(Context c, String sectionName)
@@ -197,9 +196,9 @@ class ColumnusGame extends TetrisBase {
     @Override
     protected Figure onNewFigure() {
       Figure figure = new ColumnusFigure();
-      figure.put(0, 0, new Shape(randomComplexColor()));
-      figure.put(0, 1, new Shape(randomComplexColor()));
-      figure.put(0, 2, new Shape(randomComplexColor()));
+      figure.put(0, 0, new Square(randomComplexColor()));
+      figure.put(0, 1, new Square(randomComplexColor()));
+      figure.put(0, 2, new Square(randomComplexColor()));
 
       return figure;
     }

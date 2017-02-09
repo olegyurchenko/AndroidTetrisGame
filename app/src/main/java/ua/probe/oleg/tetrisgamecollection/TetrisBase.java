@@ -56,32 +56,32 @@ class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  static class Shape
+  static class Square
   {
     int fillColor, borderColor;
 //    protected int width = 0, height = 0;
     Paint paint = new Paint();
     Rect rect = new Rect();
 
-    Shape(int fColor, int bColor)
+    Square(int fColor, int bColor)
     {
       fillColor = fColor;
       borderColor = bColor;
     }
 
-    Shape(int fColor)
+    Square(int fColor)
     {
       fillColor = fColor;
       borderColor = Color.BLACK;
     }
 
-    Shape(Shape other)
+    Square(Square other)
     {
       fillColor = other.fillColor;
       borderColor = other.borderColor;
     }
 
-    Shape()
+    Square()
     {
       fillColor = Color.WHITE;
       borderColor = Color.BLACK;
@@ -116,17 +116,17 @@ class TetrisBase {
   /*-----------------------------------------------------------------------------------------------*/
   static class Figure
   {
-    SparseArray<Shape> shapeMap;
+    SparseArray<Square> squareMap;
     int columnCount = 0, rowCount = 0;
 
     Figure()
     {
-      shapeMap = new SparseArray<>();
+      squareMap = new SparseArray<>();
     }
 
     Figure(Figure other)
     {
-      shapeMap = other.shapeMap.clone();
+      squareMap = other.squareMap.clone();
       columnCount = other.columnCount;
       rowCount = other.rowCount;
     }
@@ -136,14 +136,14 @@ class TetrisBase {
       return column + 1000000 * row;
     }
 
-    Shape get(int column, int row)
+    Square get(int column, int row)
     {
-      return shapeMap.get(index(column, row));
+      return squareMap.get(index(column, row));
     }
 
-    void put(int column, int row, Shape s)
+    void put(int column, int row, Square s)
     {
-      shapeMap.put(index(column, row), s);
+      squareMap.put(index(column, row), s);
       if(column + 1 > columnCount)
         columnCount = column + 1;
       if(row + 1 > rowCount)
@@ -172,7 +172,7 @@ class TetrisBase {
       {
         for(int c = 0; c < columnCount; c++)
         {
-          Shape s = get(c, r);
+          Square s = get(c, r);
           if(s != null)
           {
             int x = left + c * shapeWidth;
@@ -183,9 +183,9 @@ class TetrisBase {
       }
     }
 
-    Shape onNewShape()
+    Square onNewShape()
     {
-      return new Shape();
+      return new Square();
     }
 
     void save(DataOutputStream dos) throws IOException
@@ -193,13 +193,13 @@ class TetrisBase {
       dos.writeInt(columnCount);
       dos.writeInt(rowCount);
 
-      int size = shapeMap.size();
+      int size = squareMap.size();
       dos.writeInt(size);
       for(int i = 0; i < size; i++)
       {
-        int key = shapeMap.keyAt(i);
+        int key = squareMap.keyAt(i);
         dos.writeInt(key);
-        Shape s = shapeMap.valueAt(i);
+        Square s = squareMap.valueAt(i);
         s.save(dos);
 
       }
@@ -207,21 +207,41 @@ class TetrisBase {
     }
     void load(DataInputStream dis)  throws IOException
     {
-      shapeMap.clear();
+      squareMap.clear();
       columnCount = dis.readInt();
       rowCount = dis.readInt();
       int size = dis.readInt();
       for(int i = 0; i < size; i++)
       {
         int key = dis.readInt();
-        Shape s = onNewShape();
+        Square s = onNewShape();
         s.load(dis);
-        shapeMap.put(key, s);
+        squareMap.put(key, s);
       }
     }
 
   }
 
+  /*-----------------------------------------------------------------------------------------------*/
+  static class Statistics
+  {
+    long figureCount = 0;
+    long squareCount = 0;
+    long workTime = 0; //ms
+    void save(DataOutputStream dos) throws IOException
+    {
+      dos.writeLong(figureCount);
+      dos.writeLong(squareCount);
+      dos.writeLong(workTime);
+    }
+
+    void load(DataInputStream dis)  throws IOException
+    {
+      figureCount = dis.readLong();
+      squareCount = dis.readLong();
+      workTime = dis.readLong();
+    }
+  }
   /*-----------------------------------------------------------------------------------------------*/
   static class Glass
   {
@@ -239,13 +259,14 @@ class TetrisBase {
 
     private boolean drawGuideLines = true;
 
-    private SparseArray<Shape> shapeMap;
+    private SparseArray<Square> squareMap;
+    private Statistics statistics;
 
     Glass(int columns, int rows)
     {
       columnCount = columns;
       rowCount = rows;
-      shapeMap = new SparseArray<>();
+      squareMap = new SparseArray<>();
       paint = new Paint();
 
       guidePaint = new Paint();
@@ -255,11 +276,14 @@ class TetrisBase {
 
       guidePath = new Path();
 
+      statistics = new Statistics();
       score = 0;
     }
 
     public boolean isModified() {return modified;}
     protected void setModified(boolean m) {modified = m;}
+
+    Statistics getStatistics() {return statistics;}
 
     void setRect(Rect r)
     {
@@ -305,7 +329,7 @@ class TetrisBase {
       {
         for(int c = 0; c < columnCount; c++)
         {
-          Shape s = get(c, r);
+          Square s = get(c, r);
           if(s != null)
           {
             int x = rect.left + c * shapeWidth;
@@ -383,7 +407,7 @@ class TetrisBase {
       return column + 1000000 * row;
     }
 
-    Shape get(int column, int row)
+    Square get(int column, int row)
     {
       if(column < 0
         || column >= columnCount
@@ -391,10 +415,10 @@ class TetrisBase {
         || row >= rowCount)
         return null;
 
-      return shapeMap.get(index(column, row));
+      return squareMap.get(index(column, row));
     }
 
-    void put(int column, int row, Shape s)
+    void put(int column, int row, Square s)
     {
       if(column < 0
         || column >= columnCount
@@ -403,9 +427,9 @@ class TetrisBase {
         return;
 
       if(s == null)
-        shapeMap.remove(index(column, row));
+        squareMap.remove(index(column, row));
       else
-         shapeMap.put(index(column, row), s);
+         squareMap.put(index(column, row), s);
       setModified(true);
     }
 
@@ -440,6 +464,7 @@ class TetrisBase {
         return false;
       activeFigure = f;
       activeFigurePosition = cell;
+      statistics.figureCount ++;
       setModified(true);
       return true;
     }
@@ -553,12 +578,13 @@ class TetrisBase {
       {
         for(int column = 0; column < columnCount; column ++)
         {
-          Shape s = activeFigure.get(column, row);
+          Square s = activeFigure.get(column, row);
           if(s != null)
           {
             put(activeFigurePosition.column() + column,
               activeFigurePosition.row() + row,
               s);
+            statistics.squareCount++;
           }
         }
       }
@@ -571,44 +597,47 @@ class TetrisBase {
     }
     void onNewGame()
     {
-      shapeMap.clear();
+      squareMap.clear();
       activeFigure = null;
       activeFigurePosition = new Cell();
       score = 0;
+      statistics = new Statistics();
     }
 
-    Shape onNewShape()
+    Square onNewShape()
     {
-      return new Shape();
+      return new Square();
     }
 
     void save(DataOutputStream dos) throws IOException
     {
-      int size = shapeMap.size();
+      int size = squareMap.size();
       dos.writeInt(size);
       for(int i = 0; i < size; i++)
       {
-        int key = shapeMap.keyAt(i);
+        int key = squareMap.keyAt(i);
         dos.writeInt(key);
-        Shape s = shapeMap.valueAt(i);
+        Square s = squareMap.valueAt(i);
         s.save(dos);
       }
+      statistics.save(dos);
       dos.writeLong(score);
     }
 
     void load(DataInputStream dis)  throws IOException
     {
-      shapeMap.clear();
+      squareMap.clear();
       activeFigure = null;
 
       int size = dis.readInt();
       for(int i = 0; i < size; i++)
       {
         int key = dis.readInt();
-        Shape s = onNewShape();
+        Square s = onNewShape();
         s.load(dis);
-        shapeMap.put(key, s);
+        squareMap.put(key, s);
       }
+      statistics.load(dis);
       score = dis.readLong();
     }
   }
@@ -620,7 +649,7 @@ class TetrisBase {
 
     int speedRate = 50;
     int complexRate = 50;
-    int columnCount = 8, rowCount = 16;
+    int columnCount = 10, rowCount = 20;
     boolean showNextFigure = true;
     boolean showScore = true;
     boolean showGuideLines = true;
@@ -782,9 +811,9 @@ class TetrisBase {
     /*============================================================*/
     protected Figure onNewFigure() {
       Figure figure = new Figure();
-      figure.put(0, 0, new Shape(Color.GREEN, Color.BLACK));
-      figure.put(0, 1, new Shape(Color.RED, Color.BLACK));
-      figure.put(0, 2, new Shape(Color.BLUE, Color.BLACK));
+      figure.put(0, 0, new Square(Color.GREEN, Color.BLACK));
+      figure.put(0, 1, new Square(Color.RED, Color.BLACK));
+      figure.put(0, 2, new Square(Color.BLUE, Color.BLACK));
 
       return figure;
     }
@@ -917,6 +946,47 @@ class TetrisBase {
 
     }
     /*============================================================*/
+    String[] ratingText()
+    {
+      Statistics statistics = glass.getStatistics();
+      String[] strings = new String[4];
+
+      final long SEC_IN_MINUTE = 60;
+      final long SEC_IN_HOUR = 3600;
+      final long SEC_IN_DAY = 86400;
+      long day, hour, min, sec;
+
+      sec = statistics.workTime / 1000;
+
+      day = sec / SEC_IN_DAY;
+      sec %= SEC_IN_DAY;
+
+      hour = sec / SEC_IN_HOUR;
+      sec %= SEC_IN_HOUR;
+
+      min = sec / SEC_IN_MINUTE;
+      sec %= SEC_IN_MINUTE;
+
+
+      strings[0] = String.format(Locale.getDefault(), "%s:%,d",
+        context.getString(R.string.score),
+        glass.getScore());
+
+      strings[1] = String.format(Locale.getDefault(), "%s: %,d-%02d:%02d:%02d",
+        context.getString(R.string.game_time),
+        day, hour, min, sec);
+
+      strings[2] = String.format(Locale.getDefault(), "%s: %,d",
+        context.getString(R.string.number_of_figures),
+        statistics.figureCount);
+
+      strings[3] = String.format(Locale.getDefault(), "%s: %,d",
+        context.getString(R.string.number_of_squares),
+        statistics.squareCount);
+
+      return strings;
+    }
+    /*============================================================*/
     void onDraw(Canvas canvas)
     {
       Figure figure = this.nextFigure; //For thread safe
@@ -1018,6 +1088,15 @@ class TetrisBase {
         paint.setTextSize(30);
 
         int y = ratingY + 30;
+        String[] strings = ratingText();
+
+        for(String str : strings)
+        {
+          canvas.drawText(str, ratingX, y, paint);
+          y += 30;
+        }
+
+/*
         canvas.drawText(context.getString(R.string.speed) + ": " + settings.speedRate + "%", ratingX, y, paint);
         y += 30;
         canvas.drawText(context.getString(R.string.complex) + ": " + settings.complexRate + "%", ratingX, y, paint);
@@ -1025,6 +1104,7 @@ class TetrisBase {
         canvas.drawText(context.getString(R.string.score) + ": "
           + String.format(Locale.getDefault(), "%,d", glass.getScore()),
           ratingX, y, paint);
+*/
 /*
         if(accelerometer != null)
         {
@@ -1392,6 +1472,7 @@ class TetrisBase {
       if(state != State.WORKED)
         return;
 
+      glass.getStatistics().workTime += interval;
       if(glass.getActiveFigure() == null)
       {
 
@@ -1511,7 +1592,7 @@ class TetrisBase {
     }
     /*============================================================*/
     private final int STAR = 0xdeadbeef;
-    private final int STREAM_VERSION = 1;
+    private final int STREAM_VERSION = 2;
 
     /**
      * Save controller state to stream

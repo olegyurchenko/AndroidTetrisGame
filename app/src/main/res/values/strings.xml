@@ -31,5 +31,9 @@
     <string name="undo">Undo</string>
     <string name="select_game">Select game</string>
     <string name="settings">Settings</string>
+    <string name="game_time">Game time</string>
+    <string name="number_of_figures">Number of figures</string>
+    <string name="number_of_squares">Number of squares</string>
+    <string name="number_of_balls">Number of balls</string>
 
 </resources>
