@@ -35,5 +35,6 @@
     <string name="number_of_figures">Number of figures</string>
     <string name="number_of_squares">Number of squares</string>
     <string name="number_of_balls">Number of balls</string>
+    <string name="about">About</string>
 
 </resources>
