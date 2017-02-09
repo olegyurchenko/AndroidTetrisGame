@@ -21,5 +21,6 @@
         android:ems="10"
         android:id="@+id/edit_seed"
         android:layout_weight="1"
-        android:inputType="number"/>
+        android:inputType="number"
+        android:selectAllOnFocus="true"/>
 </LinearLayout>

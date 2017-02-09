@@ -17,6 +17,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -193,8 +196,7 @@ public class TetrisBaseActivity extends AppCompatActivity
       case R.id.item_magic:
         if(gameController.state != TetrisBase.Controller.State.PAUSED)
           gameController.toglePause();
-        Dialog dialog = createMagicDialog();
-        dialog.show();
+        showMagicDialog();
         return true;
       case R.id.item_settings:
         onSettings();
@@ -243,8 +245,7 @@ public class TetrisBaseActivity extends AppCompatActivity
         //gameController.onNewGame(0L);
         if(gameController.state != TetrisBase.Controller.State.PAUSED)
           gameController.toglePause();
-        Dialog dialog = createMagicDialog();
-        dialog.show();
+        showMagicDialog();
         break;
       case R.id.btnUndo:
         gameController.onUndo();
@@ -258,6 +259,20 @@ public class TetrisBaseActivity extends AppCompatActivity
     b.putString("sectionName", sectionName);
     intent.putExtras(b);
     startActivityForResult(intent, 1);
+  }
+
+  void showMagicDialog()
+  {
+    Dialog dialog = createMagicDialog();
+
+    Window window = dialog.getWindow();
+
+    if(window != null)
+      window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+    dialog.show();
+    //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    //imm.showSoftInput(seedEdit, InputMethodManager.SHOW_IMPLICIT);
   }
 
   @Override
