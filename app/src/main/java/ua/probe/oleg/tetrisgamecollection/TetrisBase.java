@@ -1401,7 +1401,7 @@ class TetrisBase {
         }
         else
         {
-          saveUndo();
+          mkUndoPoint();
           if (!glass.put(nextFigure)) {
             state = State.FINISHED;
             glass.setModified(true);
@@ -1435,7 +1435,7 @@ class TetrisBase {
     /*============================================================*/
     void onNewGame()
     {
-      saveUndo();
+      mkUndoPoint();
       onSettingsChanged();
       state = State.PAUSED;
       //glass.onNewGame();
@@ -1449,6 +1449,9 @@ class TetrisBase {
       random.setSeed(randomSeed);
     }
     /*============================================================*/
+    /**
+     * Save controller state to file
+     */
     void save()
     {
       String filename = String.format("%s.bin", sectionName);
@@ -1459,6 +1462,17 @@ class TetrisBase {
         );
 
         save(dos);
+
+        //Save undo buffer
+        int us = undo.size();
+        dos.writeInt(us);
+        for(int i = 0; i < us; i++) {
+          byte[] b = undo.elementAt(i);
+          dos.writeInt(b.length);
+          dos.write(b);
+        }
+
+
         dos.flush();
       }
       catch (IOException e) {
@@ -1466,6 +1480,9 @@ class TetrisBase {
       }
     }
     /*============================================================*/
+    /**
+     * Load controller state from file
+     */
     void load()
     {
       String filename = String.format("%s.bin", sectionName);
@@ -1476,6 +1493,17 @@ class TetrisBase {
         );
 
         load(dis);
+
+        //Load undo buffer
+        int us = dis.readInt();
+        for(int i = 0; i < us; i++) {
+          int length = dis.readInt();
+          byte [] b = new byte [length];
+          if(dis.read(b) < 0) {
+            throw new IOException("Error read undo");
+          }
+          undo.push(b);
+        }
       }
       catch (IOException e)  {
         e.printStackTrace();
@@ -1485,6 +1513,11 @@ class TetrisBase {
     private final int STAR = 0xdeadbeef;
     private final int STREAM_VERSION = 1;
 
+    /**
+     * Save controller state to stream
+     * @param dos - stream to save
+     * @throws IOException
+     */
     void save(DataOutputStream dos) throws IOException
     {
       dos.writeInt(STAR);
@@ -1510,11 +1543,17 @@ class TetrisBase {
       {
         dos.writeByte(0);
       }
-
+      //Save radnom generator state
       ObjectOutputStream oos = new ObjectOutputStream(dos);
       oos.writeObject(random);
     }
     /*============================================================*/
+
+    /**
+     * Load controller state from stream
+     * @param dis - stream for loat
+     * @throws IOException
+     */
     void load(DataInputStream dis)  throws IOException
     {
       if(dis.readInt() != STAR)
@@ -1541,6 +1580,7 @@ class TetrisBase {
         nextFigure.load(dis);
       }
 
+      //Restore radnom generator state
       ObjectInputStream ois = new ObjectInputStream(dis);
       try {
         random = (Random) ois.readObject();
@@ -1550,7 +1590,10 @@ class TetrisBase {
       }
     }
     /*============================================================*/
-    void saveUndo() {
+    /**
+     * Save current state to undo stack
+     * */
+    void mkUndoPoint() {
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
       DataOutputStream dos;
       try {
@@ -1561,7 +1604,7 @@ class TetrisBase {
       }
 
       catch (IOException e) {
-        Log.e("saveUndo()", e.getMessage());
+        Log.e("mkUndoPoint()", e.getMessage());
       }
 
 
@@ -1571,6 +1614,9 @@ class TetrisBase {
       }
     }
     /*============================================================*/
+    /**
+     * Restore controller state from undo stack.
+     */
     void onUndo() {
       if (!undo.isEmpty()) {
         ByteArrayInputStream bis = new ByteArrayInputStream(undo.pop());
@@ -1579,7 +1625,7 @@ class TetrisBase {
           dis = new DataInputStream(bis);
           load(dis);
         } catch (IOException e) {
-          Log.e("saveUndo()", e.getMessage());
+          Log.e("mkUndoPoint()", e.getMessage());
         }
 
         state = State.PAUSED;
