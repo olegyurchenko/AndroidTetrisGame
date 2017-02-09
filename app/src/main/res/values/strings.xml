@@ -36,5 +36,11 @@
     <string name="number_of_squares">Number of squares</string>
     <string name="number_of_balls">Number of balls</string>
     <string name="about">About</string>
+    <string name="version_format">v%1$s (build at %2$s)</string>
+    <string name="tetris_html_help_file">file:///android_asset/tetris_help.html</string>
+    <string name="columnus_html_help_file">file:///android_asset/columnus_help.html</string>
+    <string name="color_balls_html_help_file">file:///android_asset/color_balls_help.html</string>
+    <string name="title_activity_help_about">HelpAboutActivity</string>
+
 
 </resources>
