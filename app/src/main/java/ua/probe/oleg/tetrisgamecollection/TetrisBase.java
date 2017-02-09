@@ -968,7 +968,7 @@ class TetrisBase {
       sec %= SEC_IN_MINUTE;
 
 
-      strings[0] = String.format(Locale.getDefault(), "%s:%,d",
+      strings[0] = String.format(Locale.getDefault(), "%s: %,d",
         context.getString(R.string.score),
         glass.getScore());
 
