@@ -43,7 +43,7 @@ public class HelpActivity extends AppCompatActivity {
     tabSpec = tabHost.newTabSpec("tag1");
     tabSpec.setIndicator(getString(R.string.about));
     // создаем View из layout-файла
-    tabSpec.setContent(R.id.text_abouut);
+    tabSpec.setContent(R.id.view_about);
     tabHost.addTab(tabSpec);
 
     tabSpec = tabHost.newTabSpec("tag2");
@@ -65,9 +65,9 @@ public class HelpActivity extends AppCompatActivity {
     tabHost.setCurrentTabByTag("tag1");
 
 
+    WebView wv;
+    wv = (WebView)findViewById(R.id.view_about);
 
-    TextView aboutTextView = (TextView) findViewById(R.id.text_abouut);
-    //int versionCode = BuildConfig.VERSION_CODE;
     String versionName = BuildConfig.VERSION_NAME;
 
     String versionText = String.format(Locale.getDefault(), getString(R.string.version_format),
@@ -79,10 +79,11 @@ public class HelpActivity extends AppCompatActivity {
       readAboutText(),
       versionText);
 
-    aboutTextView.setText(Html.fromHtml(aboutText));
+    wv.loadData(aboutText, "text/html; charset=utf-8", "utf-8");
 
-    WebView wv = (WebView)findViewById(R.id.view_tetris);
+    wv = (WebView)findViewById(R.id.view_tetris);
     wv.loadUrl(getString(R.string.tetris_html_help_file));
+
 
     wv = (WebView)findViewById(R.id.view_columnus);
     wv.loadUrl(getString(R.string.columnus_html_help_file));

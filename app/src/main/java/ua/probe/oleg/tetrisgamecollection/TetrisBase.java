@@ -653,9 +653,9 @@ class TetrisBase {
     boolean showNextFigure = true;
     boolean showScore = true;
     boolean showGuideLines = true;
-    boolean useAccelerometer = true;
+    boolean useAccelerometer = false;
     boolean useTouch = true;
-    boolean useShake = true;
+    boolean useShake = false;
     long randomSeed;
 
     private void check()
@@ -683,14 +683,14 @@ class TetrisBase {
       SharedPreferences preferences = context.getSharedPreferences(sectionName, Context.MODE_PRIVATE);
       speedRate = preferences.getInt("speedRate", 50);
       complexRate = preferences.getInt("complexRate", 50);
-      columnCount = preferences.getInt("columnCount", 8);
-      rowCount = preferences.getInt("rowCount", 16);
+      columnCount = preferences.getInt("columnCount", 10);
+      rowCount = preferences.getInt("rowCount", 20);
       showNextFigure = preferences.getBoolean("showNextFigure", true);
       showScore = preferences.getBoolean("showScore", true);
       showGuideLines = preferences.getBoolean("showGuideLines", true);
-      useAccelerometer = preferences.getBoolean("useAccelerometer", true);
+      useAccelerometer = preferences.getBoolean("useAccelerometer", false);
       useTouch = preferences.getBoolean("useTouch", true);
-      useShake = preferences.getBoolean("useShake", true);
+      useShake = preferences.getBoolean("useShake", false);
       randomSeed = preferences.getLong("randomSeed", 0);
       check();
     }

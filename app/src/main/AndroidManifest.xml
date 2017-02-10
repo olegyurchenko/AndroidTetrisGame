@@ -26,8 +26,6 @@
         </activity>
         <activity android:name=".HelpActivity">
         </activity>
-        <activity android:name=".HelpAboutActivity">
-        </activity>
     </application>
 
 </manifest>
