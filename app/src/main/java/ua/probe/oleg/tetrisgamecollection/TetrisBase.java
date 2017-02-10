@@ -758,6 +758,7 @@ class TetrisBase {
     Random random;
     final int UNDO_SIZE = 32;
     Stack<byte[]> undo;
+    final int TEXT_SIZE = 30;
     /*============================================================*/
     Controller(Context c, String sectionName)
     {
@@ -897,36 +898,32 @@ class TetrisBase {
 
       if(rect.width() < rect.height()) //Verical
       {
+        int textHeight = ratingText().length * TEXT_SIZE + TEXT_SIZE;
+
         x = border;
         w = rect.width() - 2 * border;
         h = (w / glass.getColumnCount()) * glass.getRowCount();
         w = (h / glass.getRowCount()) * glass.getColumnCount();
         y = border + 3 * 20;
 
-        nextFigureX = x ;
-        nextFigureY = border;
-
-        ratingX = x;
-        ratingY = y + h;
-
         glass.setRect(
           new Rect(x, y, x + w, y + h) );
 
-        if(y + h > rect.height())
+        if(y + h + textHeight > rect.height())
         {
-          h = rect.height() - y;
+          h = rect.height() - y - textHeight;
           w = (h / glass.getRowCount()) * glass.getColumnCount();
           h = (w / glass.getColumnCount()) * glass.getRowCount();
 
           glass.setRect(
             new Rect(x, y, x + w, y + h) );
-
-          nextFigureX = x + w + border;
-          nextFigureY = border;
-
-          ratingX = x + w + border;
-          ratingY = border + glass.getShapeWidth() * 3;
         }
+
+        nextFigureX = x ;
+        nextFigureY = border;
+
+        ratingX = x;
+        ratingY = y + h + TEXT_SIZE / 2;
       }
       else
       { //Horisontal
@@ -940,7 +937,7 @@ class TetrisBase {
         nextFigureX = x + w + border;
         nextFigureY = border;
 
-        ratingX = x + w + border;
+        ratingX = x + w + border + TEXT_SIZE / 2;
         ratingY = border + glass.getShapeWidth() * 3;
       }
 
@@ -1085,15 +1082,15 @@ class TetrisBase {
       if(settings.showScore)
       {
         paint.setColor(Color.BLUE);
-        paint.setTextSize(30);
+        paint.setTextSize(TEXT_SIZE);
 
-        int y = ratingY + 30;
+        int y = ratingY + TEXT_SIZE;
         String[] strings = ratingText();
 
         for(String str : strings)
         {
           canvas.drawText(str, ratingX, y, paint);
-          y += 30;
+          y += TEXT_SIZE;
         }
 
 /*
