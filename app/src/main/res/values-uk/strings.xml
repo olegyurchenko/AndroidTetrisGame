@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Колекція тетрисів</string>
+    <string name="about">Про програму</string>
+    <string name="about_file">uk/about.html</string>
+    <string name="action_color_balls">Кольорові м\'ячики</string>
+    <string name="action_columnus">Стовбчики</string>
+    <string name="action_tetris">Тетрис</string>
+    <string name="cancel">Відміна</string>
+    <string name="color_balls_html_help_file">file:///android_asset/uk/color_balls_help.html</string>
+    <string name="column_count">Кількість стовбчиків</string>
+    <string name="complex">Складність</string>
+    <string name="complex_rate">Рівень складності</string>
+    <string name="finished">Закінчена</string>
+    <string name="game_time">Час гри</string>
+    <string name="help">Довідка</string>
+    <string name="new_game">Нова гра</string>
+    <string name="number_of_balls">Кількість м\'ячів</string>
+    <string name="number_of_figures">Кількість фігур</string>
+    <string name="number_of_squares">Кількість квадратів</string>
+    <string name="ok">ТАК</string>
+    <string name="pause">Пауза</string>
+    <string name="paused">Пауза</string>
+    <string name="random_seed_value">Випадкове початкове значення</string>
+    <string name="reset_to_default">Скинути за замовчуванням</string>
+    <string name="row_count">Кількість рядків</string>
+    <string name="score">Рахунок</string>
+    <string name="select_game">Вибір гри</string>
+    <string name="settings">Налаштування</string>
+    <string name="show_guide_lines">Показувати направляючі</string>
+    <string name="show_next_figure">Показувіти наступну фігуру</string>
+    <string name="show_score">Показувати рахунок</string>
+    <string name="speed">Швидкість</string>
+    <string name="speed_rate">Рівень швидкості</string>
+    <string name="color_balls_section_name">ColorBalls</string>
+    <string name="columnus_html_help_file">file:///android_asset/uk/columnus_help.html</string>
+    <string name="columnus_section_name">Columnus</string>
+    <string name="tetris_html_help_file">file:///android_asset/uk/tetris_help.html</string>
+    <string name="tetris_section_name">Tetris</string>
+    <string name="undo">Відмінити</string>
+    <string name="use_accelerometer">Використання акселерометра</string>
+    <string name="use_shake">Використання тряски</string>
+    <string name="use_touch">Використання торкання</string>
+    <string name="version_format">v%1$s (збірка %2$s)</string>
+</resources>

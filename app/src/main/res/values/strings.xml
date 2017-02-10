@@ -13,7 +13,6 @@
     <string name="show_next_figure">Show next figure</string>
     <string name="complex_rate">Complex rate</string>
     <string name="speed_rate">Speed rate</string>
-    <string name="column_count">Column count</string>
     <string name="row_count">Row count</string>
     <string name="show_guide_lines">Show gude lines</string>
     <string name="show_score">Show score</string>
@@ -40,7 +39,8 @@
     <string name="tetris_html_help_file">file:///android_asset/tetris_help.html</string>
     <string name="columnus_html_help_file">file:///android_asset/columnus_help.html</string>
     <string name="color_balls_html_help_file">file:///android_asset/color_balls_help.html</string>
-    <string name="title_activity_help_about">HelpAboutActivity</string>
+    <string name="about_file">about.html</string>
+    <string name="column_count">Column count</string>
 
 
 </resources>

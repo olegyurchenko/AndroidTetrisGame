@@ -79,7 +79,7 @@ public class HelpActivity extends AppCompatActivity {
       readAboutText(),
       versionText);
 
-    wv.loadData(aboutText, "text/html; charset=utf-8", "utf-8");
+    wv.loadDataWithBaseURL("file:///android_asset/", aboutText, "text/html; charset=utf-8", "utf-8", null);
 
     wv = (WebView)findViewById(R.id.view_tetris);
     wv.loadUrl(getString(R.string.tetris_html_help_file));
@@ -118,7 +118,7 @@ public class HelpActivity extends AppCompatActivity {
     StringBuilder result = new StringBuilder();
     try {
       AssetManager am = getAssets();
-      InputStream is = am.open("about.txt");
+      InputStream is = am.open(getString(R.string.about_file));
       BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
       String line;

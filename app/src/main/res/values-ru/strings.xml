@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Коллекция тетрисов</string>
+    <string name="about">О программе</string>
+    <string name="about_file">ru/about.html</string>
+    <string name="action_color_balls">Цветные мячики</string>
+    <string name="action_columnus">Столбики</string>
+    <string name="action_tetris">Тетрис</string>
+    <string name="cancel">Отмена</string>
+    <string name="color_balls_html_help_file">file:///android_asset/ru/color_balls_help.html</string>
+    <string name="color_balls_section_name">ColorBalls</string>
+    <string name="column_count">Количество столбцов</string>
+    <string name="columnus_html_help_file">file:///android_asset/ru/columnus_help.html</string>
+    <string name="columnus_section_name">Columnus</string>
+    <string name="complex">Сложность</string>
+    <string name="complex_rate">Уровень сложности</string>
+    <string name="finished">Закончена</string>
+    <string name="game_time">Время игры</string>
+    <string name="help">Справка</string>
+    <string name="new_game">Новая игра</string>
+    <string name="number_of_balls">Количество мячей</string>
+    <string name="number_of_figures">Количество фигур</string>
+    <string name="number_of_squares">Количество квадратов</string>
+    <string name="ok">ДА</string>
+    <string name="pause">Пауза</string>
+    <string name="paused">Пауза</string>
+    <string name="random_seed_value">Случайное начальное значение</string>
+    <string name="reset_to_default">Сброс по умолчанию</string>
+    <string name="row_count">Количество строк</string>
+    <string name="score">Счет</string>
+    <string name="select_game">Выбор игры</string>
+    <string name="settings">Настройки</string>
+    <string name="show_guide_lines">Показывать направляющие</string>
+    <string name="show_next_figure">Показывать следующую фигуру</string>
+    <string name="show_score">Показывать счет</string>
+    <string name="speed">Скорость</string>
+    <string name="speed_rate">Уровень скорости</string>
+    <string name="tetris_html_help_file">file:///android_asset/ru/tetris_help.html</string>
+    <string name="tetris_section_name">Tetris</string>
+    <string name="undo">Отменить</string>
+    <string name="use_accelerometer">Использовать акселерометр</string>
+    <string name="use_shake">Использовать встряску</string>
+    <string name="use_touch">Использовать касание</string>
+    <string name="version_format">v%1$s (сборка %2$s</string>
+</resources>
