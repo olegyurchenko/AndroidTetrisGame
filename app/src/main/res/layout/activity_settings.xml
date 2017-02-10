@@ -2,39 +2,33 @@
 
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fadeScrollbars="false"
-    android:scrollbarAlwaysDrawVerticalTrack="true"
-    >
+    android:scrollbarAlwaysDrawVerticalTrack="false"
+    android:scrollbarStyle="insideOverlay"
+    app:layout_scrollFlags="scroll|enterAlways">
 
     <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:scrollbarAlwaysDrawHorizontalTrack="false"
-    android:layout_marginLeft="20dp"
-    android:layout_marginStart="20dp"
-    >
+        >
 
 
     <TableLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp">
         <TableRow android:gravity="center_vertical">
             <TextView
                 android:text="@string/column_count"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <SeekBar
-                android:layout_width="200dp"
-                android:max="100"
-                android:progress="50"
-                android:id="@+id/seek_columns"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
-                android:layout_height="50dp"/>
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -42,26 +36,38 @@
                 android:id="@+id/text_columns"
                 android:text="8"/>
 
+            <SeekBar
+                android:layout_width="match_parent"
+                android:max="100"
+                android:progress="50"
+                android:id="@+id/seek_columns"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_height="50dp"
+                android:minWidth="120dp"/>
+
+
         </TableRow>
         <TableRow android:gravity="center_vertical">
             <TextView
                 android:text="@string/row_count"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <SeekBar
-                android:layout_width="200dp"
-                android:max="100"
-                android:progress="50"
-                android:id="@+id/seek_rows"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
-                android:layout_height="50dp"/>
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_rows"
                 android:text="8"/>
+
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:max="100"
+                android:progress="50"
+                android:id="@+id/seek_rows"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_height="match_parent"/>
+
 
         </TableRow>
         <TableRow android:gravity="center_vertical">
@@ -70,10 +76,17 @@
             <TextView
                 android:text="@string/speed"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_speed"
+                android:text="%"/>
 
             <SeekBar
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:max="100"
                 android:progress="50"
                 android:id="@+id/seek_speed"
@@ -83,11 +96,6 @@
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_height="50dp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/text_speed"
-                android:text="%"/>
 
         </TableRow>
 
@@ -95,11 +103,18 @@
             <TextView
                 android:text="@string/complex"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"/>
+
+            <TextView
+                android:text="%"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_complex"/>
 
             <SeekBar
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:max="100"
                 android:progress="50"
@@ -108,11 +123,6 @@
                 android:maxWidth="300dp"
                 android:minHeight="2dp"/>
 
-            <TextView
-                android:text="%"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/text_complex"/>
 
         </TableRow>
 
@@ -120,7 +130,8 @@
             <TextView
                 android:text="@string/show_next_figure"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"/>
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
@@ -132,7 +143,8 @@
             <TextView
                 android:text="@string/show_score"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"/>
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
@@ -144,7 +156,8 @@
             <TextView
                 android:text="@string/show_guide_lines"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"/>
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
@@ -156,7 +169,8 @@
             <TextView
                 android:text="@string/use_accelerometer"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"/>
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
@@ -168,7 +182,8 @@
             <TextView
                 android:text="@string/use_touch"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"/>
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
@@ -180,7 +195,8 @@
             <TextView
                 android:text="@string/use_shake"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"/>
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
