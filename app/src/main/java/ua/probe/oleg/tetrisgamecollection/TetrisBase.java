@@ -703,8 +703,20 @@ class TetrisBase {
      */
     int calcContentRating()
     {
-      /*Pure virtual */
-      return 0;
+      Glass g;
+      try {
+        g = clone();
+      } catch (CloneNotSupportedException e) {
+        Log.e("Glass", e.getMessage());
+        return 0;
+      }
+
+      int rating = 0;
+      long oldScore = g.score;
+      while (g.annigilation())
+        rating ++;
+      rating += g.score - oldScore;
+      return rating;
     }
 
     /**
@@ -760,7 +772,7 @@ class TetrisBase {
           }
 
           if(col != g1.activeFigurePosition.column())
-            break;
+            continue;
 
           g1.moveBottom();
           action.rate = g1.calcContentRating();
