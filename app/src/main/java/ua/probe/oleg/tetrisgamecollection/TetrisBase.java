@@ -22,6 +22,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
 import java.util.Stack;
@@ -114,7 +115,7 @@ class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  static class Figure
+  static class Figure implements Cloneable
   {
     SparseArray<Square> squareMap;
     int columnCount = 0, rowCount = 0;
@@ -130,6 +131,16 @@ class TetrisBase {
       columnCount = other.columnCount;
       rowCount = other.rowCount;
     }
+
+    public Figure clone() throws CloneNotSupportedException
+    {
+      Figure f = (Figure) super.clone();
+      f.squareMap = squareMap.clone();
+      f.columnCount = columnCount;
+      f.rowCount = rowCount;
+      return f;
+    }
+
 
     int index(int column, int row)
     {
@@ -243,7 +254,27 @@ class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  static class Glass
+  private static class GlassAction  implements Cloneable
+  {
+    int rotate = 0;
+    int move = 0;
+    int rate = 0;
+
+    GlassAction() {
+    rotate = 0;
+    move = 0;
+    rate = 0;
+    }
+
+    GlassAction(GlassAction other)
+    {
+      rotate = other.rotate;
+      move = other.move;
+      rate = other.rate;
+    }
+  }
+  /*-----------------------------------------------------------------------------------------------*/
+  static class Glass implements Cloneable
   {
     int rowCount, columnCount;
     int fillColor = Color.WHITE, borderColor = Color.BLUE;
@@ -264,6 +295,11 @@ class TetrisBase {
 
     Glass(int columns, int rows)
     {
+      init(columns, rows);
+    }
+
+    void init(int columns, int rows)
+    {
       columnCount = columns;
       rowCount = rows;
       squareMap = new SparseArray<>();
@@ -279,6 +315,24 @@ class TetrisBase {
       statistics = new Statistics();
       score = 0;
     }
+
+    public Glass clone() throws CloneNotSupportedException
+    {
+      Glass g = (Glass) super.clone();
+      g.init(columnCount, rowCount);
+      g.squareMap = squareMap.clone();
+      g.rect = new Rect(rect);
+      if(activeFigure != null)
+        g.activeFigure = activeFigure.clone();
+
+      g.activeFigurePosition = new Cell(activeFigurePosition);
+      g.score = score;
+      g.scoreScale = scoreScale;
+      g.drawGuideLines = drawGuideLines;
+
+      return g;
+    }
+
 
     public boolean isModified() {return modified;}
     protected void setModified(boolean m) {modified = m;}
@@ -595,6 +649,8 @@ class TetrisBase {
     {
       return false;
     }
+
+
     void onNewGame()
     {
       squareMap.clear();
@@ -639,6 +695,106 @@ class TetrisBase {
       }
       statistics.load(dis);
       score = dis.readLong();
+    }
+
+    /**
+     * Calculate rating of glass content for brute variants for the best possible step
+     * @return rateing of the glass content
+     */
+    int calcContentRating()
+    {
+      /*Pure virtual */
+      return 0;
+    }
+
+    /**
+     * Calculate best action for current state of glass
+     * @return action or null
+     */
+    GlassAction calcBestWay()
+    {
+      if(activeFigure == null)
+        return null;
+
+      ArrayList<GlassAction> actionList = new ArrayList<>();
+      for (int rotation = 0; rotation < 4; rotation++) {
+        Glass g0;
+        try {
+          g0 = clone();
+        } catch (CloneNotSupportedException e) {
+          Log.e("Glass", e.getMessage());
+          return null;
+        }
+
+        GlassAction action = new GlassAction();
+        for (action.rotate = 0; action.rotate < rotation; action.rotate++) {
+          if (!g0.rotate())
+            break;
+        }
+
+        if (action.rotate < rotation)
+          break;
+
+        for(int col = 0; col < columnCount; col ++)
+        {
+            Glass g1;
+            try {
+              g1 = g0.clone();
+            } catch (CloneNotSupportedException e) {
+              Log.e("Glass", e.getMessage());
+              return null;
+            }
+
+          action.move = 0;
+          while(g1.activeFigurePosition.column() > col)
+          {
+            if(!g1.moveLeft())
+              break;
+            action.move -= 1;
+          }
+          while(g1.activeFigurePosition.column() < col)
+          {
+            if(!g1.moveRight())
+              break;
+            action.move += 1;
+          }
+
+          if(col != g1.activeFigurePosition.column())
+            break;
+
+          g1.moveBottom();
+          action.rate = g1.calcContentRating();
+          actionList.add(new GlassAction(action));
+        }
+      }
+
+      if(actionList.isEmpty())
+        return null;
+
+
+      String  txt = "";
+      for(GlassAction action : actionList) {
+        txt += String.format(Locale.getDefault(), "{move:%d, rotate:%d, rate:%d}",
+          action.move,
+          action.rotate,
+          action.rate
+          );
+      }
+      Log.d("CalcBestWay()", txt);
+
+      //Find action with max rating
+      int maxIdx = 0, maxRate = actionList.get(0).rate;
+      int sz = actionList.size();
+      for(int i = 1; i < sz; i++)
+      {
+        int rate = actionList.get(i).rate;
+        if(rate > maxRate)
+        {
+          maxRate = rate;
+          maxIdx = i;
+        }
+      }
+      return actionList.get(maxIdx);
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
@@ -1707,6 +1863,43 @@ class TetrisBase {
         }
 
         state = State.PAUSED;
+        setModified(true);
+      }
+    }
+    /*============================================================*/
+    void onRobotAction()
+    {
+      if(state == State.PAUSED)
+      {
+        state = State.WORKED;
+        return;
+      }
+
+      if(state != State.WORKED)
+        return;
+
+      GlassAction action = glass.calcBestWay();
+      if(action != null)
+      {
+        while(action.rotate > 0) {
+          glass.rotate();
+          action.rotate--;
+        }
+
+        while ((action.move > 0))
+        {
+          glass.moveRight();
+          action.move -= 1;
+        }
+
+        while ((action.move < 0))
+        {
+          glass.moveLeft();
+          action.move += 1;
+        }
+
+        glass.moveBottom();
+        setModified(glass.isModified());
       }
     }
     /*============================================================*/

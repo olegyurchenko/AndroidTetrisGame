@@ -177,6 +177,85 @@ class TetrisGame extends TetrisBase
       }
       return false;
     }
+
+    /**
+     * Calculate rating of glass content for brute variants for the best possible step
+     * @return rateing of the glass content
+     */
+    @Override
+    int calcContentRating()
+    {
+      final int
+        RATE_EMPTY_MIDLE = -10,
+        RATE_FULL_ROW = 10,
+        RATE_EMPTY_ROW = 2,
+        RATE_IMHOMOGENITY = -2;
+
+
+
+      int rating = 0;
+
+      for(int row = 0; row < rowCount; row++)
+      {
+
+        boolean empty = true, full = true;
+        for(int col = 0; col < columnCount; col++)
+        {
+          Square s = get(col, row);
+          if(s != null)
+          {
+            empty = false;
+          }
+          else
+          {
+            full = false;
+            //[ ][X]
+            //[ ]
+            if(row > 0
+              && col < columnCount - 1
+              && get(col, row - 1) == null
+              && get(col + 1, row - 1) != null)
+              rating += RATE_IMHOMOGENITY;
+
+            //[X][ ]
+            //   [ ]
+            if(row > 0
+              && col > 0
+              && get(col, row - 1) == null
+              && get(col - 1, row - 1) != null)
+              rating += RATE_IMHOMOGENITY;
+
+          }
+        }
+
+        if(full)
+          rating += RATE_FULL_ROW;
+
+        if(empty)
+          rating += RATE_EMPTY_ROW;
+
+      }
+
+      for(int col = 0; col < columnCount; col++)
+      {
+        for(int row = 0; row < rowCount; row++) {
+          Square s = get(col, row);
+          if(s != null)
+          {
+            for(;row < rowCount; row++) {
+              if(get(col, row) == null)
+              {
+                rating += RATE_EMPTY_MIDLE;
+              }
+            }
+            break;
+          }
+        }
+      }
+
+      return rating;
+    }
+
   }
   /*-----------------------------------------------------------------------------------------------*/
   static class Controller extends TetrisBase.Controller

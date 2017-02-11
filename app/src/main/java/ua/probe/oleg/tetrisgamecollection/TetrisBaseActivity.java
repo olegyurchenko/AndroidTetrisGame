@@ -71,6 +71,9 @@ public class TetrisBaseActivity extends AppCompatActivity
     btn = (Button) findViewById(R.id.btnRotate2);
     btn.setOnClickListener(this);
 
+    btn = (Button) findViewById(R.id.btnRobot);
+    btn.setOnClickListener(this);
+
     btn = (Button) findViewById(R.id.btnPause);
     btn.setOnClickListener(this);
 
@@ -249,6 +252,9 @@ public class TetrisBaseActivity extends AppCompatActivity
         break;
       case R.id.btnUndo:
         gameController.onUndo();
+        break;
+      case R.id.btnRobot:
+        gameController.onRobotAction();
         break;
     }
   }
