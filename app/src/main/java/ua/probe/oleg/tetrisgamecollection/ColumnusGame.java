@@ -183,9 +183,9 @@ class ColumnusGame extends TetrisBase {
     int calcContentRating()
     {
       final int
-        RATE_SCORE_WAIT = 10,
-        RATE_EMPTY_ROW = 2,
-        RATE_REMOVED_SHAPE = 2;
+        RATE_SCORE_WAIT = 20,
+        RATE_EMPTY_ROW = 10,
+        RATE_DOUBLED_SHAPE = 5;
 
       Glass g;
       try {
@@ -202,10 +202,8 @@ class ColumnusGame extends TetrisBase {
         rating ++;
       rating += (g.getScore() - oldScore) * RATE_SCORE_WAIT;
 
-
-      ArrayList<Cell> list = new ArrayList<>();
-
-      //Find 2 or more colors and remove it
+      int notEmptyCount = 0;
+      //Find 2 colors
       for(int row = 0; row < rowCount; row ++) {
         boolean empty = true;
         for (int column = 0; column < columnCount; column++)
@@ -215,96 +213,57 @@ class ColumnusGame extends TetrisBase {
             continue;
 
           empty = false;
-          //[x][X][x]
+          //[x][X]
           if(column > 0 && column < columnCount - 1)
           {
             Square l = g.get(column - 1, row);
-            Square r = g.get(column + 1, row);
             if(l != null && l.color() == s.color())
             {
-              list.add(new Cell(column, row));
-              list.add(new Cell(column - 1, row));
-            }
-
-            if(r != null && r.color() == s.color())
-            {
-              list.add(new Cell(column, row));
-              list.add(new Cell(column + 1, row));
+              rating += RATE_DOUBLED_SHAPE;// * (rowCount - c.row() + 1); //Better - higher
             }
           }
 
           //[x]
           //[X]
-          //[x]
           if(row > 0 && row < rowCount - 1)
           {
             Square t = g.get(column, row - 1);
-            Square b = g.get(column, row + 1);
-            if(t != null && t.color() == s.color())
+            if(t != null && t.color() == s.color() && notEmptyCount < 2)
             {
-              list.add(new Cell(column, row));
-              list.add(new Cell(column, row - 1));
+              rating += RATE_DOUBLED_SHAPE;
             }
-            if(b != null && b.color() == s.color())
-            {
-              list.add(new Cell(column, row));
-              list.add(new Cell(column, row + 1));
-            }
-
           }
 
           //[x]
           //   [X]
-          //      [x]
-          if(row > 0 && row < rowCount - 1 && column > 0 && column < columnCount - 1)
+          if(row > 0 && column > 0)
           {
             Square t = g.get(column - 1, row - 1);
-            Square b = g.get(column + 1, row + 1);
-            if(t != null && t.color() == s.color())
+            if(t != null && t.color() == s.color() && notEmptyCount < 2)
             {
-              list.add(new Cell(column, row));
-              list.add(new Cell(column - 1, row - 1));
-            }
-
-            if(b != null && b.color() == s.color())
-            {
-              list.add(new Cell(column, row));
-              list.add(new Cell(column + 1, row + 1));
+              rating += RATE_DOUBLED_SHAPE;
             }
           }
 
           //      [x]
           //   [X]
-          //[x]
-          if(row > 0 && row < rowCount - 1 && column > 0 && column < columnCount - 1)
+          if(row > 0 && column < columnCount - 1)
           {
             Square t = g.get(column - 1, row + 1);
-            Square b = g.get(column + 1, row - 1);
-            if(t != null && t.color() == s.color())
+            if(t != null && t.color() == s.color()  && notEmptyCount < 2)
             {
-              list.add(new Cell(column, row));
-              list.add(new Cell(column - 1, row - 1));
-            }
-            if(b != null && b.color() == s.color())
-            {
-              list.add(new Cell(column, row));
-              list.add(new Cell(column - 1, row + 1));
+              rating += RATE_DOUBLED_SHAPE * (rowCount - row + 1); //Better - higher
             }
           }
 
         }
         if(empty)
           rating += RATE_EMPTY_ROW;
+        else
+          notEmptyCount ++;
       }
 
-      for(Cell c:list)
-      {
-        if(g.get(c.column(), c.row()) != null)
-        {
-          rating += RATE_REMOVED_SHAPE;
-          g.put(c.column(), c.row(), null);
-        }
-      }return rating;
+      return rating;
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
