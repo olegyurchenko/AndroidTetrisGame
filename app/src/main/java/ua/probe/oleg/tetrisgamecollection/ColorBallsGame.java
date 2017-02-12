@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -247,6 +248,135 @@ class ColorBallsGame extends TetrisBase {
     {
       return new Ball();
     }
+
+    @Override
+    int calcContentRating()
+    {
+      final int
+        RATE_SCORE_WAIT = 10,
+        RATE_EMPTY_ROW = 2,
+        RATE_REMOVED_SHAPE = 2;
+
+      Glass g;
+      try {
+        g = clone();
+      } catch (CloneNotSupportedException e) {
+        Log.e("Glass", e.getMessage());
+        return 0;
+      }
+
+      int rating = 0;
+      long oldScore = g.getScore();
+      g.setScoreScale(1);
+      while (g.annigilation())
+        rating ++;
+      rating += (g.getScore() - oldScore) * RATE_SCORE_WAIT;
+
+
+      ArrayList<Cell> list = new ArrayList<>();
+
+      //Find 2 or more colors and remove it
+      for(int row = 0; row < rowCount; row ++) {
+        boolean empty = true;
+        for (int column = 0; column < columnCount; column++)
+        {
+          Square s = g.get(column, row);
+          if(s == null)
+            continue;
+
+          empty = false;
+          //[x][X][x]
+          if(column > 0 && column < columnCount - 1)
+          {
+            Square l = g.get(column - 1, row);
+            Square r = g.get(column + 1, row);
+            if(l != null && l.color() == s.color())
+            {
+              list.add(new Cell(column, row));
+              list.add(new Cell(column - 1, row));
+            }
+
+            if(r != null && r.color() == s.color())
+            {
+              list.add(new Cell(column, row));
+              list.add(new Cell(column + 1, row));
+            }
+          }
+
+          //[x]
+          //[X]
+          //[x]
+          if(row > 0 && row < rowCount - 1)
+          {
+            Square t = g.get(column, row - 1);
+            Square b = g.get(column, row + 1);
+            if(t != null && t.color() == s.color())
+            {
+              list.add(new Cell(column, row));
+              list.add(new Cell(column, row - 1));
+            }
+            if(b != null && b.color() == s.color())
+            {
+              list.add(new Cell(column, row));
+              list.add(new Cell(column, row + 1));
+            }
+
+          }
+
+          //[x]
+          //   [X]
+          //      [x]
+          if(row > 0 && row < rowCount - 1 && column > 0 && column < columnCount - 1)
+          {
+            Square t = g.get(column - 1, row - 1);
+            Square b = g.get(column + 1, row + 1);
+            if(t != null && t.color() == s.color())
+            {
+              list.add(new Cell(column, row));
+              list.add(new Cell(column - 1, row - 1));
+            }
+
+            if(b != null && b.color() == s.color())
+            {
+              list.add(new Cell(column, row));
+              list.add(new Cell(column + 1, row + 1));
+            }
+          }
+
+          //      [x]
+          //   [X]
+          //[x]
+          if(row > 0 && row < rowCount - 1 && column > 0 && column < columnCount - 1)
+          {
+            Square t = g.get(column - 1, row + 1);
+            Square b = g.get(column + 1, row - 1);
+            if(t != null && t.color() == s.color())
+            {
+              list.add(new Cell(column, row));
+              list.add(new Cell(column - 1, row - 1));
+            }
+            if(b != null && b.color() == s.color())
+            {
+              list.add(new Cell(column, row));
+              list.add(new Cell(column - 1, row + 1));
+            }
+          }
+
+        }
+        if(empty)
+          rating += RATE_EMPTY_ROW;
+      }
+
+      for(Cell c:list)
+      {
+        if(g.get(c.column(), c.row()) != null)
+        {
+          rating += RATE_REMOVED_SHAPE;
+          g.put(c.column(), c.row(), null);
+        }
+      }return rating;
+    }
+
   }
   /*-----------------------------------------------------------------------------------------------*/
   static class Controller extends TetrisBase.Controller {

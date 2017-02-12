@@ -351,7 +351,7 @@ class TetrisBase {
 
     long getScore() {return score;}
     void addRemovedShapes(int shapes) {
-      score += shapes * 17 * scoreScale;
+      score += shapes * scoreScale;
     }
     void setScoreScale(long s)
     {
@@ -713,6 +713,7 @@ class TetrisBase {
 
       int rating = 0;
       long oldScore = g.score;
+      g.setScoreScale(1);
       while (g.annigilation())
         rating ++;
       rating += g.score - oldScore;
