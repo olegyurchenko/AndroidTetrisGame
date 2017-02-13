@@ -187,7 +187,7 @@ class TetrisGame extends TetrisBase
     int calcContentRating()
     {
       final int
-        RATE_EMPTY_MIDDLE = -200,
+        RATE_EMPTY_MIDDLE = -100,
         RATE_SINGE_CELL = 1,
         RATE_FULL_ROW = 10 * RATE_SINGE_CELL * columnCount * rowCount,
         RATE_EMPTY_ROW = 10 * RATE_SINGE_CELL * columnCount * rowCount,
