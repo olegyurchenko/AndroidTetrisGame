@@ -41,6 +41,7 @@
     <string name="color_balls_html_help_file">file:///android_asset/color_balls_help.html</string>
     <string name="about_file">about.html</string>
     <string name="column_count">Column count</string>
+    <string name="demo_mode">Demo mode</string>
 
 
 </resources>

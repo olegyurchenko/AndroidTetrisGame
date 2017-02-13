@@ -42,4 +42,5 @@
     <string name="use_shake">Використання тряски</string>
     <string name="use_touch">Використання торкання</string>
     <string name="version_format">v%1$s (збірка %2$s)</string>
+    <string name="demo_mode">Демонстраційний режим</string>
 </resources>

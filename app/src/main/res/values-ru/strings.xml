@@ -42,4 +42,5 @@
     <string name="use_shake">Использовать встряску</string>
     <string name="use_touch">Использовать касание</string>
     <string name="version_format">v%1$s (сборка %2$s)</string>
+    <string name="demo_mode">Демонстрационный режим</string>
 </resources>

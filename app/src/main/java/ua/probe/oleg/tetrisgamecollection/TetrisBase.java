@@ -922,12 +922,13 @@ class TetrisBase {
     //boolean showScore = true;
     int ratingX, ratingY;
     Accelerometer accelerometer;
-    Bitmap leftArrowBitmap, rightArrowBitmap, touchBitmap, rotateBitmap, moveBitmap, screenRotationBitmap;
+    Bitmap leftArrowBitmap, rightArrowBitmap, touchBitmap, rotateBitmap, moveBitmap, screenRotationBitmap, robotBitmap;
     final double ROTATION_ANGLE = Math.PI / 6; //30 degree
     Random random;
     final int UNDO_SIZE = 32;
     Stack<byte[]> undo;
     final int TEXT_SIZE = 30;
+    boolean demoMode = false;
     /*============================================================*/
     Controller(Context c, String sectionName)
     {
@@ -946,6 +947,7 @@ class TetrisBase {
       rotateBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_rotate);
       moveBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_move);
       screenRotationBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_screen_rotation);
+      robotBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_robot);
 
       if(settings.useAccelerometer || settings.useShake)
         accelerometer = new Accelerometer(context);
@@ -1177,31 +1179,37 @@ class TetrisBase {
       }
 
       Bitmap leftBmp = null, rightBmp = null;
-      if(state == State.TRACKED)
-      {
-        leftBmp = touchBitmap;
-        rightBmp = moveBitmap;
-      }
-      else
-      if(state == State.ROTATED)
-      {
-        leftBmp = touchBitmap;
-        rightBmp = rotateBitmap;
-      }
-      else
-      if(settings.useAccelerometer && accelerometer != null)
-      {
-        Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
-        if(Math.abs(o.y) >= ROTATION_ANGLE)
-        {
-          leftBmp = screenRotationBitmap;
 
-          if (o.y < 0)
-          { //Left
+      if(demoMode) {
+        leftBmp = robotBitmap;
+        if (demoAction != null) {
+          if (demoAction.rotate > 0)
+            rightBmp = rotateBitmap;
+          else
+          if (demoAction.move < 0)
             rightBmp = leftArrowBitmap;
-          } else
-          { //Right
+          else
+          if (demoAction.move > 0)
             rightBmp = rightArrowBitmap;
+        }
+      }
+      else {
+        if (state == State.TRACKED) {
+          leftBmp = touchBitmap;
+          rightBmp = moveBitmap;
+        } else if (state == State.ROTATED) {
+          leftBmp = touchBitmap;
+          rightBmp = rotateBitmap;
+        } else if (settings.useAccelerometer && accelerometer != null) {
+          Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
+          if (Math.abs(o.y) >= ROTATION_ANGLE) {
+            leftBmp = screenRotationBitmap;
+
+            if (o.y < 0) { //Left
+              rightBmp = leftArrowBitmap;
+            } else { //Right
+              rightBmp = rightArrowBitmap;
+            }
           }
         }
       }
@@ -1298,35 +1306,28 @@ class TetrisBase {
         accelerometer.onResume();
     }
     /*============================================================*/
+    GlassAction demoAction = null;
     void onTimer()
     {
+      int interval = demoMode ? 500 : this.interval;
+
       if(System.currentTimeMillis() - lastTime >= interval)
       {
         lastTime = System.currentTimeMillis();
         nextInterval();
       }
 
-
-      if(settings.useShake
+      if(!demoMode
+        && settings.useShake
         && accelerometer != null)
       {
         if(accelerometer.isModified())
           setModified(true);
         if(accelerometer.isShakeDetected())
         {
-          /*
-          if(state == State.PAUSED)
-          {
-            state = State.WORKED;
-          }
-          else
-          */
           if(state == State.WORKED)
           {
-            //if(accelerometer.isShakeY())
-              rotate();
-            //if(accelerometer.isShakeX())
-            //  moveDown();
+            rotate();
           }
           Log.d("ShakeDetected", String.format("%s%s%s",
             accelerometer.isShakeX() ? "X " : "",
@@ -1336,7 +1337,6 @@ class TetrisBase {
           accelerometer.clearShakeDetected();
         }
       }
-      //Log.d("TIME TEST", "Current sec = " + seconds);
     }
     /*============================================================*/
     Rect activeFigureRect()
@@ -1357,6 +1357,9 @@ class TetrisBase {
 
     void onTouchDown(int id, float fx, float fy)
     {
+      if(settings.useTouch)
+        demoMode = false;
+
       int x = Math.round(fx);
       int y = Math.round(fy);
 
@@ -1535,6 +1538,7 @@ class TetrisBase {
     /*============================================================*/
     void toglePause()
     {
+      demoMode = false;
       switch(state)
       {
         case PAUSED:
@@ -1554,6 +1558,7 @@ class TetrisBase {
     /*============================================================*/
     void moveLeft()
     {
+      demoMode = false;
       switch(state)
       {
         case PAUSED:
@@ -1574,6 +1579,7 @@ class TetrisBase {
     /*============================================================*/
     void moveRight()
     {
+      demoMode = false;
       switch(state)
       {
         case PAUSED:
@@ -1594,6 +1600,7 @@ class TetrisBase {
     /*============================================================*/
     void moveDown()
     {
+      demoMode = false;
       switch(state)
       {
         case PAUSED:
@@ -1614,6 +1621,7 @@ class TetrisBase {
     /*============================================================*/
     void rotate()
     {
+      demoMode = false;
       switch(state)
       {
         case PAUSED:
@@ -1657,12 +1665,50 @@ class TetrisBase {
           } else {
 //          Log.d("Game", "Add figure Ok");
             nextFigure = onNewFigure();
+            if(demoMode)
+            {
+              demoAction = glass.calcBestWay();
+              demoAction.rate = 1; //Use rate as counter
+            }
           }
         }
       }
       else
       {
-        if(settings.useAccelerometer && accelerometer != null)
+        if (demoMode) {
+          if (demoAction != null) {
+            if(demoAction.rate != 0) {
+              demoAction.rate = 0;
+            }
+            else
+            if (demoAction.rotate > 0) {
+              glass.rotate();
+              demoAction.rotate--;
+            }
+            else
+            if (demoAction.move != 0) {
+
+              while (demoAction.move > 0) {
+                glass.moveRight();
+                demoAction.move += -1;
+              }
+
+              while (demoAction.move < 0) {
+                glass.moveLeft();
+                demoAction.move += 1;
+              }
+            }
+            else
+            {
+              glass.moveBottom();
+              demoAction = null;
+            }
+
+            setModified(true);
+          }
+        }
+
+        if(!demoMode && settings.useAccelerometer && accelerometer != null)
         {
           Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
           if(Math.abs(o.y) >= ROTATION_ANGLE)
@@ -1685,6 +1731,7 @@ class TetrisBase {
       mkUndoPoint();
       onSettingsChanged();
       state = State.PAUSED;
+      demoMode = false;
       //glass.onNewGame();
       //nextFigure = null;
       //setModified(true);
@@ -1882,6 +1929,7 @@ class TetrisBase {
     /*============================================================*/
     void onRobotAction()
     {
+      demoMode = false;
       if(state == State.PAUSED)
       {
         state = State.WORKED;
@@ -1916,6 +1964,24 @@ class TetrisBase {
       }
     }
     /*============================================================*/
+    void onDemoMode()
+    {
+      if(demoMode) {
+        if (state == State.WORKED)
+          state = State.PAUSED;
+        demoMode = false;
+      }
+      else {
+        if (state == State.PAUSED)
+          state = State.WORKED;
+        demoMode = true;
+        if(glass.activeFigure != null)
+        {
+          demoAction = onGlassCreate().calcBestWay();
+        }
+      }
+      setModified(true);
+    }
   }
   /*-----------------------------------------------------------------------------------------------*/
 

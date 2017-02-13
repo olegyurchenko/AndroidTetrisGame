@@ -204,6 +204,9 @@ public class TetrisBaseActivity extends AppCompatActivity
       case R.id.item_settings:
         onSettings();
         return true;
+      case R.id.item_demo_mode:
+        gameController.onDemoMode();
+        return true;
     }
 
     return super.onOptionsItemSelected(item);

@@ -18,4 +18,7 @@
     <item android:title="@string/settings"
           android:id="@+id/item_settings"
           android:icon="@drawable/ic_settings"/>
+    <item android:title="@string/demo_mode"
+          android:id="@+id/item_demo_mode"
+          android:icon="@drawable/ic_robot"/>
 </menu>
