@@ -186,11 +186,10 @@ class TetrisGame extends TetrisBase
     int calcContentRating()
     {
       final int
-        RATE_EMPTY_MIDLE = -500,
-        RATE_FULL_ROW = 1000,
-        RATE_EMPTY_ROW = 1000,
-        RATE_IMHOMOGENITY = -400,
-        RATE_EMPTY_CELL = 0;
+        RATE_EMPTY_MIDDLE = -50,
+        RATE_FULL_ROW = 100,
+        RATE_EMPTY_ROW = 100,
+        RATE_HOLE = -20;
 
 
 
@@ -223,6 +222,7 @@ class TetrisGame extends TetrisBase
       for(int col = 0; col < columnCount; col++)
       {
         boolean blank = true;
+        int holeHeight = 0, holeWidth = columnCount;
         for(int row = 0; row < rowCount; row++) {
           Square s = get(col, row);
           if(s != null)
@@ -230,8 +230,7 @@ class TetrisGame extends TetrisBase
             if(blank) {
               for (int r = row + 1; r < rowCount; r++) {
                 if (get(col, r) == null) {
-                  rating += RATE_EMPTY_MIDLE;
-                  //break;
+                  rating += RATE_EMPTY_MIDDLE;
                 }
               }
               blank = false;
@@ -241,16 +240,30 @@ class TetrisGame extends TetrisBase
           {
             if(blank)
             {
-              rating += RATE_EMPTY_CELL;
-              for (int c = 0; c < columnCount; c++) {
-                if (c != col && get(c, row) != null) {
-                  rating += RATE_IMHOMOGENITY;
+              int wl = 0, wr = 0;
+              for (int c = col + 1; c < columnCount; c++) {
+                if (c != col && get(c, row) != null)
+                {
+                  wr = c - col;
                   break;
                 }
               }
+              for (int c = col - 1; c >= 0; c--) {
+                if (c != col && get(c, row) != null)
+                {
+                  wl = col - c;
+                  break;
+                }
+              }
+              if(wl > 0 || wr > 0)
+                holeHeight ++;
+              if(holeWidth > wl + wr)
+                holeWidth = wl + wr;
             }
           }
         }
+        if(holeHeight > 1 && holeWidth < 2)
+          rating += RATE_HOLE * (holeHeight - 1);
       }
 
       return rating;
