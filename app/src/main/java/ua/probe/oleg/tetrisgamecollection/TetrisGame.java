@@ -1,6 +1,7 @@
 package ua.probe.oleg.tetrisgamecollection;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * Tetris game logic
@@ -186,10 +187,11 @@ class TetrisGame extends TetrisBase
     int calcContentRating()
     {
       final int
-        RATE_EMPTY_MIDDLE = -50,
-        RATE_FULL_ROW = 100,
-        RATE_EMPTY_ROW = 100,
-        RATE_HOLE = -20;
+        RATE_EMPTY_MIDDLE = -200,
+        RATE_SINGE_CELL = 1,
+        RATE_FULL_ROW = 10 * RATE_SINGE_CELL * columnCount * rowCount,
+        RATE_EMPTY_ROW = 10 * RATE_SINGE_CELL * columnCount * rowCount,
+        RATE_HOLE = -30;
 
 
 
@@ -197,13 +199,14 @@ class TetrisGame extends TetrisBase
 
       for(int row = 0; row < rowCount; row++)
       {
-
         boolean empty = true, full = true;
+        int fillCells = 0;
         for(int col = 0; col < columnCount; col++)
         {
           if(get(col, row) != null)
           {
             empty = false;
+            fillCells ++;
           }
           else
           {
@@ -217,6 +220,8 @@ class TetrisGame extends TetrisBase
         if(empty)
           rating += RATE_EMPTY_ROW;
 
+        if(!full && !empty)
+          rating += RATE_SINGE_CELL * fillCells * row;
       }
 
       for(int col = 0; col < columnCount; col++)
@@ -230,7 +235,8 @@ class TetrisGame extends TetrisBase
             if(blank) {
               for (int r = row + 1; r < rowCount; r++) {
                 if (get(col, r) == null) {
-                  rating += RATE_EMPTY_MIDDLE;
+                  rating += RATE_EMPTY_MIDDLE;// * (rowCount - row);
+                  //break;
                 }
               }
               blank = false;
@@ -241,29 +247,38 @@ class TetrisGame extends TetrisBase
             if(blank)
             {
               int wl = 0, wr = 0;
-              for (int c = col + 1; c < columnCount; c++) {
-                if (c != col && get(c, row) != null)
+              for (int c = col + 1; c < columnCount && c < col + 3; c++) {
+                if (get(c, row) != null)
                 {
                   wr = c - col;
                   break;
                 }
               }
-              for (int c = col - 1; c >= 0; c--) {
-                if (c != col && get(c, row) != null)
+              for (int c = col - 1; c >= 0 && c >= col - 3; c--) {
+                if (get(c, row) != null)
                 {
                   wl = col - c;
                   break;
                 }
               }
-              if(wl > 0 || wr > 0)
-                holeHeight ++;
-              if(holeWidth > wl + wr)
-                holeWidth = wl + wr;
+              if(wl > 0 || wr > 0) {
+                if(wl == 0 && col > 0)
+                  wl = col;
+                if(wr == 0 && col < columnCount - 1)
+                  wr = columnCount - col;
+                holeHeight++;
+                if (holeWidth > wl + wr)
+                  holeWidth = wl + wr;
+              }
             }
           }
+
         }
-        if(holeHeight > 1 && holeWidth < 2)
-          rating += RATE_HOLE * (holeHeight - 1);
+
+        if (holeHeight > 1 && holeWidth > 0 && holeWidth < 2) {
+          rating += RATE_HOLE * holeHeight;
+          Log.d("CalcRating", String.format("col:%d holeHeight:%d holeWidth:%d", col, holeHeight, holeWidth));
+        }
       }
 
       return rating;

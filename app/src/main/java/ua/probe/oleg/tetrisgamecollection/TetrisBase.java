@@ -1979,7 +1979,7 @@ class TetrisBase {
         demoMode = true;
         if(glass.activeFigure != null)
         {
-          demoAction = onGlassCreate().calcBestWay();
+          demoAction = glass.calcBestWay();
         }
       }
       setModified(true);
