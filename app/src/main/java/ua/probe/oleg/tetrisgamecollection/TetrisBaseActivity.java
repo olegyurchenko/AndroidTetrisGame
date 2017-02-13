@@ -43,6 +43,10 @@ public class TetrisBaseActivity extends AppCompatActivity
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    //Disable SLEEP !!!!!
+    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
     setContentView(R.layout.activity_tetris_base);
 
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

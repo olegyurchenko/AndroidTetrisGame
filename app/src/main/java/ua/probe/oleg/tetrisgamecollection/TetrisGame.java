@@ -186,10 +186,11 @@ class TetrisGame extends TetrisBase
     int calcContentRating()
     {
       final int
-        RATE_EMPTY_MIDLE = -10,
-        RATE_FULL_ROW = 10,
-        RATE_EMPTY_ROW = 2,
-        RATE_IMHOMOGENITY = -2;
+        RATE_EMPTY_MIDLE = -500,
+        RATE_FULL_ROW = 1000,
+        RATE_EMPTY_ROW = 1000,
+        RATE_IMHOMOGENITY = -400,
+        RATE_EMPTY_CELL = 0;
 
 
 
@@ -201,30 +202,13 @@ class TetrisGame extends TetrisBase
         boolean empty = true, full = true;
         for(int col = 0; col < columnCount; col++)
         {
-          Square s = get(col, row);
-          if(s != null)
+          if(get(col, row) != null)
           {
             empty = false;
           }
           else
           {
             full = false;
-            //[ ][X]
-            //[ ]
-            if(row > 0
-              && col < columnCount - 1
-              && get(col, row - 1) == null
-              && get(col + 1, row - 1) != null)
-              rating += RATE_IMHOMOGENITY;
-
-            //[X][ ]
-            //   [ ]
-            if(row > 0
-              && col > 0
-              && get(col, row - 1) == null
-              && get(col - 1, row - 1) != null)
-              rating += RATE_IMHOMOGENITY;
-
           }
         }
 
@@ -238,17 +222,33 @@ class TetrisGame extends TetrisBase
 
       for(int col = 0; col < columnCount; col++)
       {
+        boolean blank = true;
         for(int row = 0; row < rowCount; row++) {
           Square s = get(col, row);
           if(s != null)
           {
-            for(;row < rowCount; row++) {
-              if(get(col, row) == null)
-              {
-                rating += RATE_EMPTY_MIDLE;
+            if(blank) {
+              for (int r = row + 1; r < rowCount; r++) {
+                if (get(col, r) == null) {
+                  rating += RATE_EMPTY_MIDLE;
+                  //break;
+                }
+              }
+              blank = false;
+            }
+          }
+          else
+          {
+            if(blank)
+            {
+              rating += RATE_EMPTY_CELL;
+              for (int c = 0; c < columnCount; c++) {
+                if (c != col && get(c, row) != null) {
+                  rating += RATE_IMHOMOGENITY;
+                  break;
+                }
               }
             }
-            break;
           }
         }
       }
@@ -276,24 +276,24 @@ class TetrisGame extends TetrisBase
       {0b111, 0b101},
       {0b110, 0b011},
       {0b011, 0b110},
+
       {0b110, 0b011},
       {0b011, 0b110},
-      {0b111, 0b110},
-      {0b111, 0b011},
       {0b111, 0b111},
       //3x3
       {0b111, 0b100, 0b100},
       {0b111, 0b010, 0b010},
       {0b111, 0b001, 0b001},
+      {0b111, 0b100, 0b100},
       {0b111, 0b101, 0b101},
+
       {0b111, 0b110, 0b110},
       {0b111, 0b011, 0b011},
+
       {0b111, 0b111, 0b111},
+
       {0b011, 0b111, 0b110},
       {0b110, 0b111, 0b011},
-      {0b010, 0b111, 0b010},
-      {0b100, 0b111, 0b100},
-      {0b001, 0b111, 0b001},
 
     };
 

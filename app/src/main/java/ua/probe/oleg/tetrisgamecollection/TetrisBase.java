@@ -1309,7 +1309,7 @@ class TetrisBase {
     GlassAction demoAction = null;
     void onTimer()
     {
-      int interval = demoMode ? 500 : this.interval;
+      int interval = demoMode ? 300 : this.interval;
 
       if(System.currentTimeMillis() - lastTime >= interval)
       {
@@ -1337,6 +1337,96 @@ class TetrisBase {
           accelerometer.clearShakeDetected();
         }
       }
+    }
+    /*============================================================*/
+    void nextInterval()
+    {
+      if(nextFigure == null)
+        nextFigure = onNewFigure();
+
+      if(state != State.WORKED)
+        return;
+
+      glass.getStatistics().workTime += interval;
+      if(glass.getActiveFigure() == null)
+      {
+
+        if(glass.annigilation()) {
+          lastTime = System.currentTimeMillis() - interval;
+
+        }
+        else
+        {
+          mkUndoPoint();
+          if (!glass.put(nextFigure)) {
+            state = State.FINISHED;
+            glass.setModified(true);
+//          Log.d("Game", "Error add figure");
+//            Toast.makeText(context, context.getString(R.string.finished), Toast.LENGTH_SHORT).show();
+          } else {
+//          Log.d("Game", "Add figure Ok");
+            nextFigure = onNewFigure();
+            if(demoMode)
+            {
+              demoAction = glass.calcBestWay();
+              demoAction.rate = 1; //Use rate as counter
+            }
+          }
+        }
+      }
+      else
+      {
+        if (demoMode) {
+          if (demoAction != null) {
+            if(demoAction.rate != 0) {
+              demoAction.rate = 0;
+            }
+            else
+            if (demoAction.rotate > 0) {
+              while (demoAction.rotate > 0) {
+                glass.rotate();
+                demoAction.rotate--;
+              }
+            }
+            else
+            if (demoAction.move != 0) {
+
+              while (demoAction.move > 0) {
+                glass.moveRight();
+                demoAction.move += -1;
+              }
+
+              while (demoAction.move < 0) {
+                glass.moveLeft();
+                demoAction.move += 1;
+              }
+            }
+            else
+            {
+              glass.moveBottom();
+              demoAction = null;
+            }
+
+            setModified(true);
+          }
+        }
+
+        if(!demoMode && settings.useAccelerometer && accelerometer != null)
+        {
+          Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
+          if(Math.abs(o.y) >= ROTATION_ANGLE)
+          {
+            if(o.y < 0)
+              glass.moveLeft();
+            else
+              glass.moveRight();
+          }
+        }
+
+        glass.moveDown();
+      }
+
+      setModified(glass.isModified());
     }
     /*============================================================*/
     Rect activeFigureRect()
@@ -1636,94 +1726,6 @@ class TetrisBase {
         case FINISHED:
           break;
       }
-    }
-    /*============================================================*/
-    void nextInterval()
-    {
-      if(nextFigure == null)
-        nextFigure = onNewFigure();
-
-      if(state != State.WORKED)
-        return;
-
-      glass.getStatistics().workTime += interval;
-      if(glass.getActiveFigure() == null)
-      {
-
-        if(glass.annigilation()) {
-          lastTime = System.currentTimeMillis() - interval;
-
-        }
-        else
-        {
-          mkUndoPoint();
-          if (!glass.put(nextFigure)) {
-            state = State.FINISHED;
-            glass.setModified(true);
-//          Log.d("Game", "Error add figure");
-//            Toast.makeText(context, context.getString(R.string.finished), Toast.LENGTH_SHORT).show();
-          } else {
-//          Log.d("Game", "Add figure Ok");
-            nextFigure = onNewFigure();
-            if(demoMode)
-            {
-              demoAction = glass.calcBestWay();
-              demoAction.rate = 1; //Use rate as counter
-            }
-          }
-        }
-      }
-      else
-      {
-        if (demoMode) {
-          if (demoAction != null) {
-            if(demoAction.rate != 0) {
-              demoAction.rate = 0;
-            }
-            else
-            if (demoAction.rotate > 0) {
-              glass.rotate();
-              demoAction.rotate--;
-            }
-            else
-            if (demoAction.move != 0) {
-
-              while (demoAction.move > 0) {
-                glass.moveRight();
-                demoAction.move += -1;
-              }
-
-              while (demoAction.move < 0) {
-                glass.moveLeft();
-                demoAction.move += 1;
-              }
-            }
-            else
-            {
-              glass.moveBottom();
-              demoAction = null;
-            }
-
-            setModified(true);
-          }
-        }
-
-        if(!demoMode && settings.useAccelerometer && accelerometer != null)
-        {
-          Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
-          if(Math.abs(o.y) >= ROTATION_ANGLE)
-          {
-            if(o.y < 0)
-              glass.moveLeft();
-            else
-              glass.moveRight();
-          }
-        }
-
-        glass.moveDown();
-      }
-
-      setModified(glass.isModified());
     }
     /*============================================================*/
     void onNewGame()
