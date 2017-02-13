@@ -183,9 +183,9 @@ class ColumnusGame extends TetrisBase {
     int calcContentRating()
     {
       final int
-        RATE_SCORE_WAIT = 20,
-        RATE_EMPTY_ROW = 10,
-        RATE_DOUBLED_SHAPE = 5;
+        RATE_SCORE_WAIGHT = 20,
+        RATE_EMPTY_ROW = 1,
+        RATE_DOUBLED_SHAPE = 3;
 
       Glass g;
       try {
@@ -200,67 +200,92 @@ class ColumnusGame extends TetrisBase {
       g.setScoreScale(1);
       while (g.annigilation())
         rating ++;
-      rating += (g.getScore() - oldScore) * RATE_SCORE_WAIT;
+      rating += (g.getScore() - oldScore) * RATE_SCORE_WAIGHT;
 
-      int notEmptyCount = 0;
-      //Find 2 colors
+      //Calculate empty rows
       for(int row = 0; row < rowCount; row ++) {
         boolean empty = true;
-        for (int column = 0; column < columnCount; column++)
-        {
-          Square s = g.get(column, row);
-          if(s == null)
+        for (int column = 0; column < columnCount; column++) {
+          if(null == g.get(column, row))
             continue;
 
           empty = false;
-          //[x][X]
-          if(column > 0 && column < columnCount - 1)
+          break;
+        }
+
+        if(empty)
+          rating += RATE_EMPTY_ROW;
+      }
+
+      //Find 2 colors sequences
+      for (int column = 0; column < columnCount; column++) {
+        for(int row = 0; row < rowCount; row ++) {
+
+          if(null != g.get(column, row))
+            break;
+
+          //[x][x][X]
+          if(column >= 2)
           {
-            Square l = g.get(column - 1, row);
-            if(l != null && l.color() == s.color())
+            Square s1 = g.get(column - 1, row);
+            Square s2 = g.get(column - 2, row);
+            if(s1 != null && s2 != null && s1.color() == s2.color())
             {
-              rating += RATE_DOUBLED_SHAPE;// * (rowCount - c.row() + 1); //Better - higher
+              rating += RATE_DOUBLED_SHAPE;
             }
           }
 
-          //[x]
+          //[X][x][x]
+          if(column < columnCount - 2)
+          {
+            Square s1 = g.get(column + 1, row);
+            Square s2 = g.get(column + 2, row);
+            if(s1 != null && s2 != null && s1.color() == s2.color())
+            {
+              rating += RATE_DOUBLED_SHAPE;
+            }
+          }
+
           //[X]
-          if(row > 0 && row < rowCount - 1)
-          {
-            Square t = g.get(column, row - 1);
-            if(t != null && t.color() == s.color() && notEmptyCount < 2)
-            {
-              rating += RATE_DOUBLED_SHAPE;
-            }
-          }
-
           //[x]
-          //   [X]
-          if(row > 0 && column > 0)
+          //[x]
+          if(row < rowCount - 2)
           {
-            Square t = g.get(column - 1, row - 1);
-            if(t != null && t.color() == s.color() && notEmptyCount < 2)
+            Square s1 = g.get(column, row + 1);
+            Square s2 = g.get(column, row + 2);
+            if(s1 != null && s2 != null && s1.color() == s2.color())
             {
               rating += RATE_DOUBLED_SHAPE;
             }
           }
 
+          //[X]
+          //   [x]
           //      [x]
-          //   [X]
-          if(row > 0 && column < columnCount - 1)
+          if(column < columnCount - 2 && row < rowCount - 2)
           {
-            Square t = g.get(column - 1, row + 1);
-            if(t != null && t.color() == s.color()  && notEmptyCount < 2)
+            Square s1 = g.get(column + 1, row + 1);
+            Square s2 = g.get(column + 2, row + 2);
+            if(s1 != null && s2 != null && s1.color() == s2.color())
             {
-              rating += RATE_DOUBLED_SHAPE * (rowCount - row + 1); //Better - higher
+              rating += RATE_DOUBLED_SHAPE;
+            }
+          }
+
+          //      [X]
+          //   [x]
+          //[X]
+          if(column >= 2 && row >= 2)
+          {
+            Square s1 = g.get(column - 1, row + 1);
+            Square s2 = g.get(column - 2, row + 2);
+            if(s1 != null && s2 != null && s1.color() == s2.color())
+            {
+              rating += RATE_DOUBLED_SHAPE;
             }
           }
 
         }
-        if(empty)
-          rating += RATE_EMPTY_ROW;
-        else
-          notEmptyCount ++;
       }
 
       return rating;
