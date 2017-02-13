@@ -189,14 +189,15 @@ class TetrisGame extends TetrisBase
       final int
         RATE_EMPTY_MIDDLE = -100,
         RATE_SINGE_CELL = 1,
-        RATE_FULL_ROW = 10 * RATE_SINGE_CELL * columnCount * rowCount,
-        RATE_EMPTY_ROW = 10 * RATE_SINGE_CELL * columnCount * rowCount,
-        RATE_HOLE = -30;
+        RATE_FULL_ROW = RATE_SINGE_CELL * columnCount * rowCount,
+        RATE_EMPTY_ROW = RATE_SINGE_CELL * columnCount * rowCount,
+        RATE_HOLE = -50;
 
 
 
       int rating = 0;
 
+      //Calculate empty row and fill row
       for(int row = 0; row < rowCount; row++)
       {
         boolean empty = true, full = true;
@@ -224,11 +225,13 @@ class TetrisGame extends TetrisBase
           rating += RATE_SINGE_CELL * fillCells * row;
       }
 
+      //Find holes
       for(int col = 0; col < columnCount; col++)
       {
         boolean blank = true;
         int holeHeight = 0, holeWidth = columnCount;
-        for(int row = 0; row < rowCount; row++) {
+        for(int row = 0; row < rowCount; row++)
+        {
           Square s = get(col, row);
           if(s != null)
           {
@@ -267,20 +270,23 @@ class TetrisGame extends TetrisBase
                 if(wr == 0 && col < columnCount - 1)
                   wr = columnCount - col;
                 holeHeight++;
-                if (holeWidth > wl + wr)
-                  holeWidth = wl + wr;
+                if (holeWidth > wl + wr - 1)
+                  holeWidth = wl + wr - 1;
+                //Log.d("1", String.format("col:%d row:%d wl:%d wr:%d holeWidth:%d holeHeight:%d", col, row, wl, wr, holeWidth, holeHeight));
               }
             }
           }
 
         }
 
+        //Log.d("2", String.format("col:%d holeHeight:%d holeWidth:%d", col, holeHeight, holeWidth));
         if (holeHeight > 1 && holeWidth > 0 && holeWidth < 2) {
           rating += RATE_HOLE * holeHeight;
-          Log.d("CalcRating", String.format("col:%d holeHeight:%d holeWidth:%d", col, holeHeight, holeWidth));
+          //Log.d("CalcRating:found hole", String.format("col:%d holeHeight:%d holeWidth:%d", col, holeHeight, holeWidth));
         }
       }
 
+      //Log.d("CalcRating", String.format("rating:%d", rating));
       return rating;
     }
 
