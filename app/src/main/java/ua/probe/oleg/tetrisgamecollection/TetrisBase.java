@@ -1309,11 +1309,13 @@ class TetrisBase {
     GlassAction demoAction = null;
     void onTimer()
     {
-      int interval = demoMode ? 300 : this.interval;
+      int interval = demoMode ? 200 : this.interval;
 
       if(System.currentTimeMillis() - lastTime >= interval)
       {
         lastTime = System.currentTimeMillis();
+        if(state == State.WORKED)
+          glass.getStatistics().workTime += interval;
         nextInterval();
       }
 
@@ -1347,7 +1349,6 @@ class TetrisBase {
       if(state != State.WORKED)
         return;
 
-      glass.getStatistics().workTime += interval;
       if(glass.getActiveFigure() == null)
       {
 
