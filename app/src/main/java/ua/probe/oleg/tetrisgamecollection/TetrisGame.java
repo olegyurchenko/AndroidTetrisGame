@@ -155,6 +155,7 @@ class TetrisGame extends TetrisBase {
      */
     @Override
     int calcContentRating() {
+      //Collated rates - be careful !!!, pure magic
       final int
         RATE_SINGE_CELL = 1,
         RATE_FULL_ROW = 1000,
@@ -260,13 +261,15 @@ class TetrisGame extends TetrisBase {
       }
 
       //Log.d("CalcRating", String.format("rating:%d", rating));
-      Log.d("CalcRating", String.format("{emptyRows:%d,fillRows:%d,fillCells:%d,bubbles:%d,holes:%d} rating:%d",
-      emptyRows,
-      fillRows,
-      fillCells,
-      bubbles,
-      holes,
-      rating));
+/*
+        Log.d("CalcRating", String.format("{emptyRows:%d,fillRows:%d,fillCells:%d,bubbles:%d,holes:%d} rating:%d",
+          emptyRows,
+          fillRows,
+          fillCells,
+          bubbles,
+          holes,
+          rating));
+*/
 
       return rating;
     }
