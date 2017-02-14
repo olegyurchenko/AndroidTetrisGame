@@ -250,11 +250,14 @@ class ColorBallsGame extends TetrisBase {
     }
 
     @Override
-    int calcContentRating() {
+    int calcContentRating()
+    {
       final int
         RATE_SCORE_WAIGHT = 20,
         RATE_EMPTY_ROW = 1,
-        RATE_DOUBLED_SHAPE = 3;
+        RATE_DOUBLED_SHAPE = 3,
+        RATE_CLOSED_DOUBLED_SHAPE = -3;
+
 
       Glass g;
       try {
@@ -268,79 +271,168 @@ class ColorBallsGame extends TetrisBase {
       long oldScore = g.getScore();
       g.setScoreScale(1);
       while (g.annigilation())
-        rating++;
+        rating ++;
       rating += (g.getScore() - oldScore) * RATE_SCORE_WAIGHT;
 
       //Calculate empty rows
-      for (int row = 0; row < rowCount; row++) {
+      for(int row = 0; row < rowCount; row ++) {
         boolean empty = true;
         for (int column = 0; column < columnCount; column++) {
-          if (null == g.get(column, row))
+          if(null == g.get(column, row))
             continue;
 
           empty = false;
           break;
         }
 
-        if (empty)
+        if(empty)
           rating += RATE_EMPTY_ROW;
       }
 
       //Find 2 colors sequences
       for (int column = 0; column < columnCount; column++) {
-        for (int row = 0; row < rowCount; row++) {
+        for(int row = 0; row < rowCount; row ++) {
 
-          if (null != g.get(column, row))
+          if(null != g.get(column, row))
             break;
 
           //[x][x][X]
-          if (column >= 2) {
+          if(column >= 2)
+          {
             Square s1 = g.get(column - 1, row);
             Square s2 = g.get(column - 2, row);
-            if (s1 != null && s2 != null && s1.color() == s2.color()) {
+            if(s1 != null && s2 != null && s1.color() == s2.color())
+            {
               rating += RATE_DOUBLED_SHAPE;
             }
           }
 
           //[X][x][x]
-          if (column < columnCount - 2) {
+          if(column < columnCount - 2)
+          {
             Square s1 = g.get(column + 1, row);
             Square s2 = g.get(column + 2, row);
-            if (s1 != null && s2 != null && s1.color() == s2.color()) {
+            if(s1 != null && s2 != null && s1.color() == s2.color())
+            {
               rating += RATE_DOUBLED_SHAPE;
+            }
+          }
+
+          //[x][x][y][X]
+          if(column >= 3)
+          {
+            Square s1 = g.get(column - 1, row);
+            Square s2 = g.get(column - 2, row);
+            Square s3 = g.get(column - 3, row);
+            if(s1 != null && s2 != null && s3 != null
+              && s1.color() != s2.color()
+              && s2.color() == s3.color())
+            {
+              rating += RATE_CLOSED_DOUBLED_SHAPE;
+            }
+          }
+
+          //[X][y][x][x]
+          if(column < columnCount - 3)
+          {
+            Square s1 = g.get(column + 1, row);
+            Square s2 = g.get(column + 2, row);
+            Square s3 = g.get(column + 3, row);
+            if(s1 != null && s2 != null && s3 != null
+              && s1.color() != s2.color()
+              && s2.color() == s3.color())
+            {
+              rating += RATE_CLOSED_DOUBLED_SHAPE;
             }
           }
 
           //[X]
           //[x]
           //[x]
-          if (row < rowCount - 2) {
+          if(row < rowCount - 2)
+          {
             Square s1 = g.get(column, row + 1);
             Square s2 = g.get(column, row + 2);
-            if (s1 != null && s2 != null && s1.color() == s2.color()) {
+            if(s1 != null && s2 != null && s1.color() == s2.color())
+            {
               rating += RATE_DOUBLED_SHAPE;
+            }
+          }
+
+          //[X]
+          //[y]
+          //[x]
+          //[x]
+          if(row < rowCount - 3)
+          {
+            Square s1 = g.get(column, row + 1);
+            Square s2 = g.get(column, row + 2);
+            Square s3 = g.get(column, row + 3);
+            if(s1 != null && s2 != null && s3 != null
+              && s1.color() != s2.color()
+              && s2.color() == s3.color())
+            {
+              rating += RATE_CLOSED_DOUBLED_SHAPE;
             }
           }
 
           //[X]
           //   [x]
           //      [x]
-          if (column < columnCount - 2 && row < rowCount - 2) {
+          if(column < columnCount - 2 && row < rowCount - 2)
+          {
             Square s1 = g.get(column + 1, row + 1);
             Square s2 = g.get(column + 2, row + 2);
-            if (s1 != null && s2 != null && s1.color() == s2.color()) {
+            if(s1 != null && s2 != null && s1.color() == s2.color())
+            {
               rating += RATE_DOUBLED_SHAPE;
+            }
+          }
+
+          //[X]
+          //   [y]
+          //      [x]
+          //         [x]
+          if(column < columnCount - 3 && row < rowCount - 3)
+          {
+            Square s1 = g.get(column + 1, row + 1);
+            Square s2 = g.get(column + 2, row + 2);
+            Square s3 = g.get(column + 3, row + 3);
+            if(s1 != null && s2 != null && s3 != null
+              && s1.color() != s2.color()
+              && s2.color() == s3.color())
+            {
+              rating += RATE_CLOSED_DOUBLED_SHAPE;
             }
           }
 
           //      [X]
           //   [x]
-          //[X]
-          if (column >= 2 && row >= 2) {
+          //[x]
+          if(column >= 2 && row < rowCount - 2)
+          {
             Square s1 = g.get(column - 1, row + 1);
             Square s2 = g.get(column - 2, row + 2);
-            if (s1 != null && s2 != null && s1.color() == s2.color()) {
+            if(s1 != null && s2 != null && s1.color() == s2.color())
+            {
               rating += RATE_DOUBLED_SHAPE;
+            }
+          }
+
+          //         [X]
+          //      [y]
+          //   [x]
+          //[x]
+          if(column >= 3 && row < rowCount - 3)
+          {
+            Square s1 = g.get(column - 1, row + 1);
+            Square s2 = g.get(column - 2, row + 2);
+            Square s3 = g.get(column - 3, row + 3);
+            if(s1 != null && s2 != null && s3 != null
+              && s1.color() != s2.color()
+              && s2.color() == s3.color())
+            {
+              rating += RATE_CLOSED_DOUBLED_SHAPE;
             }
           }
 

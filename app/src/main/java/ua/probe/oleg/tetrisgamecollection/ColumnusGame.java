@@ -185,7 +185,9 @@ class ColumnusGame extends TetrisBase {
       final int
         RATE_SCORE_WAIGHT = 20,
         RATE_EMPTY_ROW = 1,
-        RATE_DOUBLED_SHAPE = 3;
+        RATE_DOUBLED_SHAPE = 3,
+        RATE_CLOSED_DOUBLED_SHAPE = -3;
+
 
       Glass g;
       try {
@@ -246,6 +248,34 @@ class ColumnusGame extends TetrisBase {
             }
           }
 
+          //[x][x][y][X]
+          if(column >= 3)
+          {
+            Square s1 = g.get(column - 1, row);
+            Square s2 = g.get(column - 2, row);
+            Square s3 = g.get(column - 3, row);
+            if(s1 != null && s2 != null && s3 != null
+              && s1.color() != s2.color()
+              && s2.color() == s3.color())
+            {
+              rating += RATE_CLOSED_DOUBLED_SHAPE;
+            }
+          }
+
+          //[X][y][x][x]
+          if(column < columnCount - 3)
+          {
+            Square s1 = g.get(column + 1, row);
+            Square s2 = g.get(column + 2, row);
+            Square s3 = g.get(column + 3, row);
+            if(s1 != null && s2 != null && s3 != null
+              && s1.color() != s2.color()
+              && s2.color() == s3.color())
+            {
+              rating += RATE_CLOSED_DOUBLED_SHAPE;
+            }
+          }
+
           //[X]
           //[x]
           //[x]
@@ -256,6 +286,23 @@ class ColumnusGame extends TetrisBase {
             if(s1 != null && s2 != null && s1.color() == s2.color())
             {
               rating += RATE_DOUBLED_SHAPE;
+            }
+          }
+
+          //[X]
+          //[y]
+          //[x]
+          //[x]
+          if(row < rowCount - 3)
+          {
+            Square s1 = g.get(column, row + 1);
+            Square s2 = g.get(column, row + 2);
+            Square s3 = g.get(column, row + 3);
+            if(s1 != null && s2 != null && s3 != null
+              && s1.color() != s2.color()
+              && s2.color() == s3.color())
+            {
+              rating += RATE_CLOSED_DOUBLED_SHAPE;
             }
           }
 
@@ -272,16 +319,50 @@ class ColumnusGame extends TetrisBase {
             }
           }
 
+          //[X]
+          //   [y]
+          //      [x]
+          //         [x]
+          if(column < columnCount - 3 && row < rowCount - 3)
+          {
+            Square s1 = g.get(column + 1, row + 1);
+            Square s2 = g.get(column + 2, row + 2);
+            Square s3 = g.get(column + 3, row + 3);
+            if(s1 != null && s2 != null && s3 != null
+              && s1.color() != s2.color()
+              && s2.color() == s3.color())
+            {
+              rating += RATE_CLOSED_DOUBLED_SHAPE;
+            }
+          }
+
           //      [X]
           //   [x]
-          //[X]
-          if(column >= 2 && row >= 2)
+          //[x]
+          if(column >= 2 && row < rowCount - 2)
           {
             Square s1 = g.get(column - 1, row + 1);
             Square s2 = g.get(column - 2, row + 2);
             if(s1 != null && s2 != null && s1.color() == s2.color())
             {
               rating += RATE_DOUBLED_SHAPE;
+            }
+          }
+
+          //         [X]
+          //      [y]
+          //   [x]
+          //[x]
+          if(column >= 3 && row < rowCount - 3)
+          {
+            Square s1 = g.get(column - 1, row + 1);
+            Square s2 = g.get(column - 2, row + 2);
+            Square s3 = g.get(column - 3, row + 3);
+            if(s1 != null && s2 != null && s3 != null
+              && s1.color() != s2.color()
+              && s2.color() == s3.color())
+            {
+              rating += RATE_CLOSED_DOUBLED_SHAPE;
             }
           }
 
