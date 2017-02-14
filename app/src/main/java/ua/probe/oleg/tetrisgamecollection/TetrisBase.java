@@ -1182,14 +1182,15 @@ class TetrisBase {
 
       if(demoMode) {
         leftBmp = robotBitmap;
-        if (demoAction != null) {
-          if (demoAction.rotate > 0)
+        GlassAction action = demoAction;
+        if (action != null) {
+          if (action.rotate > 0)
             rightBmp = rotateBitmap;
           else
-          if (demoAction.move < 0)
+          if (action.move < 0)
             rightBmp = leftArrowBitmap;
           else
-          if (demoAction.move > 0)
+          if (action.move > 0)
             rightBmp = rightArrowBitmap;
         }
       }

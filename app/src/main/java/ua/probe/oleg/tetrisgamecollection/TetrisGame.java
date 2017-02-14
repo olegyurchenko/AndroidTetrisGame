@@ -151,7 +151,7 @@ class TetrisGame extends TetrisBase {
     /**
      * Calculate rating of glass content for brute variants for the best possible step
      *
-     * @return rateing of the glass content
+     * @return rating of the glass content
      */
     @Override
     int calcContentRating() {
