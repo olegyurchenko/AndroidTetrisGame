@@ -18,9 +18,9 @@
     <string name="game_time">Время игры</string>
     <string name="help">Справка</string>
     <string name="new_game">Новая игра</string>
-    <string name="number_of_balls">Количество мячей</string>
-    <string name="number_of_figures">Количество фигур</string>
-    <string name="number_of_squares">Количество квадратов</string>
+    <string name="number_of_balls">Мячей</string>
+    <string name="number_of_figures">Фигур</string>
+    <string name="number_of_squares">Квадратов</string>
     <string name="ok">ДА</string>
     <string name="pause">Пауза</string>
     <string name="paused">Пауза</string>
