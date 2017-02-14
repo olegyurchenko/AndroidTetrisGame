@@ -147,12 +147,12 @@ class TetrisBase {
       return column + 1000000 * row;
     }
 
-    Square get(int column, int row)
+    synchronized Square get(int column, int row)
     {
       return squareMap.get(index(column, row));
     }
 
-    void put(int column, int row, Square s)
+    synchronized void put(int column, int row, Square s)
     {
       squareMap.put(index(column, row), s);
       if(column + 1 > columnCount)
@@ -461,7 +461,7 @@ class TetrisBase {
       return column + 1000000 * row;
     }
 
-    Square get(int column, int row)
+    synchronized Square get(int column, int row)
     {
       if(column < 0
         || column >= columnCount
@@ -472,7 +472,7 @@ class TetrisBase {
       return squareMap.get(index(column, row));
     }
 
-    void put(int column, int row, Square s)
+    synchronized void put(int column, int row, Square s)
     {
       if(column < 0
         || column >= columnCount
@@ -507,7 +507,7 @@ class TetrisBase {
       return true;
     }
 
-    boolean put(Figure f)
+    synchronized boolean put(Figure f)
     {
       if(activeFigure != null)
         return false;
