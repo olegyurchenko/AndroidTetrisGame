@@ -205,7 +205,7 @@ class TetrisGame extends TetrisBase {
       //Find holes and bubbles
       for (int col = 0; col < columnCount; col++) {
         boolean blank = true;
-        int holeHeight = 0, holeWidth = columnCount;
+        int holeHeight = 0, holeWidth = -1;
         int fillCount = 0;
         for (int row = 0; row < rowCount; row++) {
           Square s = get(col, row);
@@ -222,43 +222,46 @@ class TetrisGame extends TetrisBase {
               }
               blank = false;
             }
-          } else {
+          }
+          else
+          {
             if (blank) {
-              int wl = 0, wr = 0;
-              for (int c = col + 1; c < columnCount && c < col + 3; c++) {
-                if (get(c, row) != null) {
-                  wr = c - col;
+              int w = 1;
+              for (int c = col + 1; c < columnCount; c++) {
+                if (get(c, row) != null)
                   break;
-                }
+                w++;
               }
-              for (int c = col - 1; c >= 0 && c >= col - 3; c--) {
-                if (get(c, row) != null) {
-                  wl = col - c;
+
+              for (int c = col - 1; c >= 0; c--) {
+                if (get(c, row) != null)
                   break;
-                }
+                w++;
               }
-              if (wl > 0 || wr > 0) {
-                if (wl == 0)
-                  wl = col;
-                if (wr == 0)
-                  wr = columnCount - col;
-                holeHeight++;
-                if (holeWidth > wl + wr - 1)
-                  holeWidth = wl + wr - 1;
-                //Log.d("1", String.format("col:%d row:%d wl:%d wr:%d holeWidth:%d holeHeight:%d", col, row, wl, wr, holeWidth, holeHeight));
-              }
+
+              if ( holeWidth == -1 && w < 2 )
+                holeWidth = w;
+
+              if( holeWidth != -1 )
+                holeHeight ++;
+
+
+              //Log.d("1", String.format("col:%d row:%d w:%d holeWidth:%d holeHeight:%d", col, row, w, holeWidth, holeHeight));
             }
+
           }
 
-        }
+        } //col
 
         //Log.d("2", String.format("col:%d holeHeight:%d holeWidth:%d", col, holeHeight, holeWidth));
         if (holeHeight > 1 && holeWidth > 0 && holeWidth < 2) {
           holes += holeHeight;
-          rating += RATE_HOLE * holeHeight;
           //Log.d("CalcRating:found hole", String.format("col:%d holeHeight:%d holeWidth:%d", col, holeHeight, holeWidth));
+
+          holeHeight -= 1;
+          rating += RATE_HOLE * holeHeight * holeHeight; //Square
         }
-      }
+      } //row
 
       //Log.d("CalcRating", String.format("rating:%d", rating));
 /*
