@@ -158,7 +158,7 @@ class TetrisGame extends TetrisBase {
       //Collated rates - be careful !!!, pure magic
       final int
         RATE_SINGE_CELL = 1,
-        RATE_FULL_ROW = 1000,
+        RATE_FULL_ROW = 500,
         RATE_EMPTY_ROW = 400,
         RATE_BUBBLE = -300,
         RATE_HOLE = -100;
