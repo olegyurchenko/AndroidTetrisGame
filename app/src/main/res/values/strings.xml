@@ -2,7 +2,7 @@
     <string name="app_name">Matrix game collection</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="action_tetris">Tetris</string>
+    <string name="action_tetris">Bricks</string>
     <string name="action_columnus">Columnus</string>
     <string name="action_color_balls">Color balls</string>
     <string name="score">Score</string>
@@ -21,7 +21,7 @@
     <string name="use_shake">Use shake</string>
     <string name="reset_to_default">Reset to default</string>
     <string name="help">Help</string>
-    <string name="tetris_section_name">Tetris</string>
+    <string name="tetris_section_name">Bricks</string>
     <string name="columnus_section_name">Columnus</string>
     <string name="color_balls_section_name">ColorBalls</string>
     <string name="random_seed_value">Random seed value</string>
