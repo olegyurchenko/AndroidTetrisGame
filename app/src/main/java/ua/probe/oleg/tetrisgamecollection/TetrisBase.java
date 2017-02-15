@@ -1297,14 +1297,18 @@ class TetrisBase {
       if(accelerometer != null)
         accelerometer.onPause();
       save();
-      if(state != State.FINISHED)
+      if(state != State.FINISHED) {
         state = State.PAUSED;
+      }
     }
     /*============================================================*/
     void onResume()
     {
       if(accelerometer != null)
         accelerometer.onResume();
+
+      if(state == State.PAUSED && demoMode)
+        state = State.WORKED;
     }
     /*============================================================*/
     GlassAction demoAction = null;

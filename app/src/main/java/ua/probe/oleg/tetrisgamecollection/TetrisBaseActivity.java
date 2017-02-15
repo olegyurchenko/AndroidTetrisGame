@@ -56,42 +56,55 @@ public class TetrisBaseActivity extends AppCompatActivity
 
     //Buttons
     btn = (Button) findViewById(R.id.btnLeft1);
-    btn.setOnClickListener(this);
+    if(btn != null)
+      btn.setOnClickListener(this);
     btn = (Button) findViewById(R.id.btnLeft2);
-    btn.setOnClickListener(this);
+    if(btn != null)
+      btn.setOnClickListener(this);
 
     btn = (Button) findViewById(R.id.btnRight1);
-    btn.setOnClickListener(this);
+    if(btn != null)
+      btn.setOnClickListener(this);
     btn = (Button) findViewById(R.id.btnRight2);
-    btn.setOnClickListener(this);
+    if(btn != null)
+      btn.setOnClickListener(this);
 
     btn = (Button) findViewById(R.id.btnDown1);
-    btn.setOnClickListener(this);
+    if(btn != null)
+      btn.setOnClickListener(this);
     btn = (Button) findViewById(R.id.btnDown2);
-    btn.setOnClickListener(this);
+    if(btn != null)
+      btn.setOnClickListener(this);
 
     btn = (Button) findViewById(R.id.btnRotate1);
-    btn.setOnClickListener(this);
+    if(btn != null)
+      btn.setOnClickListener(this);
     btn = (Button) findViewById(R.id.btnRotate2);
-    btn.setOnClickListener(this);
+    if(btn != null)
+      btn.setOnClickListener(this);
 
     btn = (Button) findViewById(R.id.btnRobot);
-    btn.setOnClickListener(this);
+    if(btn != null)
+      btn.setOnClickListener(this);
 
     btn = (Button) findViewById(R.id.btnPause);
-    btn.setOnClickListener(this);
+    if(btn != null)
+      btn.setOnClickListener(this);
 
 //    btn = (Button) findViewById(R.id.btnSettings);
 //    btn.setOnClickListener(this);
 
     btn = (Button) findViewById(R.id.btnCreate);
-    btn.setOnClickListener(this);
+    if(btn != null)
+      btn.setOnClickListener(this);
 
     btn = (Button) findViewById(R.id.btnMagic);
-    btn.setOnClickListener(this);
+    if(btn != null)
+      btn.setOnClickListener(this);
 
     btn = (Button) findViewById(R.id.btnUndo);
-    btn.setOnClickListener(this);
+    if(btn != null)
+      btn.setOnClickListener(this);
 
     //gameController = (TetrisBase.Controller) getLastNonConfigurationInstance();
     gameController = (TetrisBase.Controller) getLastCustomNonConfigurationInstance();

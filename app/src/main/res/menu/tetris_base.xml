@@ -1,24 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
       tools:context=".TetrisBaseActivity" >
 
-    <item android:title="@string/pause"
-          android:id="@+id/item_pause"
-          android:icon="@drawable/ic_pause"/>
-    <item android:title="@string/undo"
-          android:id="@+id/item_undo"
-          android:icon="@drawable/ic_undo"/>
-    <item android:title="@string/new_game"
-          android:id="@+id/item_new_game"
-          android:icon="@drawable/ic_new"/>
-    <item android:title="@string/select_game"
-          android:id="@+id/item_magic"
-          android:icon="@drawable/ic_magic"/>
-    <item android:title="@string/settings"
-          android:id="@+id/item_settings"
-          android:icon="@drawable/ic_settings"/>
-    <item android:title="@string/demo_mode"
-          android:id="@+id/item_demo_mode"
-          android:icon="@drawable/ic_robot"/>
+    <group
+        android:id="@+id/grp_1">
+        <item android:title="@string/pause"
+              android:id="@+id/item_pause"
+              android:icon="@drawable/ic_pause"
+              app:showAsAction="ifRoom|withText"/>
+        <item android:title="@string/undo"
+              android:id="@+id/item_undo"
+              android:icon="@drawable/ic_undo"
+              app:showAsAction="ifRoom|withText"/>
+        <item android:title="@string/new_game"
+              android:id="@+id/item_new_game"
+              android:icon="@drawable/ic_create"
+              app:showAsAction="ifRoom|withText"/>
+        <item android:title="@string/select_game"
+              android:id="@+id/item_magic"
+              android:icon="@drawable/ic_magic"
+              app:showAsAction="withText"/>
+        <item android:title="@string/demo_mode"
+              android:id="@+id/item_demo_mode"
+              android:icon="@drawable/ic_robot"
+              app:showAsAction="withText"/>
+    </group>
+    <group
+        android:id="@+id/grp_2">
+        <item android:title="@string/settings"
+              android:id="@+id/item_settings"
+              android:icon="@drawable/ic_settings"
+              app:showAsAction="withText"/>
+    </group>
 </menu>
