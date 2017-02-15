@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Колекція тетрисів</string>
+    <string name="app_name">Колекція матричних ігор</string>
     <string name="about">Про програму</string>
     <string name="about_file">uk/about.html</string>
     <string name="action_color_balls">Кольорові м\'ячики</string>

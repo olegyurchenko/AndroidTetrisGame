@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tetris game collection</string>
+    <string name="app_name">Matrix game collection</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="action_tetris">Tetris</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Коллекция тетрисов</string>
+    <string name="app_name">Колекция матричних игр</string>
     <string name="about">О программе</string>
     <string name="about_file">ru/about.html</string>
     <string name="action_color_balls">Цветные мячики</string>
