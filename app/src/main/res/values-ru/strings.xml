@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Колекция матричних игр</string>
     <string name="about">О программе</string>
     <string name="about_file">ru/about.html</string>
-    <string name="action_color_balls">Цветные мячики</string>
     <string name="action_columnus">Столбики</string>
     <string name="action_tetris">Кирпичики</string>
     <string name="cancel">Отмена</string>
@@ -43,4 +41,6 @@
     <string name="use_touch">Использовать касание</string>
     <string name="version_format">v%1$s (сборка %2$s)</string>
     <string name="demo_mode">Демонстрационный режим</string>
+    <string name="app_name">Блочные игры</string>
+    <string name="action_color_balls">Цветные шарики</string>
 </resources>

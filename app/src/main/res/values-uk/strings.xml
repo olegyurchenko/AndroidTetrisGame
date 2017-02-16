@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Колекція матричних ігор</string>
     <string name="about">Про програму</string>
     <string name="about_file">uk/about.html</string>
-    <string name="action_color_balls">Кольорові м\'ячики</string>
     <string name="action_columnus">Стовбчики</string>
     <string name="action_tetris">Цеглинки</string>
     <string name="cancel">Відміна</string>
@@ -43,4 +41,6 @@
     <string name="use_touch">Використання торкання</string>
     <string name="version_format">v%1$s (збірка %2$s)</string>
     <string name="demo_mode">Демонстраційний режим</string>
+    <string name="app_name">Блочні ігри</string>
+    <string name="action_color_balls">Кольорові кульки</string>
 </resources>
