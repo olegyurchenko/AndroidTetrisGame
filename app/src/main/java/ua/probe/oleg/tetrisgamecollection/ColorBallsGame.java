@@ -1,6 +1,8 @@
 package ua.probe.oleg.tetrisgamecollection;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +18,8 @@ import java.util.Locale;
 class ColorBallsGame extends TetrisBase {
 
   /*-----------------------------------------------------------------------------------------------*/
+  private static Bitmap ballBitmap = null;
+
   private static class Ball extends Square
   {
     Ball(int color)
@@ -33,10 +37,15 @@ class ColorBallsGame extends TetrisBase {
       paint.setStyle(Paint.Style.FILL);
       canvas.drawCircle(rect.left + rect.width() / 2, rect.top + rect.height() / 2, Math.min(rect.width(), rect.height())/ 2, paint);
 
-      // перенастраивам кисть на контуры
-      paint.setColor(borderColor);
-      paint.setStyle(Paint.Style.STROKE);
-      canvas.drawCircle(rect.left + rect.width() / 2, rect.top + rect.height() / 2, Math.min(rect.width(), rect.height())/ 2, paint);
+      if(ballBitmap != null)  {
+        canvas.drawBitmap(ballBitmap, null, rect, paint);
+      }
+      else {
+        // перенастраивам кисть на контуры
+        paint.setColor(borderColor);
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(rect.left + rect.width() / 2, rect.top + rect.height() / 2, Math.min(rect.width(), rect.height()) / 2, paint);
+      }
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
@@ -449,6 +458,7 @@ class ColorBallsGame extends TetrisBase {
     Controller(Context c, String sectionName)
     {
       super(c, sectionName);
+      ballBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ball);
     }
 
     @Override

@@ -58,6 +58,7 @@ class TetrisBase {
   }
   /*-----------------------------------------------------------------------------------------------*/
   private static Paint squarePaint = new Paint();
+  private static Bitmap squareBitmap = null;
   static class Square
   {
     int fillColor, borderColor;
@@ -93,6 +94,7 @@ class TetrisBase {
 
     void onDraw(Canvas canvas, int x, int y, int width, int height)
     {
+
       rect.set(x, y, x + width, y + height);
 
       // перенастраивам кисть на заливку
@@ -100,10 +102,16 @@ class TetrisBase {
       paint.setStyle(Paint.Style.FILL);
       canvas.drawRect(rect, paint);
 
-      // перенастраивам кисть на контуры
-      paint.setColor(borderColor);
-      paint.setStyle(Paint.Style.STROKE);
-      canvas.drawRect(rect, paint);
+      if(squareBitmap != null) {
+        canvas.drawBitmap(squareBitmap, null, rect, paint);
+      }
+
+      if(squareBitmap == null) {
+        // перенастраивам кисть на контуры
+        paint.setColor(borderColor);
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawRect(rect, paint);
+      }
     }
 
     void save(DataOutputStream dos) throws IOException
@@ -275,6 +283,7 @@ class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
+  private static Bitmap glassBitmap = null;
   static class Glass implements Cloneable
   {
     int rowCount, columnCount;
@@ -373,10 +382,15 @@ class TetrisBase {
       paint.setStyle(Paint.Style.FILL);
       canvas.drawRect(rect, paint);
 
-      // перенастраивам кисть на контуры
-      paint.setColor(borderColor);
-      paint.setStyle(Paint.Style.STROKE);
-      canvas.drawRect(rect, paint);
+      if(glassBitmap != null) {
+        canvas.drawBitmap(glassBitmap, null, rect, paint);
+      }
+      else {
+        // перенастраивам кисть на контуры
+        paint.setColor(borderColor);
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawRect(rect, paint);
+      }
 
       int shapeWidth = getShapeWidth();
       int shapeHeight = getShapeHeight();
@@ -949,6 +963,11 @@ class TetrisBase {
       moveBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_move);
       screenRotationBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_screen_rotation);
       robotBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_robot);
+
+      squareBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.square);
+
+      //glassBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.square);
+
 
       if(settings.useAccelerometer || settings.useShake)
         accelerometer = new Accelerometer(context);
