@@ -57,11 +57,12 @@ class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
+  private static Paint squarePaint = new Paint();
   static class Square
   {
     int fillColor, borderColor;
 //    protected int width = 0, height = 0;
-    Paint paint = new Paint();
+    Paint paint = squarePaint;
     Rect rect = new Rect();
 
     Square(int fColor, int bColor)
@@ -1169,6 +1170,8 @@ class TetrisBase {
 
         glass.setRect(rect);
       }
+
+      canvas.drawARGB(80, 102, 204, 255);
 
       Rect glassRect = glass.getRect();
       glass.onDraw(canvas);
