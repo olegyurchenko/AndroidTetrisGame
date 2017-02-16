@@ -1274,6 +1274,11 @@ class TetrisBase {
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         canvas.drawRect(bounds, paint);
+/*
+        if(squareBitmap != null) {
+          canvas.drawBitmap(squareBitmap, null, bounds, paint);
+        }
+*/
 
         paint.setColor(Color.BLACK);
         canvas.drawText(text, x, y, paint);
