@@ -5,7 +5,7 @@
     <string name="action_columnus">Стовбчики</string>
     <string name="action_tetris">Цеглинки</string>
     <string name="cancel">Відміна</string>
-    <string name="color_balls_html_help_file">file:///android_asset/uk/color_balls_help.html</string>
+    <string name="html_help_file">file:///android_asset/uk/help.html</string>
     <string name="column_count">Кількість стовбчиків</string>
     <string name="complex">Складність</string>
     <string name="complex_rate">Рівень складності</string>
@@ -31,9 +31,7 @@
     <string name="speed">Швидкість</string>
     <string name="speed_rate">Рівень швидкості</string>
     <string name="color_balls_section_name">ColorBalls</string>
-    <string name="columnus_html_help_file">file:///android_asset/uk/columnus_help.html</string>
     <string name="columnus_section_name">Columnus</string>
-    <string name="tetris_html_help_file">file:///android_asset/uk/tetris_help.html</string>
     <string name="tetris_section_name">Bricks</string>
     <string name="undo">Відмінити</string>
     <string name="use_accelerometer">Використання акселерометра</string>
@@ -43,4 +41,5 @@
     <string name="demo_mode">Демонстраційний режим</string>
     <string name="app_name">Блочні ігри</string>
     <string name="action_color_balls">Кольорові кульки</string>
+    <string name="content">Зміст</string>
 </resources>

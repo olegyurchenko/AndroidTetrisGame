@@ -47,19 +47,10 @@ public class HelpActivity extends AppCompatActivity {
     tabHost.addTab(tabSpec);
 
     tabSpec = tabHost.newTabSpec("tag2");
-    tabSpec.setIndicator(getString(R.string.action_tetris));
-    tabSpec.setContent(R.id.view_tetris);
+    tabSpec.setIndicator(getString(R.string.content));
+    tabSpec.setContent(R.id.view_content);
     tabHost.addTab(tabSpec);
 
-    tabSpec = tabHost.newTabSpec("tag3");
-    tabSpec.setIndicator(getString(R.string.action_columnus));
-    tabSpec.setContent(R.id.view_columnus);
-    tabHost.addTab(tabSpec);
-
-    tabSpec = tabHost.newTabSpec("tag4");
-    tabSpec.setIndicator(getString(R.string.action_color_balls));
-    tabSpec.setContent(R.id.view_color_balls);
-    tabHost.addTab(tabSpec);
 
     // вторая вкладка будет выбрана по умолчанию
     tabHost.setCurrentTabByTag("tag1");
@@ -81,15 +72,8 @@ public class HelpActivity extends AppCompatActivity {
 
     wv.loadDataWithBaseURL("file:///android_asset/", aboutText, "text/html; charset=utf-8", "utf-8", null);
 
-    wv = (WebView)findViewById(R.id.view_tetris);
-    wv.loadUrl(getString(R.string.tetris_html_help_file));
-
-
-    wv = (WebView)findViewById(R.id.view_columnus);
-    wv.loadUrl(getString(R.string.columnus_html_help_file));
-
-    wv = (WebView)findViewById(R.id.view_color_balls);
-    wv.loadUrl(getString(R.string.color_balls_html_help_file));
+    wv = (WebView)findViewById(R.id.view_content);
+    wv.loadUrl(getString(R.string.html_help_file));
   }
 
   /*============================================================*/

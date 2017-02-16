@@ -38,17 +38,7 @@
                     android:layout_height="fill_parent"
                     />
                 <WebView
-                    android:id="@+id/view_tetris"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    />
-                <WebView
-                    android:id="@+id/view_columnus"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    />
-                <WebView
-                    android:id="@+id/view_color_balls"
+                    android:id="@+id/view_content"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     />

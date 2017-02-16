@@ -5,10 +5,9 @@
     <string name="action_columnus">Столбики</string>
     <string name="action_tetris">Кирпичики</string>
     <string name="cancel">Отмена</string>
-    <string name="color_balls_html_help_file">file:///android_asset/ru/color_balls_help.html</string>
+    <string name="html_help_file">file:///android_asset/ru/help.html</string>
     <string name="color_balls_section_name">ColorBalls</string>
     <string name="column_count">Количество столбцов</string>
-    <string name="columnus_html_help_file">file:///android_asset/ru/columnus_help.html</string>
     <string name="columnus_section_name">Columnus</string>
     <string name="complex">Сложность</string>
     <string name="complex_rate">Уровень сложности</string>
@@ -33,7 +32,6 @@
     <string name="show_score">Показывать счет</string>
     <string name="speed">Скорость</string>
     <string name="speed_rate">Уровень скорости</string>
-    <string name="tetris_html_help_file">file:///android_asset/ru/tetris_help.html</string>
     <string name="tetris_section_name">Bricks</string>
     <string name="undo">Отменить</string>
     <string name="use_accelerometer">Использовать акселерометр</string>
@@ -43,4 +41,5 @@
     <string name="demo_mode">Демонстрационный режим</string>
     <string name="app_name">Блочные игры</string>
     <string name="action_color_balls">Цветные шарики</string>
+    <string name="content">Содержание</string>
 </resources>
