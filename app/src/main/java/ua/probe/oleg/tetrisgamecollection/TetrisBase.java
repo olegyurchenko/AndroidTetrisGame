@@ -11,8 +11,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.util.SparseArray;
+import android.util.TypedValue;
 import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
@@ -57,8 +59,124 @@ class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
+  private static Paint borderPaint = new Paint();
+  /*-----------------------------------------------------------------------------------------------*/
+  private enum BevelCut {
+    None,
+    Lowered,
+    Raised
+  }
+  /*-----------------------------------------------------------------------------------------------*/
+  private static void drawShadow(Canvas canvas, Rect rect, int thick, BevelCut cut)
+  {
+    final int borderLightColor = Color.LTGRAY;
+    final int borderShadowColor = Color.GRAY;
+
+    Paint paint = borderPaint;
+    paint.setStrokeWidth(thick);
+    paint.setStyle(Paint.Style.STROKE);
+
+    if(cut != BevelCut.None)
+    {
+      int color1 = borderLightColor;
+      int color2 = borderShadowColor;
+
+      if(cut == BevelCut.Raised)
+      {
+        color1 = borderShadowColor;
+        color2 = borderLightColor;
+      }
+
+      //Top
+      int x1 = rect.left;
+      int x2 = rect.right - 2 * thick;
+      int y1 = rect.top;
+      int y2 = y1;
+
+      paint.setColor(color1);
+      canvas.drawLine(x1, y1, x2, y2, paint);
+      y1 += thick; y2 += thick;
+
+      paint.setColor(color2);
+      canvas.drawLine(x1, y1, x2, y2, paint);
+
+      //Left
+      x1 = rect.left;
+      x2 = x1;
+      y1 = rect.top;
+      y2 = rect.bottom - 2 * thick;
+
+      paint.setColor(color1);
+      canvas.drawLine(x1, y1, x2, y2, paint);
+      x1 += thick; x2 += thick;
+      y1 += thick;
+
+      paint.setColor(color2);
+      canvas.drawLine(x1, y1, x2, y2, paint);
+
+      //bottom
+      x1 = rect.left;
+      x2 = rect.right - 2 * thick;
+      y1 = rect.bottom - 2 * thick;
+      y2 = y1;
+
+      paint.setColor(color1);
+      canvas.drawLine(x1, y1, x2, y2, paint);
+      y1 += thick; y2 += thick;
+      x1 += thick; x2 += thick;
+
+      paint.setColor(color2);
+      canvas.drawLine(x1, y1, x2, y2, paint);
+
+      //Right
+      x1 = rect.right - 2 * thick;
+      x2 = x1;
+      y1 = rect.top;
+      y2 = rect.bottom - 2 * thick;
+
+      paint.setColor(color1);
+      canvas.drawLine(x1, y1, x2, y2, paint);
+      x1 += thick; x2 += thick;
+      y2 += thick;
+
+      paint.setColor(color2);
+      canvas.drawLine(x1, y1, x2, y2, paint);
+    }
+  }
+  /*-----------------------------------------------------------------------------------------------*/
+  private static void drawBorder(Canvas canvas, Rect rect, int width, BevelCut inner, BevelCut outer)
+  {
+    final int borderColor = Color.BLACK;
+
+    if(inner != BevelCut.None && outer != BevelCut.None) {
+
+      Paint paint = borderPaint;
+      paint.setStrokeWidth(width);
+      paint.setStyle(Paint.Style.STROKE);
+      paint.setColor(borderColor);
+      canvas.drawRect(rect, paint);
+    }
+
+    if(inner != BevelCut.None)
+    {
+      drawShadow(canvas,
+        new Rect(rect.left, rect.top, rect.right - 2 * width, rect.bottom - 2 * width),
+        width,
+        inner);
+    }
+    if(outer != BevelCut.None)
+    {
+      drawShadow(canvas,
+        new Rect(rect.left - 2 * width, rect.top - 2 * width,  rect.right, rect.bottom),
+        width,
+        outer);
+    }
+
+  }
+  /*-----------------------------------------------------------------------------------------------*/
   private static Paint squarePaint = new Paint();
   private static Bitmap squareBitmap = null;
+
   static class Square
   {
     int fillColor, borderColor;
@@ -102,6 +220,7 @@ class TetrisBase {
       paint.setStyle(Paint.Style.FILL);
       canvas.drawRect(rect, paint);
 
+      /*
       if(squareBitmap != null) {
         canvas.drawBitmap(squareBitmap, null, rect, paint);
       }
@@ -112,6 +231,8 @@ class TetrisBase {
         paint.setStyle(Paint.Style.STROKE);
         canvas.drawRect(rect, paint);
       }
+      */
+      drawShadow(canvas, rect, 1, BevelCut.Raised);
     }
 
     void save(DataOutputStream dos) throws IOException
@@ -283,7 +404,7 @@ class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  private static Bitmap glassBitmap = null;
+  //private static Bitmap glassBitmap = null;
   static class Glass implements Cloneable
   {
     int rowCount, columnCount;
@@ -302,6 +423,7 @@ class TetrisBase {
 
     private SparseArray<Square> squareMap;
     private Statistics statistics;
+    private int borderWidth = 2;
 
     Glass(int columns, int rows)
     {
@@ -382,6 +504,7 @@ class TetrisBase {
       paint.setStyle(Paint.Style.FILL);
       canvas.drawRect(rect, paint);
 
+      /*
       if(glassBitmap != null) {
         canvas.drawBitmap(glassBitmap, null, rect, paint);
       }
@@ -391,6 +514,8 @@ class TetrisBase {
         paint.setStyle(Paint.Style.STROKE);
         canvas.drawRect(rect, paint);
       }
+      */
+      drawBorder(canvas, rect, borderWidth,  BevelCut.None, BevelCut.Lowered);
 
       int shapeWidth = getShapeWidth();
       int shapeHeight = getShapeHeight();
@@ -944,6 +1069,7 @@ class TetrisBase {
     Stack<byte[]> undo;
     final int TEXT_SIZE = 30;
     boolean demoMode = false;
+    int backColor = Color.WHITE;
     /*============================================================*/
     Controller(Context c, String sectionName)
     {
@@ -967,6 +1093,14 @@ class TetrisBase {
       squareBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.square);
 
       //glassBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.square);
+
+
+      TypedValue a = new TypedValue();
+      context.getTheme().resolveAttribute(android.R.attr.windowBackground, a, true);
+      if (a.type >= TypedValue.TYPE_FIRST_COLOR_INT && a.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+        // windowBackground is a color
+        backColor = a.data;
+      }
 
 
       if(settings.useAccelerometer || settings.useShake)
@@ -1175,6 +1309,31 @@ class TetrisBase {
       return strings;
     }
     /*============================================================*/
+    private void drawStatusPanel(Canvas canvas, String text)
+    {
+      Rect glassRect = glass.getRect();
+
+      paint.setTypeface(Typeface.DEFAULT);// your preference here
+      paint.setTextSize(40);// have this the same as your text size
+      paint.getTextBounds(text, 0, text.length(), bounds);
+
+      int x = glassRect.left + (glassRect.width() - bounds.width()) / 2;
+      int y = glassRect.top + (glassRect.height() - bounds.height())/ 2;
+
+
+      bounds.set(glassRect.left - 10, y - bounds.height() * 2, glassRect.right + 10, y + bounds.height());
+
+      paint.setColor(backColor);
+      paint.setAlpha(200);
+      paint.setStyle(Paint.Style.FILL);
+      canvas.drawRect(bounds, paint);
+
+      drawBorder(canvas, bounds, 1, BevelCut.Raised, BevelCut.Lowered);
+
+      paint.setColor(Color.BLACK);
+      canvas.drawText(text, x, y, paint);
+    }
+    /*============================================================*/
     void onDraw(Canvas canvas)
     {
       Figure figure = this.nextFigure; //For thread safe
@@ -1190,7 +1349,8 @@ class TetrisBase {
         glass.setRect(rect);
       }
 
-      canvas.drawARGB(80, 102, 204, 255);
+      //canvas.drawARGB(80, 102, 204, 255);
+      canvas.drawColor(backColor);
 
       Rect glassRect = glass.getRect();
       glass.onDraw(canvas);
@@ -1260,28 +1420,7 @@ class TetrisBase {
         else
           text = context.getString(R.string.finished);
 
-
-        paint.setTypeface(Typeface.DEFAULT);// your preference here
-        paint.setTextSize(40);// have this the same as your text size
-        paint.getTextBounds(text, 0, text.length(), bounds);
-
-        int x = glassRect.left + (glassRect.width() - bounds.width()) / 2;
-        int y = glassRect.top + (glassRect.height() - bounds.height())/ 2;
-
-
-        bounds.set(glassRect.left, y - bounds.height() * 2, glassRect.right, y + bounds.height());
-
-        paint.setColor(Color.WHITE);
-        paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        canvas.drawRect(bounds, paint);
-/*
-        if(squareBitmap != null) {
-          canvas.drawBitmap(squareBitmap, null, bounds, paint);
-        }
-*/
-
-        paint.setColor(Color.BLACK);
-        canvas.drawText(text, x, y, paint);
+        drawStatusPanel(canvas, text);
       }
 
       if(settings.showScore)
