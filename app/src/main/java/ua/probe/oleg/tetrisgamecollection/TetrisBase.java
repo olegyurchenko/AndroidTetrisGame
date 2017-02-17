@@ -1058,9 +1058,14 @@ class TetrisBase {
 
     //boolean showNextFigure = true;
     Figure nextFigure;
-    int nextFigureX, nextFigureY;
+    //int nextFigureX, nextFigureY;
+
+    Rect nextFigureRect = new Rect();
+    Rect gameTimeRect = new Rect();
+    Rect statisticRect = new Rect();
+
     //boolean showScore = true;
-    int ratingX, ratingY;
+    //int ratingX, ratingY;
     Accelerometer accelerometer;
     Bitmap leftArrowBitmap, rightArrowBitmap, touchBitmap, rotateBitmap, moveBitmap, screenRotationBitmap, robotBitmap;
     final double ROTATION_ANGLE = Math.PI / 6; //30 degree
@@ -1148,35 +1153,6 @@ class TetrisBase {
     /*============================================================*/
     void setModified(boolean m) {modified = m;}
     /*============================================================*/
-    //int getComplexRate() {return complexRate;}
-    /*============================================================*/
-    /*
-    void setComplexRate(int r)     {
-      if(r > 0 && r <= 100)
-      {
-        complexRate = r;
-        glass.setScoreScale(complexRate * speedRate);
-        setModified(true);
-      }
-    }
-    */
-    /*============================================================*/
-    //int getSpeedRate() {return speedRate;}
-    /*============================================================*/
-    /*
-    void setSpeedRate(int r)
-    {
-      if(r > 0 && r <= 199)
-      {
-        speedRate = r;
-        interval = minInterval + ((maxInterval - minInterval) * (100 - speedRate)) / 100;
-        Log.d("GameController", "interval=" + interval);
-        glass.setScoreScale(complexRate * speedRate);
-        setModified(true);
-      }
-    }
-    */
-    /*============================================================*/
     static int colors[] = {
       Color.rgb(0xff, 0, 0),
       Color.rgb(0, 0xff, 0),
@@ -1216,20 +1192,22 @@ class TetrisBase {
       geometryInit();
     }
     /*============================================================*/
+    private int nextFigureCellSize = 20;
     void geometryInit()
     {
       int x, y, w, h;
       int border = 20;
+      int textHeight = 3 * (TEXT_SIZE + TEXT_SIZE / 2);
 
+      nextFigureRect.set(0, 0, 5 * nextFigureCellSize, 5 * nextFigureCellSize);
       if(rect.width() < rect.height()) //Verical
       {
-        int textHeight = ratingText().length * TEXT_SIZE + TEXT_SIZE;
 
         x = border;
         w = rect.width() - 2 * border;
         h = (w / glass.getColumnCount()) * glass.getRowCount();
         w = (h / glass.getRowCount()) * glass.getColumnCount();
-        y = border + 3 * 20;
+        y = border + nextFigureRect.height();
 
         glass.setRect(
           new Rect(x, y, x + w, y + h) );
@@ -1244,11 +1222,13 @@ class TetrisBase {
             new Rect(x, y, x + w, y + h) );
         }
 
-        nextFigureX = x ;
-        nextFigureY = border;
-
-        ratingX = x;
-        ratingY = y + h + TEXT_SIZE / 2;
+        nextFigureRect.offsetTo(x, border);
+        //nextFigureX = x ;
+        //nextFigureY = border;
+        gameTimeRect.set(nextFigureRect.right, nextFigureRect.top, x + w, nextFigureRect.bottom);
+        statisticRect.set(x, y + h + border, x + w, rect.bottom - border);
+        //ratingX = x;
+        //ratingY = y + h + TEXT_SIZE / 2;
       }
       else
       { //Horisontal
@@ -1259,19 +1239,22 @@ class TetrisBase {
         glass.setRect(
           new Rect(x, y, x + w, y + h)
         );
-        nextFigureX = x + w + border;
-        nextFigureY = border;
 
-        ratingX = x + w + border + TEXT_SIZE / 2;
-        ratingY = border + glass.getShapeWidth() * 3;
+        nextFigureRect.offsetTo(x + w + border, border);
+        gameTimeRect.set(nextFigureRect.right, nextFigureRect.top, rect.right - border, nextFigureRect.bottom);
+        //nextFigureX = x + w + border;
+        //nextFigureY = border;
+
+        statisticRect.set(nextFigureRect.left, nextFigureRect.bottom, rect.right - border, nextFigureRect.bottom + textHeight);
+        //ratingX = x + w + border + TEXT_SIZE / 2;
+        //ratingY = border + glass.getShapeWidth() * 3;
       }
 
     }
     /*============================================================*/
-    String[] ratingText()
+    String gameTimeText()
     {
       Statistics statistics = glass.getStatistics();
-      String[] strings = new String[4];
 
       final long SEC_IN_MINUTE = 60;
       final long SEC_IN_HOUR = 3600;
@@ -1290,23 +1273,40 @@ class TetrisBase {
       sec %= SEC_IN_MINUTE;
 
 
+      return String.format(Locale.getDefault(), "%,d-%02d:%02d:%02d",
+        day, hour, min, sec);
+    }
+    /*============================================================*/
+    String[] ratingText()
+    {
+      Statistics statistics = glass.getStatistics();
+      String[] strings = new String[3];
+
       strings[0] = String.format(Locale.getDefault(), "%s: %,d",
         context.getString(R.string.score),
         glass.getScore());
 
-      strings[1] = String.format(Locale.getDefault(), "%s: %,d-%02d:%02d:%02d",
-        context.getString(R.string.game_time),
-        day, hour, min, sec);
-
-      strings[2] = String.format(Locale.getDefault(), "%s: %,d",
+      strings[1] = String.format(Locale.getDefault(), "%s: %,d",
         context.getString(R.string.number_of_figures),
         statistics.figureCount);
 
-      strings[3] = String.format(Locale.getDefault(), "%s: %,d",
+      strings[2] = String.format(Locale.getDefault(), "%s: %,d",
         context.getString(R.string.number_of_squares),
         statistics.squareCount);
 
       return strings;
+    }
+    /*============================================================*/
+    private void drawNextFigure(Canvas canvas)
+    {
+      Figure figure = nextFigure;
+      if(figure != null && settings.showNextFigure)
+      {
+        int x = nextFigureRect.left + (nextFigureRect.width() - figure.getColumnCount() * nextFigureCellSize) / 2;
+        int y = nextFigureRect.top + (nextFigureRect.height() - figure.getRowCount() * nextFigureCellSize) / 2;
+        figure.onDraw(canvas, x, y, nextFigureCellSize, nextFigureCellSize);
+      }
+      drawBorder(canvas, nextFigureRect, 1, BevelCut.Raised, BevelCut.Lowered);
     }
     /*============================================================*/
     private void drawStatusPanel(Canvas canvas, String text)
@@ -1314,7 +1314,7 @@ class TetrisBase {
       Rect glassRect = glass.getRect();
 
       paint.setTypeface(Typeface.DEFAULT);// your preference here
-      paint.setTextSize(40);// have this the same as your text size
+      paint.setTextSize(TEXT_SIZE);// have this the same as your text size
       paint.getTextBounds(text, 0, text.length(), bounds);
 
       int x = glassRect.left + (glassRect.width() - bounds.width()) / 2;
@@ -1334,10 +1334,101 @@ class TetrisBase {
       canvas.drawText(text, x, y, paint);
     }
     /*============================================================*/
+    private void drawGameTime(Canvas canvas)
+    {
+      String text = gameTimeText();
+
+      paint.setTypeface(Typeface.DEFAULT);// your preference here
+      paint.setTextSize(TEXT_SIZE);// have this the same as your text size
+      paint.getTextBounds(text, 0, text.length(), bounds);
+
+      int x = gameTimeRect.left + (gameTimeRect.width() - bounds.width()) / 2;
+      int y = gameTimeRect.top + (gameTimeRect.height() - bounds.height()) / 2 + bounds.height();
+
+      paint.setColor(Color.BLACK);
+      canvas.drawText(text, x, y, paint);
+
+      drawBorder(canvas, gameTimeRect, 1, BevelCut.Raised, BevelCut.Lowered);
+    }
+    /*============================================================*/
+    private void drawStatistics(Canvas canvas)
+    {
+      long maxVal = 0;
+      long score = glass.getScore();
+      Statistics statistics = glass.getStatistics();
+
+      //Find max value for call max string size
+      if(maxVal < score)
+        maxVal = score;
+      if(maxVal < statistics.figureCount)
+        maxVal = statistics.figureCount;
+      if(maxVal < statistics.squareCount)
+        maxVal = statistics.squareCount;
+
+      String text = String.format(Locale.getDefault(), "%,d", maxVal);
+
+      paint.setTypeface(Typeface.DEFAULT);// your preference here
+      paint.setTextSize(TEXT_SIZE);// have this the same as your text size
+      paint.getTextBounds(text, 0, text.length(), bounds);
+      paint.setColor(Color.BLACK);
+
+      int[] width = new int[] {
+        statisticRect.width() - bounds.width() - 2 * TEXT_SIZE,
+        bounds.width() + 2 * TEXT_SIZE
+      };
+
+      int height = statisticRect.height() / 3;
+
+      for(int row = 0; row < 3; row ++)
+      {
+        switch (row)
+        {
+          case 0:
+            text = context.getString(R.string.score);
+            break;
+          case 1:
+            text = context.getString(R.string.number_of_figures);
+            break;
+          case 2:
+            text = context.getString(R.string.number_of_squares);
+            break;
+        }
+        paint.getTextBounds(text, 0, text.length(), bounds);
+
+        int x = statisticRect.left + width[0] - bounds.width() - TEXT_SIZE;
+        int y = statisticRect.top + height * row + (height - bounds.height()) / 2 + bounds.height();
+        canvas.drawText(text, x, y, paint);
+
+        switch (row)
+        {
+          case 0:
+            text = String.format(Locale.getDefault(), "%,d", score);
+            break;
+          case 1:
+            text = String.format(Locale.getDefault(), "%,d", statistics.figureCount);
+            break;
+          case 2:
+            text = String.format(Locale.getDefault(), "%,d", statistics.squareCount);
+            break;
+        }
+        paint.getTextBounds(text, 0, text.length(), bounds);
+
+        x = statisticRect.left + width[0] + TEXT_SIZE;
+        canvas.drawText(text, x, y, paint);
+
+        drawBorder(canvas,
+          new Rect(statisticRect.left, statisticRect.top + height * row, statisticRect.left + width[0], statisticRect.top + height * (row + 1)),
+          1, BevelCut.Raised, BevelCut.Lowered);
+        drawBorder(canvas,
+          new Rect(statisticRect.left + width[0], statisticRect.top + height * row, statisticRect.left + width[0] + width[1], statisticRect.top + height * (row + 1)),
+          1, BevelCut.Raised, BevelCut.Lowered);
+      }
+
+      //drawBorder(canvas, statisticRect, 1, BevelCut.Raised, BevelCut.Lowered);
+    }
+    /*============================================================*/
     void onDraw(Canvas canvas)
     {
-      Figure figure = this.nextFigure; //For thread safe
-
       if(glass.getRect() == null)
       {
         if(rect == null)
@@ -1354,11 +1445,9 @@ class TetrisBase {
 
       Rect glassRect = glass.getRect();
       glass.onDraw(canvas);
-      if(figure != null && settings.showNextFigure)
-      {
-        figure.onDraw(canvas, nextFigureX, nextFigureY, 20, 20);
-        //nextFigure.onDraw(canvas, nextFigureX, nextFigureY, glass.getShapeWidth(), glass.getShapeHeight());
-      }
+
+      drawNextFigure(canvas);
+      drawGameTime(canvas);
 
       Bitmap leftBmp = null, rightBmp = null;
 
@@ -1423,37 +1512,8 @@ class TetrisBase {
         drawStatusPanel(canvas, text);
       }
 
-      if(settings.showScore)
-      {
-        paint.setColor(Color.BLUE);
-        paint.setTextSize(TEXT_SIZE);
-
-        int y = ratingY + TEXT_SIZE;
-        String[] strings = ratingText();
-
-        for(String str : strings)
-        {
-          canvas.drawText(str, ratingX, y, paint);
-          y += TEXT_SIZE;
-        }
-
-/*
-        canvas.drawText(context.getString(R.string.speed) + ": " + settings.speedRate + "%", ratingX, y, paint);
-        y += 30;
-        canvas.drawText(context.getString(R.string.complex) + ": " + settings.complexRate + "%", ratingX, y, paint);
-        y += 30;
-        canvas.drawText(context.getString(R.string.score) + ": "
-          + String.format(Locale.getDefault(), "%,d", glass.getScore()),
-          ratingX, y, paint);
-*/
-/*
-        if(accelerometer != null)
-        {
-          y += 30;
-          Accelerometer.Orientation o = accelerometer.getActualDeviceOrientation();
-          canvas.drawText(String.format("x=%1$.01f y=%2$.01f z=%3$.01f", o.x, o.y, o.z), ratingX, y, paint);
-        }
-*/
+      if(settings.showScore) {
+        drawStatistics(canvas);
       }
     }
 
