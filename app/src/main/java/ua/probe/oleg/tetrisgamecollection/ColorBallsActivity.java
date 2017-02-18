@@ -2,9 +2,6 @@ package ua.probe.oleg.tetrisgamecollection;
 
 import android.os.Bundle;
 
-/**
- * Created by oleg on 13.01.17.
- */
 
 public class ColorBallsActivity extends TetrisBaseActivity
 {
@@ -20,4 +17,11 @@ public class ColorBallsActivity extends TetrisBaseActivity
   {
     return new ColorBallsGame.Controller(this, sectionName);
   }
+
+  @Override
+  protected Class<?> settinsActivityClass()
+  {
+    return ColumnusSettingsActivity.class;
+  }
+
 }

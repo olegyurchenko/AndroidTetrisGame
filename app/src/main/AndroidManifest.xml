@@ -26,6 +26,10 @@
         </activity>
         <activity android:name=".HelpActivity">
         </activity>
+        <activity android:name=".TetrisSettingsActivity">
+        </activity>
+        <activity android:name=".ColumnusSettingsActivity">
+        </activity>
     </application>
 
 </manifest>

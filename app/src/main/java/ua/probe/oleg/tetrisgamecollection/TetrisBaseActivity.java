@@ -279,8 +279,13 @@ public class TetrisBaseActivity extends AppCompatActivity
     }
   }
 
+  protected Class<?> settinsActivityClass()
+  {
+    return SettingsActivity.class;
+  }
+
   public void onSettings() {
-    Intent intent = new Intent(this, SettingsActivity.class);
+    Intent intent = new Intent(this, settinsActivityClass());
     Bundle b = new Bundle();
     b.putString("sectionName", sectionName);
     intent.putExtras(b);

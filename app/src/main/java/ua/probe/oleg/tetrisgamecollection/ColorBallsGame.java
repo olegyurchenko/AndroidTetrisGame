@@ -455,18 +455,85 @@ class ColorBallsGame extends TetrisBase {
   /*-----------------------------------------------------------------------------------------------*/
   static class Controller extends TetrisBase.Controller {
 
+    ArrayList<Integer> colors;
+
+    @Override
+    int randomColor()
+    {
+      if(colors == null)
+        colors = new ArrayList<>();
+      if(colors.isEmpty())
+      {
+
+        if(settings.complexRate == 0)
+          settings.complexRate = 8;
+
+        colors.add(Color.WHITE);
+        colors.add(Color.BLACK);
+
+        if(settings.complexRate >= 8)
+        {
+          colors.add(Color.GRAY);
+
+          for(int r = 0; r < 256; r += 255) {
+            for (int g = 0; g < 256; g += 255) {
+              for (int b = 0; b < 256; b += 255) {
+                Log.d("Columnus", String.format("rgb(%d,%d,%d)", r, g, b));
+                colors.add(Color.rgb(r, g, b));
+              }
+            }
+          }
+        }
+
+        if(settings.complexRate >= 16)
+        {
+          for(int r = 0; r < 256; r += 127) {
+            for (int g = 0; g < 256; g += 127) {
+              colors.add(Color.rgb(r, g, 255));
+            }
+          }
+
+          for(int g = 0; g < 256; g += 127) {
+            for (int b = 0; b < 256; b += 127) {
+              colors.add(Color.rgb(255, g, b));
+            }
+          }
+
+          for(int r = 0; r < 256; r += 127) {
+            for (int b = 0; b < 256; b += 127) {
+              colors.add(Color.rgb(r, 255, b));
+            }
+          }
+        }
+
+        if(settings.complexRate >= 32)
+        {
+          for(int r = 0; r < 256; r += 64) {
+            for (int g = 0; g < 256; g += 64) {
+              for (int b = 0; b < 256; b += 64) {
+                colors.add(Color.rgb(r, g, b));
+              }
+            }
+          }
+        }
+      }
+
+      int n = random.nextInt(0x7fffffff);
+      return colors.get(n % colors.size());
+    }
+    /*============================================================*/
     Controller(Context c, String sectionName)
     {
       super(c, sectionName);
       ballBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ball);
     }
-
+    /*============================================================*/
     @Override
     protected Glass onGlassCreate()
     {
       return new BallsGlass(settings.columnCount, settings.rowCount);
     }
-
+    /*============================================================*/
     @Override
     String[] ratingText()
     {
@@ -483,16 +550,24 @@ class ColorBallsGame extends TetrisBase {
 
       return strings;
     }
-
+    /*============================================================*/
     @Override
     protected Figure onNewFigure() {
       Figure figure = new BallsFigure();
-      figure.put(0, 0, new Ball(randomComplexColor()));
-      figure.put(0, 1, new Ball(randomComplexColor()));
-      figure.put(0, 2, new Ball(randomComplexColor()));
+      figure.put(0, 0, new Ball(randomColor()));
+      figure.put(0, 1, new Ball(randomColor()));
+      figure.put(0, 2, new Ball(randomColor()));
 
       return figure;
     }
+    /*============================================================*/
+    @Override
+    void onSettingsChanged() {
+      super.onSettingsChanged();
+      if(colors != null)
+        colors.clear();
+    }
+    /*============================================================*/
   }
   /*-----------------------------------------------------------------------------------------------*/
 }

@@ -42,4 +42,6 @@
     <string name="app_name">Блочні ігри</string>
     <string name="action_color_balls">Кольорові кульки</string>
     <string name="content">Зміст</string>
+    <string name="of_squares">квадратів</string>
+    <string name="of_colors">кольорів</string>
 </resources>

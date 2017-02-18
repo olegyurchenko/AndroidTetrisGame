@@ -41,6 +41,9 @@
     <string name="column_count">Column count</string>
     <string name="demo_mode">Demo mode</string>
     <string name="content">Content</string>
+    <string name="ms">ms</string>
+    <string name="of_squares">squares</string>
+    <string name="of_colors">colors</string>
 
 
 </resources>

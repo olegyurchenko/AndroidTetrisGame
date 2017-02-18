@@ -2,9 +2,6 @@ package ua.probe.oleg.tetrisgamecollection;
 
 import android.os.Bundle;
 
-/**
- * Created by oleg on 13.01.17.
- */
 
 public class TetrisActivity extends TetrisBaseActivity
 {
@@ -17,6 +14,12 @@ public class TetrisActivity extends TetrisBaseActivity
   protected TetrisBase.Controller onGameControllerCreate()
   {
     return new TetrisGame.Controller(this, sectionName);
+  }
+
+  @Override
+  protected Class<?> settinsActivityClass()
+  {
+    return TetrisSettingsActivity.class;
   }
 
 }

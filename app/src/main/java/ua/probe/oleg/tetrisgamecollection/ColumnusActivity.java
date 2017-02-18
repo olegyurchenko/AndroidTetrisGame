@@ -2,9 +2,6 @@ package ua.probe.oleg.tetrisgamecollection;
 
 import android.os.Bundle;
 
-/**
- * Created by oleg on 13.01.17.
- */
 
 public class ColumnusActivity extends TetrisBaseActivity
 {
@@ -19,4 +16,11 @@ public class ColumnusActivity extends TetrisBaseActivity
   {
     return new ColumnusGame.Controller(this, sectionName);
   }
+
+  @Override
+  protected Class<?> settinsActivityClass()
+  {
+    return ColumnusSettingsActivity.class;
+  }
+
 }

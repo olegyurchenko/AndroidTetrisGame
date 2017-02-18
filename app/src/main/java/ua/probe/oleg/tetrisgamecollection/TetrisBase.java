@@ -11,7 +11,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
@@ -953,11 +952,11 @@ class TetrisBase {
   /*-----------------------------------------------------------------------------------------------*/
   static class Settings
   {
-    final int MinColumns = 3, MaxColumns = 20;
-    final int MinRows = 5, MaxRows = 30;
+    static final int MinColumns = 5, MaxColumns = 20;
+    static final int MinRows = 10, MaxRows = 30;
 
-    int speedRate = 50;
-    int complexRate = 50;
+    int tickTime = 800;
+    int complexRate = 0;
     int columnCount = 10, rowCount = 20;
     boolean showNextFigure = true;
     boolean showScore = true;
@@ -969,12 +968,12 @@ class TetrisBase {
 
     private void check()
     {
-      if(speedRate <= 0)
-        speedRate = 1;
-      if(speedRate > 100)
-        speedRate = 100;
-      if(complexRate <= 0)
-        complexRate = 1;
+      if(tickTime <= 100)
+        tickTime = 100;
+      if(tickTime > 10000)
+        tickTime = 10000;
+      if(complexRate < 0)
+        complexRate = 0;
       if(complexRate > 100)
         complexRate = 100;
       if(columnCount < MinColumns)
@@ -990,16 +989,16 @@ class TetrisBase {
     void load(Context context, String sectionName)
     {
       SharedPreferences preferences = context.getSharedPreferences(sectionName, Context.MODE_PRIVATE);
-      speedRate = preferences.getInt("speedRate", 50);
-      complexRate = preferences.getInt("complexRate", 50);
-      columnCount = preferences.getInt("columnCount", 10);
-      rowCount = preferences.getInt("rowCount", 20);
-      showNextFigure = preferences.getBoolean("showNextFigure", true);
-      showScore = preferences.getBoolean("showScore", true);
-      showGuideLines = preferences.getBoolean("showGuideLines", true);
-      useAccelerometer = preferences.getBoolean("useAccelerometer", false);
-      useTouch = preferences.getBoolean("useTouch", true);
-      useShake = preferences.getBoolean("useShake", false);
+      tickTime = preferences.getInt("tickTime", tickTime);
+      complexRate = preferences.getInt("complexRate", complexRate);
+      columnCount = preferences.getInt("columnCount", columnCount);
+      rowCount = preferences.getInt("rowCount", rowCount);
+      showNextFigure = preferences.getBoolean("showNextFigure", showNextFigure);
+      showScore = preferences.getBoolean("showScore", showScore);
+      showGuideLines = preferences.getBoolean("showGuideLines", showGuideLines);
+      useAccelerometer = preferences.getBoolean("useAccelerometer", useAccelerometer);
+      useTouch = preferences.getBoolean("useTouch", useTouch);
+      useShake = preferences.getBoolean("useShake", useShake);
       randomSeed = preferences.getLong("randomSeed", 0);
       check();
     }
@@ -1011,7 +1010,7 @@ class TetrisBase {
       SharedPreferences.Editor ed = preferences.edit();
 
       check();
-      ed.putInt("speedRate", speedRate);
+      ed.putInt("tickTime", tickTime);
       ed.putInt("complexRate", complexRate);
       ed.putInt("columnCount", columnCount);
       ed.putInt("rowCount", rowCount);
@@ -1044,7 +1043,7 @@ class TetrisBase {
     Settings settings;
 
     //protected int defaultColumnCount = 8, defaultRowCount = 16;
-    //protected int complexRate = 50, speedRate = 50;
+    //protected int complexRate = 50, tickTime = 50;
     enum State
     {
       PAUSED,
@@ -1119,9 +1118,9 @@ class TetrisBase {
     /*============================================================*/
     private void setup()
     {
-      interval = minInterval + ((maxInterval - minInterval) * (100 - settings.speedRate)) / 100;
+      interval = settings.tickTime;
       //Log.d("GameController", "interval=" + interval);
-      glass.setScoreScale(settings.complexRate * settings.speedRate);
+      glass.setScoreScale(1); //TODK !
     }
     /*============================================================*/
     void onSettingsChanged()
@@ -1176,13 +1175,6 @@ class TetrisBase {
     int randomColor()
     {
       return colors[random.nextInt(colors.length)];
-    }
-    /*============================================================*/
-    int randomComplexColor()
-    {
-      int d =  (colors.length * settings.complexRate) / 100;
-      int n = random.nextInt(d < 1 ? 1 : d);
-      return colors[n];
     }
     /*============================================================*/
     void setSize(int w, int h)

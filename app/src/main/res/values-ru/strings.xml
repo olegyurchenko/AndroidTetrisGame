@@ -42,4 +42,6 @@
     <string name="app_name">Блочные игры</string>
     <string name="action_color_balls">Цветные шарики</string>
     <string name="content">Содержание</string>
+    <string name="of_squares">квадратов</string>
+    <string name="of_colors">цветов</string>
 </resources>

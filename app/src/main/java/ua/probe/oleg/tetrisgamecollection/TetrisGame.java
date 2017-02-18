@@ -3,6 +3,10 @@ package ua.probe.oleg.tetrisgamecollection;
 import android.content.Context;
 import android.util.Log;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
+
 /**
  * Tetris game logic
  */
@@ -281,51 +285,102 @@ class TetrisGame extends TetrisBase {
 
   /*-----------------------------------------------------------------------------------------------*/
   static class Controller extends TetrisBase.Controller {
-    static byte figures[][] = {
 
-      //1x1
+    //3 - square figures
+    static byte figures3[][] = {
       {0b1},
-      //2x2
       {0b11},
       {0b11, 0b01},
+      {0b111}
+    };
+
+    //4 - square figures
+    static byte figures4[][] = {
       {0b11, 0b11},
-      //3x2
-      {0b111},
       {0b111, 0b100},
       {0b111, 0b010},
       {0b111, 0b001},
-      {0b111, 0b101},
       {0b110, 0b011},
       {0b011, 0b110},
+      {0b1111}
+    };
 
-      {0b110, 0b011},
-      {0b011, 0b110},
-      {0b111, 0b111},
-      //3x3
-      {0b111, 0b100, 0b100},
-      {0b111, 0b010, 0b010},
+    //5 - square figures
+    static byte figures5[][] = {
+      {0b111, 0b101},
+      {0b111, 0b110},
+      {0b111, 0b011},
       {0b111, 0b001, 0b001},
       {0b111, 0b100, 0b100},
-      {0b111, 0b101, 0b101},
+      {0b111, 0b010, 0b010},
 
-      {0b111, 0b110, 0b110},
-      {0b111, 0b011, 0b011},
+      {0b100, 0b111, 0b100},
+      {0b010, 0b111, 0b010},
+      {0b001, 0b111, 0b001},
+      {0b001, 0b111, 0b100},
+      {0b100, 0b111, 0b001},
 
-      {0b111, 0b111, 0b111},
+      {0b1111, 0b1000},
+      {0b1111, 0b0001},
 
-      {0b011, 0b111, 0b110},
-      {0b110, 0b111, 0b011},
 
+//      {0b1111, 0b0100},
+//      {0b1111, 0b0010},
     };
+
+    //6 - square figures
+    static byte figures6[][] = {
+      {0b111, 0b111},
+      {0b1110, 0b0111},
+      {0b0111, 0b1110},
+    };
+
+    ArrayList<byte []> figures;
+
 
     Controller(Context c, String sectionName) {
       super(c, sectionName);
     }
 
-    byte[] randomFigure() {
-      int n = random.nextInt(1000);
-      n %= (figures.length * settings.complexRate) / 100;
-      return figures[n % figures.length];
+    byte[] randomFigure()
+    {
+      if(figures == null)
+        figures = new ArrayList<>();
+
+      if(figures.isEmpty()) {
+
+        if(settings.complexRate == 0)
+          settings.complexRate = 4;
+
+        if(settings.complexRate >= 3)
+        {
+          Collections.addAll(figures, figures3);
+        }
+        if(settings.complexRate >= 4)
+        {
+          Collections.addAll(figures, figures4);
+        }
+        if(settings.complexRate >= 5)
+        {
+          Collections.addAll(figures, figures5);
+        }
+        if(settings.complexRate >= 6)
+        {
+          Collections.addAll(figures, figures6);
+        }
+
+      }
+
+
+      int n = random.nextInt(0x7fffffff);
+      return figures.get(n % figures.size());
+    }
+
+    @Override
+    void onSettingsChanged() {
+      super.onSettingsChanged();
+      if(figures != null)
+        figures.clear();
     }
 
     @Override

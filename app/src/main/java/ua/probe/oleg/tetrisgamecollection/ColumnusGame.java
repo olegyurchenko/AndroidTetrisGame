@@ -1,6 +1,7 @@
 package ua.probe.oleg.tetrisgamecollection;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -375,6 +376,83 @@ class ColumnusGame extends TetrisBase {
   /*-----------------------------------------------------------------------------------------------*/
   static class Controller extends TetrisBase.Controller
   {
+    ArrayList<Integer> colors;
+
+
+    /*===========================================================*/
+    @Override
+    int randomColor()
+    {
+      if(colors == null)
+        colors = new ArrayList<>();
+      if(colors.isEmpty())
+      {
+
+        if(settings.complexRate == 0)
+          settings.complexRate = 8;
+
+        colors.add(Color.rgb(255, 0, 0));
+        colors.add(Color.rgb(0, 255, 0));
+
+
+        if(settings.complexRate >= 4)
+        {
+          colors.add(Color.rgb(200, 200, 200));
+          colors.add(Color.BLACK);
+          colors.add(Color.rgb(0, 0, 255));
+        }
+
+        if(settings.complexRate >= 8)
+        {
+          colors.add(Color.GRAY);
+
+          for(int r = 0; r < 256; r += 255) {
+            for (int g = 0; g < 256; g += 255) {
+              for (int b = 0; b < 256; b += 255) {
+                Log.d("Columnus", String.format("rgb(%d,%d,%d)", r, g, b));
+                colors.add(Color.rgb(r, g, b));
+              }
+            }
+          }
+        }
+
+        if(settings.complexRate >= 16)
+        {
+          for(int r = 0; r < 256; r += 128) {
+            for (int g = 0; g < 256; g += 128) {
+              colors.add(Color.rgb(r, g, 255));
+            }
+          }
+
+          for(int g = 0; g < 256; g += 128) {
+            for (int b = 0; b < 256; b += 128) {
+              colors.add(Color.rgb(255, g, b));
+            }
+          }
+
+          for(int r = 0; r < 256; r += 128) {
+            for (int b = 0; b < 256; b += 127) {
+              colors.add(Color.rgb(r, 255, b));
+            }
+          }
+        }
+
+        if(settings.complexRate >= 32)
+        {
+          for(int r = 0; r < 256; r += 64) {
+            for (int g = 0; g < 256; g += 64) {
+              for (int b = 0; b < 256; b += 64) {
+                colors.add(Color.rgb(r, g, b));
+              }
+            }
+          }
+        }
+      }
+
+      int n = random.nextInt(0x7fffffff);
+      return colors.get(n % colors.size());
+    }
+    /*============================================================*/
 
     Controller(Context c, String sectionName)
     {
@@ -390,11 +468,19 @@ class ColumnusGame extends TetrisBase {
     @Override
     protected Figure onNewFigure() {
       Figure figure = new ColumnusFigure();
-      figure.put(0, 0, new Square(randomComplexColor()));
-      figure.put(0, 1, new Square(randomComplexColor()));
-      figure.put(0, 2, new Square(randomComplexColor()));
+      figure.put(0, 0, new Square(randomColor()));
+      figure.put(0, 1, new Square(randomColor()));
+      figure.put(0, 2, new Square(randomColor()));
 
       return figure;
     }
+
+    @Override
+    void onSettingsChanged() {
+      super.onSettingsChanged();
+      if(colors != null)
+        colors.clear();
+    }
+
   }
 }

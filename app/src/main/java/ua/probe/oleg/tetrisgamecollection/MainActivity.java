@@ -124,9 +124,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
   }
 
-  private void statrSettings(String sectionName)
+  private void statrSettings(String sectionName, Class<?> cls)
   {
-    Intent intent = new Intent(this, SettingsActivity.class);
+    Intent intent = new Intent(this, cls);
     Bundle b = new Bundle();
     b.putString("sectionName", sectionName);
     intent.putExtras(b);
@@ -135,17 +135,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
   protected void tetrisSettings()
   {
-    statrSettings(getString(R.string.tetris_section_name));
+    statrSettings(getString(R.string.tetris_section_name), TetrisSettingsActivity.class);
   }
 
   protected void columnusSettings()
   {
-    statrSettings(getString(R.string.columnus_section_name));
+
+    statrSettings(getString(R.string.columnus_section_name), ColumnusSettingsActivity.class);
   }
 
   protected void colorBallsSettings()
   {
-    statrSettings(getString(R.string.color_balls_section_name));
+    statrSettings(getString(R.string.color_balls_section_name), ColumnusSettingsActivity.class);
   }
 
   protected void help()
