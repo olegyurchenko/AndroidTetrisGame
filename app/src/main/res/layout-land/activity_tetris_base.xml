@@ -35,29 +35,29 @@
                 android:id="@+id/btnLeft1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_left">
-            </Button>
+                android:drawableTop="@drawable/ic_left"
+                />
 
             <Button
                 android:id="@+id/btnRight1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_right">
-            </Button>
+                android:drawableTop="@drawable/ic_right"
+                />
 
             <Button
                 android:id="@+id/btnRotate1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_rotate">
-            </Button>
+                android:drawableTop="@drawable/ic_rotate"
+                />
 
             <Button
                 android:id="@+id/btnDown1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_bottom">
-            </Button>
+                android:drawableTop="@drawable/ic_bottom"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -134,29 +134,29 @@
                 android:id="@+id/btnLeft2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_left">
-            </Button>
+                android:drawableTop="@drawable/ic_left"
+                />
 
             <Button
                 android:id="@+id/btnRight2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_right">
-            </Button>
+                android:drawableTop="@drawable/ic_right"
+                />
 
             <Button
                 android:id="@+id/btnRotate2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_rotate">
-            </Button>
+                android:drawableTop="@drawable/ic_rotate"
+                />
 
             <Button
                 android:id="@+id/btnDown2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_bottom">
-            </Button>
+                android:drawableTop="@drawable/ic_bottom"
+                />
 
         </LinearLayout>
 

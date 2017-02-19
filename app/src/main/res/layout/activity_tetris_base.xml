@@ -36,29 +36,33 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:drawableTop="@drawable/ic_left"
-            android:id="@+id/btnLeft1">
-        </Button>
+            android:id="@+id/btnLeft1"
+            android:minHeight="100dp"
+            />
 
         <Button
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:drawableTop="@drawable/ic_right"
-            android:id="@+id/btnRight1">
-        </Button>
+            android:id="@+id/btnRight1"
+            android:minHeight="100dp"
+            />
 
         <Button
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:drawableTop="@drawable/ic_rotate"
-            android:id="@+id/btnRotate1">
-        </Button>
+            android:id="@+id/btnRotate1"
+            android:minHeight="100dp"
+            />
 
         <Button
             android:drawableTop="@drawable/ic_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnDown1">
-        </Button>
+            android:id="@+id/btnDown1"
+            android:minHeight="100dp"
+            />
 
     </LinearLayout>
 
@@ -91,29 +95,33 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:drawableTop="@drawable/ic_left"
-            android:id="@+id/btnLeft2">
-        </Button>
+            android:id="@+id/btnLeft2"
+            android:minHeight="100dp"
+            />
 
         <Button
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:drawableTop="@drawable/ic_right"
-            android:id="@+id/btnRight2">
-        </Button>
+            android:id="@+id/btnRight2"
+            android:minHeight="100dp"
+            />
 
         <Button
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:drawableTop="@drawable/ic_rotate"
-            android:id="@+id/btnRotate2">
-        </Button>
+            android:id="@+id/btnRotate2"
+            android:minHeight="100dp"
+            />
 
         <Button
             android:drawableTop="@drawable/ic_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnDown2">
-        </Button>
+            android:id="@+id/btnDown2"
+            android:minHeight="100dp"
+            />
 
     </LinearLayout>
 
