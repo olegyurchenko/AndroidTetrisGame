@@ -2,17 +2,18 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    >
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
@@ -25,16 +26,19 @@
         <Button
             android:id="@+id/btn_tetris"
             android:drawableLeft="@mipmap/ic_game_tetris"
-            android:layout_width="wrap_content"
+            android:drawableStart="@mipmap/ic_game_tetris"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/action_tetris"
-            android:minHeight="73dp"
+            android:minHeight="100dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             >
         </Button>
 
         <Button
             android:drawableLeft="@drawable/ic_settings"
+            android:drawableStart="@drawable/ic_settings"
             android:text=""
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="62dp"
@@ -51,18 +55,20 @@
         >
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/action_columnus"
             android:drawableLeft="@mipmap/ic_game_columnus"
+            android:drawableStart="@mipmap/ic_game_columnus"
             android:id="@+id/btn_columnus"
-            android:minHeight="73dp"
-            >
+            android:minHeight="100dp"
+            style="@style/Widget.AppCompat.Button.Colored">
         </Button>
 
         <Button
             android:drawableLeft="@drawable/ic_settings"
+            android:drawableStart="@drawable/ic_settings"
             android:text=""
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="62dp"
@@ -79,17 +85,19 @@
 
         <Button
             android:id="@+id/btn_color_ball"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:drawableLeft="@mipmap/ic_game_color_balls"
+            android:drawableStart="@mipmap/ic_game_color_balls"
             android:text="@string/action_color_balls"
-            android:minHeight="73dp"
-            >
+            android:minHeight="100dp"
+            style="@style/Widget.AppCompat.Button.Colored">
         </Button>
 
         <Button
             android:drawableLeft="@drawable/ic_settings"
+            android:drawableStart="@drawable/ic_settings"
             android:text=""
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="62dp"
@@ -102,15 +110,17 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+        >
 
         <Button
             android:drawableLeft="@drawable/ic_help"
+            android:drawableStart="@drawable/ic_help"
             android:text="@string/help"
             android:layout_width="167dp"
             android:layout_height="71dp"
             android:id="@+id/btn_help"
-            android:minHeight="90dp"
-            android:minWidth="90dp"/>
+            android:minHeight="100dp"
+            android:minWidth="200dp"
+            style="@style/Widget.AppCompat.Button.Borderless"/>
     </LinearLayout>
 </LinearLayout>

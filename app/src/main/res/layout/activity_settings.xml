@@ -3,6 +3,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fadeScrollbars="false"
@@ -23,7 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp">
-        <TableRow android:gravity="center_vertical">
+        <TableRow android:gravity="center_vertical"
+                  android:minHeight="70dp">
             <TextView
                 android:text="@string/column_count"
                 android:layout_width="wrap_content"
@@ -39,7 +41,8 @@
 
 
         </TableRow>
-        <TableRow android:gravity="center_vertical">
+        <TableRow android:gravity="center_vertical"
+                  android:minHeight="70dp">
             <TextView
                 android:text="@string/row_count"
                 android:layout_width="wrap_content"
@@ -54,7 +57,8 @@
 
 
         </TableRow>
-        <TableRow android:gravity="center_vertical">
+        <TableRow android:gravity="center_vertical"
+                  android:minHeight="70dp">
 
 
             <TextView
@@ -72,7 +76,8 @@
 
         </TableRow>
 
-        <TableRow android:gravity="center_vertical">
+        <TableRow android:gravity="center_vertical"
+                  android:minHeight="70dp">
             <TextView
                 android:text="@string/complex"
                 android:layout_width="wrap_content"
@@ -88,7 +93,8 @@
 
         </TableRow>
 
-        <TableRow android:gravity="center_vertical">
+        <TableRow android:gravity="center_vertical"
+                  android:minHeight="70dp">
             <TextView
                 android:text="@string/show_next_figure"
                 android:layout_width="wrap_content"
@@ -101,7 +107,8 @@
                 />
         </TableRow>
 
-        <TableRow android:gravity="center_vertical">
+        <TableRow android:gravity="center_vertical"
+                  android:minHeight="70dp">
             <TextView
                 android:text="@string/show_score"
                 android:layout_width="wrap_content"
@@ -114,7 +121,8 @@
                 />
         </TableRow>
 
-        <TableRow android:gravity="center_vertical">
+        <TableRow android:gravity="center_vertical"
+                  android:minHeight="70dp">
             <TextView
                 android:text="@string/show_guide_lines"
                 android:layout_width="wrap_content"
@@ -127,7 +135,8 @@
                 />
         </TableRow>
 
-        <TableRow android:gravity="center_vertical">
+        <TableRow android:gravity="center_vertical"
+                  android:minHeight="70dp">
             <TextView
                 android:text="@string/use_accelerometer"
                 android:layout_width="wrap_content"
@@ -140,7 +149,8 @@
                 />
         </TableRow>
 
-        <TableRow android:gravity="center_vertical">
+        <TableRow android:gravity="center_vertical"
+                  android:minHeight="70dp">
             <TextView
                 android:text="@string/use_touch"
                 android:layout_width="wrap_content"
@@ -153,7 +163,8 @@
                 />
         </TableRow>
 
-        <TableRow android:gravity="center_vertical">
+        <TableRow android:gravity="center_vertical"
+                  android:minHeight="70dp">
             <TextView
                 android:text="@string/use_shake"
                 android:layout_width="wrap_content"
@@ -166,7 +177,8 @@
                 />
         </TableRow>
 
-        <TableRow android:gravity="center_vertical">
+        <TableRow android:gravity="center_vertical"
+                  android:minHeight="70dp">
 
             <Button
                 android:text="@string/reset_to_default"
