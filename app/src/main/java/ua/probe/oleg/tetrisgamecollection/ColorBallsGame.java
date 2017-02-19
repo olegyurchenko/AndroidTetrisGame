@@ -87,11 +87,27 @@ class ColorBallsGame extends TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
+  private static class Statistics extends TetrisBase.Statistics
+  {
+    @Override
+    String getText(int col, int row, Context context) {
+      if(row == SQUARE_COUNT_ROW && col == TEXT_COL)
+        return context.getString(R.string.number_of_balls);
+
+      return super.getText(col, row, context);
+    }
+  }
+  /*-----------------------------------------------------------------------------------------------*/
   private static class BallsGlass extends TetrisBase.Glass
   {
     BallsGlass(int colCount, int rowCount)
     {
       super(colCount, rowCount);
+    }
+
+    @Override
+    TetrisBase.Statistics onNewStatistics() {
+      return new Statistics();
     }
 
     @Override
@@ -456,6 +472,7 @@ class ColorBallsGame extends TetrisBase {
   static class Controller extends TetrisBase.Controller {
 
     ArrayList<Integer> colors;
+    static final int DEFAULT_COMPLEX = 4;
 
     @Override
     int randomColor()
@@ -466,10 +483,18 @@ class ColorBallsGame extends TetrisBase {
       {
 
         if(settings.complexRate == 0)
-          settings.complexRate = 8;
+          settings.complexRate = DEFAULT_COMPLEX;
 
-        colors.add(Color.WHITE);
-        colors.add(Color.BLACK);
+        colors.add(Color.rgb(255, 0, 0));
+        colors.add(Color.rgb(0, 255, 0));
+
+
+        if(settings.complexRate >= 4)
+        {
+          colors.add(Color.rgb(200, 200, 200));
+          colors.add(Color.BLACK);
+          colors.add(Color.rgb(0, 0, 255));
+        }
 
         if(settings.complexRate >= 8)
         {
@@ -487,19 +512,19 @@ class ColorBallsGame extends TetrisBase {
 
         if(settings.complexRate >= 16)
         {
-          for(int r = 0; r < 256; r += 127) {
-            for (int g = 0; g < 256; g += 127) {
+          for(int r = 0; r < 256; r += 128) {
+            for (int g = 0; g < 256; g += 128) {
               colors.add(Color.rgb(r, g, 255));
             }
           }
 
-          for(int g = 0; g < 256; g += 127) {
-            for (int b = 0; b < 256; b += 127) {
+          for(int g = 0; g < 256; g += 128) {
+            for (int b = 0; b < 256; b += 128) {
               colors.add(Color.rgb(255, g, b));
             }
           }
 
-          for(int r = 0; r < 256; r += 127) {
+          for(int r = 0; r < 256; r += 128) {
             for (int b = 0; b < 256; b += 127) {
               colors.add(Color.rgb(r, 255, b));
             }
@@ -535,20 +560,13 @@ class ColorBallsGame extends TetrisBase {
     }
     /*============================================================*/
     @Override
-    String[] ratingText()
-    {
-      String[] strings = super.ratingText();
-      Statistics statistics = glass.getStatistics();
+    void setup() {
+      super.setup();
 
+      if(settings.complexRate == 0)
+        settings.complexRate = DEFAULT_COMPLEX;
 
-      if(strings.length > 3)
-      {
-        strings[3] = String.format(Locale.getDefault(), "%s: %,d",
-          context.getString(R.string.number_of_balls),
-          statistics.squareCount);
-      }
-
-      return strings;
+      glass.setScoreScale(settings.complexRate * settings.complexRate * 10);
     }
     /*============================================================*/
     @Override

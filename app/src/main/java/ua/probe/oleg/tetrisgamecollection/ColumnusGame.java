@@ -377,6 +377,7 @@ class ColumnusGame extends TetrisBase {
   static class Controller extends TetrisBase.Controller
   {
     ArrayList<Integer> colors;
+    static final int DEFAULT_COMPLEX = 8;
 
 
     /*===========================================================*/
@@ -389,7 +390,7 @@ class ColumnusGame extends TetrisBase {
       {
 
         if(settings.complexRate == 0)
-          settings.complexRate = 8;
+          settings.complexRate = DEFAULT_COMPLEX;
 
         colors.add(Color.rgb(255, 0, 0));
         colors.add(Color.rgb(0, 255, 0));
@@ -473,6 +474,15 @@ class ColumnusGame extends TetrisBase {
       figure.put(0, 2, new Square(randomColor()));
 
       return figure;
+    }
+
+    @Override
+    void setup() {
+      super.setup();
+      if(settings.complexRate == 0)
+        settings.complexRate = DEFAULT_COMPLEX;
+
+      glass.setScoreScale(settings.complexRate * settings.complexRate * 10);
     }
 
     @Override

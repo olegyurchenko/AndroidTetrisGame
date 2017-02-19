@@ -6,7 +6,7 @@ import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 
-public class ColumnusSettingsActivity extends SettingsActivity {
+public class ColorBallsSettingsActivity extends SettingsActivity {
 
   int [] complexSeries = new int[] {
     2, 4, 8, 16, 32
@@ -29,7 +29,7 @@ public class ColumnusSettingsActivity extends SettingsActivity {
     strings = new ArrayList<>();
 
     if(settings.complexRate == 0)
-      settings.complexRate = ColumnusGame.Controller.DEFAULT_COMPLEX;
+      settings.complexRate = ColorBallsGame.Controller.DEFAULT_COMPLEX;
 
     for (int i = 0; i < complexSeries.length; i ++)
     {

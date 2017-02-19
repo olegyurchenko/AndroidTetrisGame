@@ -21,7 +21,7 @@ public class ColorBallsActivity extends TetrisBaseActivity
   @Override
   protected Class<?> settinsActivityClass()
   {
-    return ColumnusSettingsActivity.class;
+    return ColorBallsSettingsActivity.class;
   }
 
 }

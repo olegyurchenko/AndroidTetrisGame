@@ -286,6 +286,8 @@ class TetrisGame extends TetrisBase {
   /*-----------------------------------------------------------------------------------------------*/
   static class Controller extends TetrisBase.Controller {
 
+    static final int DEFAULT_COMPLEX = 4;
+
     //3 - square figures
     static byte figures3[][] = {
       {0b1},
@@ -350,7 +352,7 @@ class TetrisGame extends TetrisBase {
       if(figures.isEmpty()) {
 
         if(settings.complexRate == 0)
-          settings.complexRate = 4;
+          settings.complexRate = DEFAULT_COMPLEX;
 
         if(settings.complexRate >= 3)
         {
@@ -387,7 +389,17 @@ class TetrisGame extends TetrisBase {
     protected Glass onGlassCreate() {
       return new TetrisGlass(settings.columnCount, settings.rowCount);
     }
+    /*============================================================*/
+    @Override
+    void setup() {
+      super.setup();
 
+      if(settings.complexRate == 0)
+        settings.complexRate = DEFAULT_COMPLEX;
+
+      glass.setScoreScale(settings.complexRate * settings.complexRate * 10);
+    }
+    /*============================================================*/
     @Override
     protected Figure onNewFigure() {
       Figure figure = new TetrisFigure(randomFigure(), randomColor());

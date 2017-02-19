@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
   protected void colorBallsSettings()
   {
-    statrSettings(getString(R.string.color_balls_section_name), ColumnusSettingsActivity.class);
+    statrSettings(getString(R.string.color_balls_section_name), ColorBallsSettingsActivity.class);
   }
 
   protected void help()

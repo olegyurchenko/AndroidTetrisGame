@@ -363,13 +363,41 @@ class TetrisBase {
   }
 
   /*-----------------------------------------------------------------------------------------------*/
-  static class Statistics
+  static class Statistics implements Cloneable
   {
+    static final int
+      TEXT_COL = 0,
+      NUMBER_COL = 1,
+      SCORE_ROW = 0,
+      FIGURE_COUNT_ROW = 1,
+      SQUARE_COUNT_ROW = 2;
+
+    long score = 0;
     long figureCount = 0;
     long squareCount = 0;
     long workTime = 0; //ms
+
+    public Statistics clone() throws CloneNotSupportedException
+    {
+      Statistics s = (Statistics) super.clone();
+      s.score = score;
+      s.figureCount = figureCount;
+      s.squareCount = squareCount;
+      s.workTime = workTime;
+      return s;
+    }
+
+    void clear()
+    {
+      score = 0;
+      figureCount = 0;
+      squareCount = 0;
+      workTime = 0;
+    }
+
     void save(DataOutputStream dos) throws IOException
     {
+      dos.writeLong(score);
       dos.writeLong(figureCount);
       dos.writeLong(squareCount);
       dos.writeLong(workTime);
@@ -377,9 +405,67 @@ class TetrisBase {
 
     void load(DataInputStream dis)  throws IOException
     {
+      score = dis.readLong();
       figureCount = dis.readLong();
       squareCount = dis.readLong();
       workTime = dis.readLong();
+    }
+
+    String gameTimeText()
+    {
+      final long SEC_IN_MINUTE = 60;
+      final long SEC_IN_HOUR = 3600;
+      final long SEC_IN_DAY = 86400;
+      long day, hour, min, sec;
+
+      sec = workTime / 1000;
+
+      day = sec / SEC_IN_DAY;
+      sec %= SEC_IN_DAY;
+
+      hour = sec / SEC_IN_HOUR;
+      sec %= SEC_IN_HOUR;
+
+      min = sec / SEC_IN_MINUTE;
+      sec %= SEC_IN_MINUTE;
+
+
+      return String.format(Locale.getDefault(), "%,d-%02d:%02d:%02d",
+        day, hour, min, sec);
+    }
+
+    String getText(int col, int row, Context context)
+    {
+      String text = "";
+      if(col == TEXT_COL) {
+        switch(row) {
+          case SCORE_ROW:
+            text = context.getString(R.string.score);
+            break;
+          case FIGURE_COUNT_ROW:
+            text = context.getString(R.string.number_of_figures);
+            break;
+          case SQUARE_COUNT_ROW:
+            text = context.getString(R.string.number_of_squares);
+            break;
+        }
+      }
+
+      if(col == NUMBER_COL) {
+        switch (row)
+        {
+          case SCORE_ROW:
+            text = String.format(Locale.getDefault(), "%,d", score);
+            break;
+          case FIGURE_COUNT_ROW:
+            text = String.format(Locale.getDefault(), "%,d", figureCount);
+            break;
+          case SQUARE_COUNT_ROW:
+            text = String.format(Locale.getDefault(), "%,d", squareCount);
+            break;
+        }
+      }
+      return text;
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
@@ -407,22 +493,22 @@ class TetrisBase {
   static class Glass implements Cloneable
   {
     int rowCount, columnCount;
-    int fillColor = Color.WHITE, borderColor = Color.BLUE;
     Rect rect;
     Figure activeFigure = null;
     Cell activeFigurePosition = new Cell();
     boolean modified = false;
     private Paint paint, guidePaint;
     private Path guidePath;
+    private int bgColor = Color.WHITE;
 
-    private long score;
+    //private long score;
     private long scoreScale = 100;
 
     private boolean drawGuideLines = true;
 
     private SparseArray<Square> squareMap;
     private Statistics statistics;
-    private int borderWidth = 2;
+    private int borderWidth = 1;
 
     Glass(int columns, int rows)
     {
@@ -443,9 +529,14 @@ class TetrisBase {
 
       guidePath = new Path();
 
-      statistics = new Statistics();
-      score = 0;
+      statistics = onNewStatistics();
+      bgColor = Color.WHITE;
     }
+
+    Statistics onNewStatistics() {
+      return new Statistics();
+    }
+
 
     public Glass clone() throws CloneNotSupportedException
     {
@@ -457,10 +548,10 @@ class TetrisBase {
         g.activeFigure = activeFigure.clone();
 
       g.activeFigurePosition = new Cell(activeFigurePosition);
-      g.score = score;
       g.scoreScale = scoreScale;
       g.drawGuideLines = drawGuideLines;
-
+      g.statistics = statistics.clone();
+      g.bgColor = bgColor;
       return g;
     }
 
@@ -469,6 +560,8 @@ class TetrisBase {
     protected void setModified(boolean m) {modified = m;}
 
     Statistics getStatistics() {return statistics;}
+    int getBgColor() {return bgColor;}
+    void setBgColor(int c) {bgColor = c; setModified(true);}
 
     void setRect(Rect r)
     {
@@ -480,9 +573,9 @@ class TetrisBase {
       return  rect;
     }
 
-    long getScore() {return score;}
+    long getScore() {return statistics.score;}
     void addRemovedShapes(int shapes) {
-      score += shapes * scoreScale;
+      statistics.score += shapes * scoreScale;
     }
     void setScoreScale(long s)
     {
@@ -499,22 +592,11 @@ class TetrisBase {
       Figure figure = this.activeFigure; //Thread safe
 
       // перенастраивам кисть на заливку
-      paint.setColor(fillColor);
+      paint.setColor(bgColor);
       paint.setStyle(Paint.Style.FILL);
       canvas.drawRect(rect, paint);
 
-      /*
-      if(glassBitmap != null) {
-        canvas.drawBitmap(glassBitmap, null, rect, paint);
-      }
-      else {
-        // перенастраивам кисть на контуры
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(rect, paint);
-      }
-      */
-      drawBorder(canvas, rect, borderWidth,  BevelCut.None, BevelCut.Lowered);
+      drawBorder(canvas, rect, borderWidth,  BevelCut.Raised, BevelCut.Lowered);
 
       int shapeWidth = getShapeWidth();
       int shapeHeight = getShapeHeight();
@@ -652,7 +734,7 @@ class TetrisBase {
         return false;
       Cell cell = new Cell();
       //Centered in top
-      cell.setColumn(1 + (columnCount - f.getColumnCount()) / 2);
+      cell.setColumn( (columnCount - f.getColumnCount()) / 2 );
       if(!validPosition(cell.column(), cell.row(), f))
         return false;
       activeFigure = f;
@@ -795,8 +877,7 @@ class TetrisBase {
       squareMap.clear();
       activeFigure = null;
       activeFigurePosition = new Cell();
-      score = 0;
-      statistics = new Statistics();
+      statistics.clear();
     }
 
     Square onNewShape()
@@ -816,7 +897,6 @@ class TetrisBase {
         s.save(dos);
       }
       statistics.save(dos);
-      dos.writeLong(score);
     }
 
     void load(DataInputStream dis)  throws IOException
@@ -833,7 +913,6 @@ class TetrisBase {
         squareMap.put(key, s);
       }
       statistics.load(dis);
-      score = dis.readLong();
     }
 
     /**
@@ -842,21 +921,8 @@ class TetrisBase {
      */
     int calcContentRating()
     {
-      Glass g;
-      try {
-        g = clone();
-      } catch (CloneNotSupportedException e) {
-        Log.e("Glass", e.getMessage());
-        return 0;
-      }
-
-      int rating = 0;
-      long oldScore = g.score;
-      g.setScoreScale(1);
-      while (g.annigilation())
-        rating ++;
-      rating += g.score - oldScore;
-      return rating;
+      /* Pure virtual */
+      return 0;
     }
 
     /**
@@ -952,8 +1018,8 @@ class TetrisBase {
   /*-----------------------------------------------------------------------------------------------*/
   static class Settings
   {
-    static final int MinColumns = 5, MaxColumns = 20;
-    static final int MinRows = 10, MaxRows = 30;
+    static final int MinColumns = 8, MaxColumns = 16;
+    static final int MinRows = 16, MaxRows = 32;
 
     int tickTime = 800;
     int complexRate = 0;
@@ -965,6 +1031,10 @@ class TetrisBase {
     boolean useTouch = true;
     boolean useShake = false;
     long randomSeed;
+    int glassColor = Color.argb(80, 102, 204, 255);
+    int statusColor = Color.rgb(229, 234, 171);
+    int statusTextColor = Color.BLACK;
+
 
     private void check()
     {
@@ -1000,6 +1070,10 @@ class TetrisBase {
       useTouch = preferences.getBoolean("useTouch", useTouch);
       useShake = preferences.getBoolean("useShake", useShake);
       randomSeed = preferences.getLong("randomSeed", 0);
+      glassColor = preferences.getInt("glassColor", glassColor);
+
+      statusColor = preferences.getInt("statusColor", statusColor);
+      statusTextColor = preferences.getInt("statusTextColor", statusTextColor);
       check();
     }
 
@@ -1021,6 +1095,9 @@ class TetrisBase {
       ed.putBoolean("useTouch", useTouch);
       ed.putBoolean("useShake", useShake);
       ed.putLong("randomSeed", randomSeed);
+      ed.putInt("glassColor", glassColor);
+      ed.putInt("statusColor", statusColor);
+      ed.putInt("statusTextColor", statusTextColor);
 
       ed.apply();
     }
@@ -1062,6 +1139,7 @@ class TetrisBase {
     Rect nextFigureRect = new Rect();
     Rect gameTimeRect = new Rect();
     Rect statisticRect = new Rect();
+    Rect statusRect = new Rect();
 
     //boolean showScore = true;
     //int ratingX, ratingY;
@@ -1102,7 +1180,7 @@ class TetrisBase {
       TypedValue a = new TypedValue();
       context.getTheme().resolveAttribute(android.R.attr.windowBackground, a, true);
       if (a.type >= TypedValue.TYPE_FIRST_COLOR_INT && a.type <= TypedValue.TYPE_LAST_COLOR_INT) {
-        // windowBackground is a color
+        // windowBackground is a glassColor
         backColor = a.data;
       }
 
@@ -1116,10 +1194,10 @@ class TetrisBase {
       load();
     }
     /*============================================================*/
-    private void setup()
+    void setup()
     {
       interval = settings.tickTime;
-      //Log.d("GameController", "interval=" + interval);
+      glass.setBgColor(settings.glassColor);
       glass.setScoreScale(1); //TODK !
     }
     /*============================================================*/
@@ -1189,48 +1267,56 @@ class TetrisBase {
     {
       int x, y, w, h;
       int border = 20;
-      int textHeight = 3 * (TEXT_SIZE + TEXT_SIZE / 2);
+      int textHeight = 4 * TEXT_SIZE + TEXT_SIZE / 2;
+      int textWidth = 10 * TEXT_SIZE;
 
       nextFigureRect.set(0, 0, 5 * nextFigureCellSize, 5 * nextFigureCellSize);
       if(rect.width() < rect.height()) //Verical
       {
 
-        x = border;
         w = rect.width() - 2 * border;
         h = (w / glass.getColumnCount()) * glass.getRowCount();
         w = (h / glass.getRowCount()) * glass.getColumnCount();
         y = border + nextFigureRect.height();
 
-        glass.setRect(
-          new Rect(x, y, x + w, y + h) );
 
         if(y + h + textHeight > rect.height())
         {
           h = rect.height() - y - textHeight;
           w = (h / glass.getRowCount()) * glass.getColumnCount();
           h = (w / glass.getColumnCount()) * glass.getRowCount();
-
-          glass.setRect(
-            new Rect(x, y, x + w, y + h) );
         }
 
-        nextFigureRect.offsetTo(x, border);
+        x = (rect.width() - w) / 2;
+        y = (rect.height() - h - nextFigureRect.height() - border - textHeight) / 2 + border + nextFigureRect.height();
+
+        nextFigureRect.offsetTo(border, border);
+        if(nextFigureRect.bottom > y - border)
+          nextFigureRect.bottom = y;
+
         //nextFigureX = x ;
         //nextFigureY = border;
-        gameTimeRect.set(nextFigureRect.right, nextFigureRect.top, x + w, nextFigureRect.bottom);
-        statisticRect.set(x, y + h + border, x + w, rect.bottom - border);
+        gameTimeRect.set(nextFigureRect.right, nextFigureRect.top, rect.width() - border, nextFigureRect.bottom);
+        statisticRect.set(border, y + h, rect.right - border, rect.bottom - border);
         //ratingX = x;
         //ratingY = y + h + TEXT_SIZE / 2;
       }
       else
       { //Horisontal
-        x = y = border;
+        x = border;
         h = rect.height() - 2 * border;
         w = (h / glass.getRowCount()) * glass.getColumnCount();
         h = (w / glass.getColumnCount()) * glass.getRowCount();
-        glass.setRect(
-          new Rect(x, y, x + w, y + h)
-        );
+
+        if(x + w + textWidth > rect.width())
+        {
+          w = rect.width() - x - textWidth;
+          h = (w / glass.getColumnCount()) * glass.getRowCount();
+          w = (h / glass.getRowCount()) * glass.getColumnCount();
+        }
+
+        //x = (rect.width() - w) / 2;
+        y = (rect.height() - h) / 2;
 
         nextFigureRect.offsetTo(x + w + border, border);
         gameTimeRect.set(nextFigureRect.right, nextFigureRect.top, rect.right - border, nextFigureRect.bottom);
@@ -1242,51 +1328,9 @@ class TetrisBase {
         //ratingY = border + glass.getShapeWidth() * 3;
       }
 
-    }
-    /*============================================================*/
-    String gameTimeText()
-    {
-      Statistics statistics = glass.getStatistics();
+      glass.setRect(
+        new Rect(x, y, x + w, y + h) );
 
-      final long SEC_IN_MINUTE = 60;
-      final long SEC_IN_HOUR = 3600;
-      final long SEC_IN_DAY = 86400;
-      long day, hour, min, sec;
-
-      sec = statistics.workTime / 1000;
-
-      day = sec / SEC_IN_DAY;
-      sec %= SEC_IN_DAY;
-
-      hour = sec / SEC_IN_HOUR;
-      sec %= SEC_IN_HOUR;
-
-      min = sec / SEC_IN_MINUTE;
-      sec %= SEC_IN_MINUTE;
-
-
-      return String.format(Locale.getDefault(), "%,d-%02d:%02d:%02d",
-        day, hour, min, sec);
-    }
-    /*============================================================*/
-    String[] ratingText()
-    {
-      Statistics statistics = glass.getStatistics();
-      String[] strings = new String[3];
-
-      strings[0] = String.format(Locale.getDefault(), "%s: %,d",
-        context.getString(R.string.score),
-        glass.getScore());
-
-      strings[1] = String.format(Locale.getDefault(), "%s: %,d",
-        context.getString(R.string.number_of_figures),
-        statistics.figureCount);
-
-      strings[2] = String.format(Locale.getDefault(), "%s: %,d",
-        context.getString(R.string.number_of_squares),
-        statistics.squareCount);
-
-      return strings;
     }
     /*============================================================*/
     private void drawNextFigure(Canvas canvas)
@@ -1303,32 +1347,33 @@ class TetrisBase {
     /*============================================================*/
     private void drawStatusPanel(Canvas canvas, String text)
     {
-      Rect glassRect = glass.getRect();
 
       paint.setTypeface(Typeface.DEFAULT);// your preference here
       paint.setTextSize(TEXT_SIZE);// have this the same as your text size
       paint.getTextBounds(text, 0, text.length(), bounds);
 
-      int x = glassRect.left + (glassRect.width() - bounds.width()) / 2;
-      int y = glassRect.top + (glassRect.height() - bounds.height())/ 2;
+      int x = rect.left + (rect.width() - bounds.width()) / 2;
+      int y = rect.top + (rect.height() - bounds.height())/ 2;
 
+      statusRect.set(x - TEXT_SIZE,
+        y - 2 * TEXT_SIZE,
+        x + bounds.width() + TEXT_SIZE,
+        y + TEXT_SIZE);
 
-      bounds.set(glassRect.left - 10, y - bounds.height() * 2, glassRect.right + 10, y + bounds.height());
-
-      paint.setColor(backColor);
+      paint.setColor(settings.statusColor);
       paint.setAlpha(200);
       paint.setStyle(Paint.Style.FILL);
-      canvas.drawRect(bounds, paint);
+      canvas.drawRect(statusRect, paint);
 
-      drawBorder(canvas, bounds, 1, BevelCut.Raised, BevelCut.Lowered);
+      drawBorder(canvas, statusRect, 1, BevelCut.Raised, BevelCut.Lowered);
 
-      paint.setColor(Color.BLACK);
+      paint.setColor(settings.statusTextColor);
       canvas.drawText(text, x, y, paint);
     }
     /*============================================================*/
     private void drawGameTime(Canvas canvas)
     {
-      String text = gameTimeText();
+      String text = glass.getStatistics().gameTimeText();
 
       paint.setTypeface(Typeface.DEFAULT);// your preference here
       paint.setTextSize(TEXT_SIZE);// have this the same as your text size
@@ -1346,12 +1391,11 @@ class TetrisBase {
     private void drawStatistics(Canvas canvas)
     {
       long maxVal = 0;
-      long score = glass.getScore();
       Statistics statistics = glass.getStatistics();
 
       //Find max value for call max string size
-      if(maxVal < score)
-        maxVal = score;
+      if(maxVal < statistics.score)
+        maxVal = statistics.score;
       if(maxVal < statistics.figureCount)
         maxVal = statistics.figureCount;
       if(maxVal < statistics.squareCount)
@@ -1371,41 +1415,48 @@ class TetrisBase {
 
       int height = statisticRect.height() / 3;
 
+      if(height > TEXT_SIZE + TEXT_SIZE / 2)
+        height = TEXT_SIZE + TEXT_SIZE / 2;
+
+      if(height < bounds.height() + TEXT_SIZE / 2)
+        height = bounds.height() + TEXT_SIZE / 2;
+
+
       for(int row = 0; row < 3; row ++)
       {
-        switch (row)
-        {
-          case 0:
-            text = context.getString(R.string.score);
-            break;
-          case 1:
-            text = context.getString(R.string.number_of_figures);
-            break;
-          case 2:
-            text = context.getString(R.string.number_of_squares);
-            break;
-        }
+        text = statistics.getText(Statistics.TEXT_COL, row, context);
+
         paint.getTextBounds(text, 0, text.length(), bounds);
+
 
         int x = statisticRect.left + width[0] - bounds.width() - TEXT_SIZE;
         int y = statisticRect.top + height * row + (height - bounds.height()) / 2 + bounds.height();
+
+        if(x < statisticRect.left)
+          x = statisticRect.left + TEXT_SIZE;
+
+        paint.setColor(backColor);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(
+          new Rect(statisticRect.left, statisticRect.top + height * row, statisticRect.left + width[0], statisticRect.top + height * (row + 1)),
+          paint);
+
+        paint.setColor(Color.BLACK);
         canvas.drawText(text, x, y, paint);
 
-        switch (row)
-        {
-          case 0:
-            text = String.format(Locale.getDefault(), "%,d", score);
-            break;
-          case 1:
-            text = String.format(Locale.getDefault(), "%,d", statistics.figureCount);
-            break;
-          case 2:
-            text = String.format(Locale.getDefault(), "%,d", statistics.squareCount);
-            break;
-        }
+
+        text = statistics.getText(Statistics.NUMBER_COL, row, context);
         paint.getTextBounds(text, 0, text.length(), bounds);
 
         x = statisticRect.left + width[0] + TEXT_SIZE;
+
+        paint.setColor(backColor);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(
+          new Rect(statisticRect.left + width[0], statisticRect.top + height * row, statisticRect.left + width[0] + width[1], statisticRect.top + height * (row + 1)),
+          paint);
+
+        paint.setColor(Color.BLACK);
         canvas.drawText(text, x, y, paint);
 
         drawBorder(canvas,
@@ -1492,6 +1543,11 @@ class TetrisBase {
           paint);
       }
 
+
+      if(settings.showScore) {
+        drawStatistics(canvas);
+      }
+
       if(state == State.PAUSED || state == State.FINISHED)
       {
         String text;
@@ -1504,9 +1560,6 @@ class TetrisBase {
         drawStatusPanel(canvas, text);
       }
 
-      if(settings.showScore) {
-        drawStatistics(canvas);
-      }
     }
 
     /*============================================================*/
@@ -2031,7 +2084,7 @@ class TetrisBase {
     }
     /*============================================================*/
     private final int STAR = 0xdeadbeef;
-    private final int STREAM_VERSION = 2;
+    private final int STREAM_VERSION = 3;
 
     /**
      * Save controller state to stream

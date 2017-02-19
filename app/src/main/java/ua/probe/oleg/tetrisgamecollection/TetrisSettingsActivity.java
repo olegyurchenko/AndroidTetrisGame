@@ -27,7 +27,7 @@ public class TetrisSettingsActivity extends SettingsActivity {
     strings = new ArrayList<>();
 
     if(settings.complexRate == 0)
-      settings.complexRate = 4; //Tetris standard
+      settings.complexRate = TetrisGame.Controller.DEFAULT_COMPLEX;
 
     for (int i = 0; i < complexSeries.length; i ++)
     {
