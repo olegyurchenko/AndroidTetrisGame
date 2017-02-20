@@ -144,7 +144,13 @@ public class TetrisBaseActivity extends AppCompatActivity
       return;
     }
 
-    int btnHeight = (oldBottom - top) / 6;
+    int height = oldBottom - top;
+    int width = right - left;
+    int btnHeight = height / 6;
+
+    if(width > height) //Landscape
+      btnHeight = height / 5;
+
 
     ImageButton[] buttons = new ImageButton[] {
       leftBtn1, leftBtn2,
