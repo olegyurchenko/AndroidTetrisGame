@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:id="@+id/layout_main">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -32,36 +32,36 @@
         android:weightSum="1">
 
 
-        <Button
+        <ImageButton
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:drawableTop="@drawable/ic_left"
+            android:src="@drawable/ic_left"
             android:id="@+id/btnLeft1"
-            android:minHeight="100dp"
+            android:contentDescription="@string/btn_left"
             />
 
-        <Button
+        <ImageButton
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:drawableTop="@drawable/ic_right"
+            android:src="@drawable/ic_right"
             android:id="@+id/btnRight1"
-            android:minHeight="100dp"
+            android:contentDescription="@string/btn_right"
             />
 
-        <Button
+        <ImageButton
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:drawableTop="@drawable/ic_rotate"
+            android:src="@drawable/ic_rotate"
             android:id="@+id/btnRotate1"
-            android:minHeight="100dp"
+            android:contentDescription="@string/btn_rotate"
             />
 
-        <Button
-            android:drawableTop="@drawable/ic_bottom"
+        <ImageButton
+            android:src="@drawable/ic_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/btnDown1"
-            android:minHeight="100dp"
+            android:contentDescription="@string/btn_down"
             />
 
     </LinearLayout>
@@ -83,44 +83,45 @@
         android:layout_height="wrap_content"
         android:layout_weight="2">
 
-        <Button
+        <ImageButton
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:drawableTop="@drawable/ic_robot"
+            android:src="@drawable/ic_robot"
             android:id="@+id/btnRobot"
-            style="@style/Widget.AppCompat.Button.Borderless">
-        </Button>
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:contentDescription="@string/btn_robot"
+            />
 
-        <Button
+        <ImageButton
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:drawableTop="@drawable/ic_left"
+            android:src="@drawable/ic_left"
             android:id="@+id/btnLeft2"
-            android:minHeight="100dp"
+            android:contentDescription="@string/btn_left"
             />
 
-        <Button
+        <ImageButton
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:drawableTop="@drawable/ic_right"
+            android:src="@drawable/ic_right"
             android:id="@+id/btnRight2"
-            android:minHeight="100dp"
+            android:contentDescription="@string/btn_right"
             />
 
-        <Button
+        <ImageButton
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:drawableTop="@drawable/ic_rotate"
+            android:src="@drawable/ic_rotate"
             android:id="@+id/btnRotate2"
-            android:minHeight="100dp"
+            android:contentDescription="@string/btn_rotate"
             />
 
-        <Button
-            android:drawableTop="@drawable/ic_bottom"
+        <ImageButton
+            android:src="@drawable/ic_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/btnDown2"
-            android:minHeight="100dp"
+            android:contentDescription="@string/btn_down"
             />
 
     </LinearLayout>

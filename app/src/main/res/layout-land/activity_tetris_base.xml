@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    >
+    android:id="@+id/layout_main">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -31,32 +31,36 @@
             android:gravity="bottom"
             android:orientation="vertical">
 
-            <Button
+            <ImageButton
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:src="@drawable/ic_left"
                 android:id="@+id/btnLeft1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_left"
+                android:contentDescription="@string/btn_left"
                 />
 
-            <Button
+            <ImageButton
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:src="@drawable/ic_right"
                 android:id="@+id/btnRight1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_right"
+                android:contentDescription="@string/btn_right"
                 />
 
-            <Button
+            <ImageButton
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:src="@drawable/ic_rotate"
                 android:id="@+id/btnRotate1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_rotate"
+                android:contentDescription="@string/btn_rotate"
                 />
 
-            <Button
-                android:id="@+id/btnDown1"
+            <ImageButton
+                android:src="@drawable/ic_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_bottom"
+                android:id="@+id/btnDown1"
+                android:contentDescription="@string/btn_down"
                 />
         </LinearLayout>
 
@@ -66,37 +70,41 @@
             android:layout_weight="4"
             android:orientation="vertical">
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnPause"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_pause">
-            </Button>
+                android:src="@drawable/ic_pause"
+                android:contentDescription="@string/pause"
+                />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnUndo"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_undo">
-            </Button>
+                android:src="@drawable/ic_undo"
+                android:contentDescription="@string/undo"
+            />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnCreate"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_create">
-            </Button>
+                android:src="@drawable/ic_create"
+                android:contentDescription="@string/new_game"
+                />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnMagic"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_magic">
-            </Button>
+                android:src="@drawable/ic_magic"
+                android:contentDescription="@string/select_game"
+                />
 
         </LinearLayout>
 
@@ -115,13 +123,14 @@
             android:layout_weight="4"
             android:orientation="vertical">
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnRobot"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_robot"
-                style="@style/Widget.AppCompat.Button.Borderless">
-            </Button>
+                android:src="@drawable/ic_robot"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:contentDescription="@string/btn_robot"
+                />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -130,32 +139,36 @@
             android:gravity="bottom"
             android:orientation="vertical">
 
-            <Button
+            <ImageButton
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:src="@drawable/ic_left"
                 android:id="@+id/btnLeft2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_left"
+                android:contentDescription="@string/btn_left"
                 />
 
-            <Button
+            <ImageButton
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:src="@drawable/ic_right"
                 android:id="@+id/btnRight2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_right"
+                android:contentDescription="@string/btn_right"
                 />
 
-            <Button
+            <ImageButton
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:src="@drawable/ic_rotate"
                 android:id="@+id/btnRotate2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_rotate"
+                android:contentDescription="@string/btn_rotate"
                 />
 
-            <Button
-                android:id="@+id/btnDown2"
+            <ImageButton
+                android:src="@drawable/ic_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_bottom"
+                android:id="@+id/btnDown2"
+                android:contentDescription="@string/btn_down"
                 />
 
         </LinearLayout>

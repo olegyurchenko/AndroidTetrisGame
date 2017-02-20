@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 
@@ -39,6 +40,10 @@ public class TetrisBaseActivity extends AppCompatActivity
 
   Timer myTimer;
   Handler uiHandler = new Handler();
+  ImageButton leftBtn1, leftBtn2;
+  ImageButton rightBtn1, rightBtn2;
+  ImageButton rotateBtn1, rotateBtn2;
+  ImageButton downBtn1, downBtn2;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -52,57 +57,57 @@ public class TetrisBaseActivity extends AppCompatActivity
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
-    Button btn;
+    ImageButton btn;
 
     //Buttons
-    btn = (Button) findViewById(R.id.btnLeft1);
+    leftBtn1 = btn = (ImageButton) findViewById(R.id.btnLeft1);
     if(btn != null)
       btn.setOnClickListener(this);
-    btn = (Button) findViewById(R.id.btnLeft2);
-    if(btn != null)
-      btn.setOnClickListener(this);
-
-    btn = (Button) findViewById(R.id.btnRight1);
-    if(btn != null)
-      btn.setOnClickListener(this);
-    btn = (Button) findViewById(R.id.btnRight2);
+    leftBtn2 = btn = (ImageButton) findViewById(R.id.btnLeft2);
     if(btn != null)
       btn.setOnClickListener(this);
 
-    btn = (Button) findViewById(R.id.btnDown1);
+    rightBtn1 = btn = (ImageButton) findViewById(R.id.btnRight1);
     if(btn != null)
       btn.setOnClickListener(this);
-    btn = (Button) findViewById(R.id.btnDown2);
-    if(btn != null)
-      btn.setOnClickListener(this);
-
-    btn = (Button) findViewById(R.id.btnRotate1);
-    if(btn != null)
-      btn.setOnClickListener(this);
-    btn = (Button) findViewById(R.id.btnRotate2);
+    rightBtn2 = btn = (ImageButton) findViewById(R.id.btnRight2);
     if(btn != null)
       btn.setOnClickListener(this);
 
-    btn = (Button) findViewById(R.id.btnRobot);
+    downBtn1 = btn = (ImageButton) findViewById(R.id.btnDown1);
+    if(btn != null)
+      btn.setOnClickListener(this);
+    downBtn2 = btn = (ImageButton) findViewById(R.id.btnDown2);
     if(btn != null)
       btn.setOnClickListener(this);
 
-    btn = (Button) findViewById(R.id.btnPause);
+    rotateBtn1 = btn = (ImageButton) findViewById(R.id.btnRotate1);
+    if(btn != null)
+      btn.setOnClickListener(this);
+    rotateBtn2 = btn = (ImageButton) findViewById(R.id.btnRotate2);
+    if(btn != null)
+      btn.setOnClickListener(this);
+
+    btn = (ImageButton) findViewById(R.id.btnRobot);
+    if(btn != null)
+      btn.setOnClickListener(this);
+
+    btn = (ImageButton) findViewById(R.id.btnPause);
     if(btn != null)
       btn.setOnClickListener(this);
 
 //    btn = (Button) findViewById(R.id.btnSettings);
 //    btn.setOnClickListener(this);
 
-    btn = (Button) findViewById(R.id.btnCreate);
+    btn = (ImageButton) findViewById(R.id.btnCreate);
     if(btn != null)
       btn.setOnClickListener(this);
 
-    btn = (Button) findViewById(R.id.btnMagic);
+    btn = (ImageButton) findViewById(R.id.btnMagic);
     if(btn != null)
       btn.setOnClickListener(this);
 
-    btn = (Button) findViewById(R.id.btnUndo);
+    btn = (ImageButton) findViewById(R.id.btnUndo);
     if(btn != null)
       btn.setOnClickListener(this);
 
@@ -116,13 +121,47 @@ public class TetrisBaseActivity extends AppCompatActivity
 
     drawView = new DrawView(this);
 
+    LinearLayout layout = (LinearLayout) findViewById(R.id.layout_main);
+    if (layout != null) {
+      layout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
 
-    //gameController.setRect(new Rect(100, 100, drawView.getWidth(), drawView.getHeight()));
+        @Override
+        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
+                                   int oldBottom) {
+          onSizeChanged(v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom);
+        }
+      });
+    }
 
-    LinearLayout layout = (LinearLayout) findViewById(R.id.draw_layout);
+    /* Insert main view*/
+    layout = (LinearLayout) findViewById(R.id.draw_layout);
     layout.addView(drawView);
 
     drawView.setOnTouchListener(this);
+  }
+
+  void onSizeChanged(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
+                      int oldBottom) {
+    // its possible that the layout is not complete in which case
+    // we will get all zero values for the positions, so ignore the event
+    if (left == 0 && top == 0 && right == 0 && bottom == 0) {
+      return;
+    }
+
+    int btnHeight = (oldBottom - top) / 6;
+
+    ImageButton[] buttons = new ImageButton[] {
+      leftBtn1, leftBtn2,
+      rightBtn1, rightBtn2,
+      rotateBtn1, rotateBtn2,
+      downBtn1, downBtn2
+    };
+
+    for(ImageButton btn:buttons) {
+      if(btn != null)
+        btn.setMinimumHeight(btnHeight);
+    }
+
   }
 
   @Override
