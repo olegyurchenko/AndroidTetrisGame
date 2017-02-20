@@ -44,4 +44,8 @@
     <string name="content">Зміст</string>
     <string name="of_squares">квадратів</string>
     <string name="of_colors">кольорів</string>
+    <string name="color_balls_help_file">file:///android_asset/uk/color_balls_help.html</string>
+    <string name="columnus_help_file">file:///android_asset/uk/columnus_help.html</string>
+    <string name="ms">мс</string>
+    <string name="tetris_help_file">file:///android_asset/uk/tetris_help.html</string>
 </resources>

@@ -72,8 +72,22 @@ public class HelpActivity extends AppCompatActivity {
 
     wv.loadDataWithBaseURL("file:///android_asset/", aboutText, "text/html; charset=utf-8", "utf-8", null);
 
-    wv = (WebView)findViewById(R.id.view_content);
-    wv.loadUrl(getString(R.string.html_help_file));
+    wv = (WebView) findViewById(R.id.view_content);
+
+    Bundle b = getIntent().getExtras();
+    String content = b.getString("content");
+
+    if(content == null || content.isEmpty()) { //No content defined
+      tabHost.setCurrentTabByTag("tag1");
+
+      wv.loadUrl(getString(R.string.html_help_file));
+    }
+    else
+    {
+      tabHost.setCurrentTabByTag("tag2");
+
+      wv.loadUrl(content);
+    }
   }
 
   /*============================================================*/

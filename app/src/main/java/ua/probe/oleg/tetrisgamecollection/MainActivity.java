@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.view.Menu;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -22,24 +23,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     setSupportActionBar(toolbar);
 
     Button btn;
+    ImageButton iBtn;
 
     btn = (Button) findViewById(R.id.btn_tetris);
     btn.setOnClickListener(this);
 
-    btn = (Button) findViewById(R.id.btn_tetris_settings);
-    btn.setOnClickListener(this);
+    iBtn = (ImageButton) findViewById(R.id.btn_tetris_settings);
+    iBtn.setOnClickListener(this);
+
+    iBtn = (ImageButton) findViewById(R.id.btn_tetris_help);
+    iBtn.setOnClickListener(this);
 
     btn = (Button) findViewById(R.id.btn_columnus);
     btn.setOnClickListener(this);
 
-    btn = (Button) findViewById(R.id.btn_columnus_settings);
+    iBtn = (ImageButton) findViewById(R.id.btn_columnus_settings);
+    iBtn.setOnClickListener(this);
+
+    iBtn = (ImageButton) findViewById(R.id.btn_columnus_help);
+    iBtn.setOnClickListener(this);
+
+    btn = (Button) findViewById(R.id.btn_color_balls);
     btn.setOnClickListener(this);
 
-    btn = (Button) findViewById(R.id.btn_color_ball);
-    btn.setOnClickListener(this);
+    iBtn = (ImageButton) findViewById(R.id.btn_color_balls_settings);
+    iBtn.setOnClickListener(this);
 
-    btn = (Button) findViewById(R.id.btn_color_ball_settings);
-    btn.setOnClickListener(this);
+    iBtn = (ImageButton) findViewById(R.id.btn_color_balls_help);
+    iBtn.setOnClickListener(this);
 
     btn = (Button) findViewById(R.id.btn_help);
     btn.setOnClickListener(this);
@@ -58,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startColorBalls();
         return true;
       case R.id.action_help:
-        help();
+        help("");
         return true;
 
     }
@@ -80,20 +91,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       case R.id.btn_columnus:
         startColumnus();
         break;
-      case R.id.btn_color_ball:
+      case R.id.btn_color_balls:
         startColorBalls();
         break;
+
       case R.id.btn_tetris_settings:
         tetrisSettings();
         break;
       case R.id.btn_columnus_settings:
         columnusSettings();
         break;
-      case R.id.btn_color_ball_settings:
+      case R.id.btn_color_balls_settings:
         colorBallsSettings();
         break;
+
+      case R.id.btn_tetris_help:
+        help(getString(R.string.tetris_help_file));
+        break;
+      case R.id.btn_columnus_help:
+        help(getString(R.string.columnus_help_file));
+        break;
+      case R.id.btn_color_balls_help:
+        help(getString(R.string.color_balls_help_file));
+        break;
+
       case R.id.btn_help:
-        help();
+        help("");
         break;
     }
   }
@@ -149,11 +172,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     statrSettings(getString(R.string.color_balls_section_name), ColorBallsSettingsActivity.class);
   }
 
-  protected void help()
+  protected void help(String content)
   {
     Intent intent = new Intent(this, HelpActivity.class);
     Bundle b = new Bundle();
-    b.putString("startTab", "helpAbout"); //TODO
+    b.putString("content", content);
+    intent.putExtras(b);
     startActivity(intent);
   }
 }
