@@ -34,7 +34,7 @@ public class ColorBallsSettingsActivity extends SettingsActivity {
     for (int i = 0; i < complexSeries.length; i ++)
     {
       int complex = complexSeries[i];
-      strings.add(complex + " " + getString(R.string.of_colors));
+      strings.add(this.getResources().getQuantityString(R.plurals.colors, complex, complex));
       if(settings.complexRate == complex)
         selection = i;
     }

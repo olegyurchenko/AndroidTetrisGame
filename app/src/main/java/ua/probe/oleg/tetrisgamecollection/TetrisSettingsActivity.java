@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class TetrisSettingsActivity extends SettingsActivity {
 
   int [] complexSeries = new int[] {
-    3, 4, 5, 6
+    3, 4, 14, 5, 15, 6, 16
   };
 
   @Override
@@ -32,7 +32,14 @@ public class TetrisSettingsActivity extends SettingsActivity {
     for (int i = 0; i < complexSeries.length; i ++)
     {
       int complex = complexSeries[i];
-      strings.add(complex + " " + getString(R.string.of_squares));
+
+      if(complex > 10) {
+        strings.add(this.getResources().getQuantityString(R.plurals.squares, complex - 10, complex - 10));
+      }
+      else {
+        strings.add(this.getResources().getQuantityString(R.plurals.not_more_squares, complex, complex));
+      }
+
       if(settings.complexRate == complex)
         selection = i;
     }

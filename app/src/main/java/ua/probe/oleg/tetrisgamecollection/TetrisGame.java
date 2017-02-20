@@ -354,19 +354,34 @@ class TetrisGame extends TetrisBase {
         if(settings.complexRate == 0)
           settings.complexRate = DEFAULT_COMPLEX;
 
-        if(settings.complexRate >= 3)
+        if(settings.complexRate >= 3 && settings.complexRate < 10)
         {
           Collections.addAll(figures, figures3);
         }
-        if(settings.complexRate >= 4)
+        if(settings.complexRate >= 4 && settings.complexRate < 10)
         {
           Collections.addAll(figures, figures4);
         }
-        if(settings.complexRate >= 5)
+        if(settings.complexRate >= 5 && settings.complexRate < 10)
         {
           Collections.addAll(figures, figures5);
         }
-        if(settings.complexRate >= 6)
+        if(settings.complexRate >= 6 && settings.complexRate < 10)
+        {
+          Collections.addAll(figures, figures6);
+        }
+
+        if(settings.complexRate == 14)
+        {
+          Collections.addAll(figures, figures4);
+        }
+
+        if(settings.complexRate == 15)
+        {
+          Collections.addAll(figures, figures5);
+        }
+
+        if(settings.complexRate == 16)
         {
           Collections.addAll(figures, figures6);
         }
@@ -397,7 +412,11 @@ class TetrisGame extends TetrisBase {
       if(settings.complexRate == 0)
         settings.complexRate = DEFAULT_COMPLEX;
 
-      glass.setScoreScale(settings.complexRate * settings.complexRate * 10);
+      long scale = settings.complexRate * settings.complexRate * 10;
+      if(settings.complexRate > 10)
+        scale = (settings.complexRate - 9) * (settings.complexRate - 9) * 10;
+
+      glass.setScoreScale(scale);
     }
     /*============================================================*/
     @Override
