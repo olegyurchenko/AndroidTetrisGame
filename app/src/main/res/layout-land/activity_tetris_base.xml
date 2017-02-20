@@ -50,7 +50,7 @@
             <ImageButton
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:src="@drawable/ic_rotate"
+                android:src="@drawable/ic_rotate_right"
                 android:id="@+id/btnRotate1"
                 android:contentDescription="@string/btn_rotate"
                 />
@@ -158,7 +158,7 @@
             <ImageButton
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:src="@drawable/ic_rotate"
+                android:src="@drawable/ic_rotate_right"
                 android:id="@+id/btnRotate2"
                 android:contentDescription="@string/btn_rotate"
                 />
