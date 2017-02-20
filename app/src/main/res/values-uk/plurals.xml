@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="not_more_squares">
+        <item quantity="one">Не більше %1$d квадрату</item>
+        <item quantity="few">Не більше %1$d квадратів</item>
+        <item quantity="many">Не більше %1$d квадратів</item>
+        <item quantity="other">Не більше %1$d квадратів</item>
+    </plurals>
+    <plurals name="squares">
+        <item quantity="one">%1$d квадрат</item>
+        <item quantity="few">%1$d квадрата</item>
+        <item quantity="many">%1$d квадратів</item>
+        <item quantity="other">%1$d квадратів</item>
+    </plurals>
+    <plurals name="colors">
+        <item quantity="one">%1$d колір</item>
+        <item quantity="few">%1$d кольори</item>
+        <item quantity="many">%1$d колорів</item>
+        <item quantity="other">%1$d колорів</item>
+    </plurals>
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="not_more_squares">
+        <item quantity="two">No more %1$d squares</item>
+        <item quantity="few">No more %1$d squares</item>
+        <item quantity="many">No more %1$d squares</item>
+        <item quantity="other">No more %1$d squares</item>
+    </plurals>
+    <plurals name="squares">
+        <item quantity="two">%1$d squares</item>
+        <item quantity="few">%1$d squares</item>
+        <item quantity="many">%1$d squares</item>
+        <item quantity="other">%1$d squares</item>
+    </plurals>
+    <plurals name="colors">
+        <item quantity="two">%1$d colors</item>
+        <item quantity="few">%1$d colors</item>
+        <item quantity="many">%1$d colors</item>
+        <item quantity="other">%1$d colors</item>
+    </plurals>
+</resources>

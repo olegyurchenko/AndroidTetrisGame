@@ -48,4 +48,9 @@
     <string name="columnus_help_file">file:///android_asset/ru/columnus_help.html</string>
     <string name="ms">мс</string>
     <string name="tetris_help_file">file:///android_asset/ru/tetris_help.html</string>
+    <string name="btn_down">Вниз</string>
+    <string name="btn_left">Лево</string>
+    <string name="btn_right">Право</string>
+    <string name="btn_robot">Ход робота</string>
+    <string name="btn_rotate">Вращать</string>
 </resources>
