@@ -32,7 +32,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class TetrisBaseActivity extends AppCompatActivity
-  implements View.OnTouchListener, View.OnClickListener/*, SeekBar.OnSeekBarChangeListener*/ {
+  implements View.OnTouchListener, View.OnClickListener, View.OnLayoutChangeListener {
   protected TetrisBase.Controller gameController;
   protected View drawView = null;
   protected String sectionName = "TetrisBase";
@@ -123,24 +123,20 @@ public class TetrisBaseActivity extends AppCompatActivity
 
     LinearLayout layout = (LinearLayout) findViewById(R.id.layout_main);
     if (layout != null) {
-      layout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-
-        @Override
-        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
-                                   int oldBottom) {
-          onSizeChanged(v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom);
-        }
-      });
+      layout.addOnLayoutChangeListener(this);
     }
 
     /* Insert main view*/
     layout = (LinearLayout) findViewById(R.id.draw_layout);
-    layout.addView(drawView);
+    if (layout != null) {
+      layout.addView(drawView);
+    }
 
     drawView.setOnTouchListener(this);
   }
 
-  void onSizeChanged(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
+  @Override
+  public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
                       int oldBottom) {
     // its possible that the layout is not complete in which case
     // we will get all zero values for the positions, so ignore the event
@@ -263,6 +259,9 @@ public class TetrisBaseActivity extends AppCompatActivity
       case R.id.item_demo_mode:
         gameController.onDemoMode();
         return true;
+      case R.id.item_help:
+        help();
+        return true;
     }
 
     return super.onOptionsItemSelected(item);
@@ -343,6 +342,19 @@ public class TetrisBaseActivity extends AppCompatActivity
     dialog.show();
     //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     //imm.showSoftInput(seedEdit, InputMethodManager.SHOW_IMPLICIT);
+  }
+
+  protected void help() {
+    help(getString(R.string.html_help_file));
+  }
+
+  protected void help(String content)
+  {
+    Intent intent = new Intent(this, HelpActivity.class);
+    Bundle b = new Bundle();
+    b.putString("content", content);
+    intent.putExtras(b);
+    startActivity(intent);
   }
 
   @Override

@@ -23,4 +23,10 @@ public class ColumnusActivity extends TetrisBaseActivity
     return ColumnusSettingsActivity.class;
   }
 
+  @Override
+  protected void help() {
+    help(getString(R.string.columnus_help_file));
+  }
+
+
 }

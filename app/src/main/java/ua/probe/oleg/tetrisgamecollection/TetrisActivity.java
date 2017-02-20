@@ -22,4 +22,9 @@ public class TetrisActivity extends TetrisBaseActivity
     return TetrisSettingsActivity.class;
   }
 
+  @Override
+  protected void help() {
+    help(getString(R.string.tetris_help_file));
+  }
+
 }

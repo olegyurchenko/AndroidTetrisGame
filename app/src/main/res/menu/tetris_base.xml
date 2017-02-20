@@ -34,4 +34,11 @@
               android:icon="@drawable/ic_settings"
               app:showAsAction="withText"/>
     </group>
+    <group
+        android:id="@+id/grp_3">
+        <item android:title="@string/help"
+              android:id="@+id/item_help"
+              android:icon="@drawable/ic_help"
+              app:showAsAction="withText"/>
+    </group>
 </menu>

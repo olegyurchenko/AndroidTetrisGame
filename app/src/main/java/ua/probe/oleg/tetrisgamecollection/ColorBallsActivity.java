@@ -24,4 +24,9 @@ public class ColorBallsActivity extends TetrisBaseActivity
     return ColorBallsSettingsActivity.class;
   }
 
+
+  @Override
+  protected void help() {
+    help(getString(R.string.color_balls_help_file));
+  }
 }
