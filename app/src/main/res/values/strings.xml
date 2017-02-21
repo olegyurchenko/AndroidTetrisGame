@@ -48,4 +48,5 @@
     <string name="btn_down">Down</string>
     <string name="btn_rotate">Rotate</string>
     <string name="btn_robot">Robot step</string>
+    <string name="glass_color">Glass color</string>
 </resources>
