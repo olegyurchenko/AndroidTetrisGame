@@ -524,6 +524,7 @@ class TetrisBase {
 
       guidePaint = new Paint();
       guidePaint.setColor(Color.BLACK);
+      guidePaint.setStrokeWidth(1);
       guidePaint.setStyle(Paint.Style.STROKE);
       guidePaint.setPathEffect(new DashPathEffect(new float[] {20 ,30}, 0));
 
@@ -1040,8 +1041,6 @@ class TetrisBase {
     {
       if(tickTime <= 100)
         tickTime = 100;
-      if(tickTime > 10000)
-        tickTime = 10000;
       if(complexRate < 0)
         complexRate = 0;
       if(complexRate > 100)
@@ -1586,72 +1585,76 @@ class TetrisBase {
     void onTimer()
     {
       int interval = demoMode ? 200 : this.interval;
+      boolean modified = false;
 
-      if(System.currentTimeMillis() - lastTime >= interval)
-      {
-        lastTime = System.currentTimeMillis();
-        if(state == State.WORKED)
-          glass.getStatistics().workTime += interval;
-        nextInterval();
-      }
+      if(state == State.WORKED) {
 
-      if(!demoMode
-        && settings.useShake
-        && accelerometer != null)
-      {
-        if(accelerometer.isModified())
-          setModified(true);
-        if(accelerometer.isShakeDetected())
+        if(nextFigure == null) {
+          nextFigure = onNewFigure();
+          modified = true;
+        }
+
+        if(glass.getActiveFigure() == null)
         {
-          if(state == State.WORKED)
-          {
-            rotate();
+
+          if(glass.annigilation()) {
+
+            modified = true;
+            // /lastTime = System.currentTimeMillis() - interval;
           }
-          Log.d("ShakeDetected", String.format("%s%s%s",
-            accelerometer.isShakeX() ? "X " : "",
-            accelerometer.isShakeY() ? "Y " : "",
-            accelerometer.isShakeZ() ? "Z " : "")
+          else
+          {
+            mkUndoPoint();
+            if (!glass.put(nextFigure)) {
+              state = State.FINISHED;
+            }
+            else
+            {
+//          Log.d("Game", "Add figure Ok");
+              nextFigure = onNewFigure();
+              if(demoMode)
+              {
+                demoAction = glass.calcBestWay();
+                demoAction.rate = 1; //Use rate as counter
+              }
+
+            }
+            modified = true;
+          }
+        }
+
+
+        if (System.currentTimeMillis() - lastTime >= interval) {
+          lastTime = System.currentTimeMillis();
+          glass.getStatistics().workTime += interval;
+          nextInterval();
+        }
+
+        if (!demoMode
+          && settings.useShake
+          && accelerometer != null) {
+          if (accelerometer.isModified())
+            setModified(true);
+          if (accelerometer.isShakeDetected()) {
+            rotate();
+            modified = true;
+            Log.d("ShakeDetected", String.format("%s%s%s",
+              accelerometer.isShakeX() ? "X " : "",
+              accelerometer.isShakeY() ? "Y " : "",
+              accelerometer.isShakeZ() ? "Z " : "")
             );
-          accelerometer.clearShakeDetected();
+            accelerometer.clearShakeDetected();
+          }
         }
       }
+
+      if(modified)
+        setModified(true);
     }
     /*============================================================*/
     void nextInterval()
     {
-      if(nextFigure == null)
-        nextFigure = onNewFigure();
-
-      if(state != State.WORKED)
-        return;
-
-      if(glass.getActiveFigure() == null)
-      {
-
-        if(glass.annigilation()) {
-          lastTime = System.currentTimeMillis() - interval;
-
-        }
-        else
-        {
-          mkUndoPoint();
-          if (!glass.put(nextFigure)) {
-            state = State.FINISHED;
-            glass.setModified(true);
-//          Log.d("Game", "Error add figure");
-//            Toast.makeText(context, context.getString(R.string.finished), Toast.LENGTH_SHORT).show();
-          } else {
-//          Log.d("Game", "Add figure Ok");
-            nextFigure = onNewFigure();
-            if(demoMode)
-            {
-              demoAction = glass.calcBestWay();
-              demoAction.rate = 1; //Use rate as counter
-            }
-          }
-        }
-      }
-      else
+      if(glass.getActiveFigure() != null)
       {
         if (demoMode) {
           if (demoAction != null) {
@@ -1703,7 +1706,8 @@ class TetrisBase {
         glass.moveDown();
       }
 
-      setModified(glass.isModified());
+      if(glass.isModified())
+        setModified(true);
     }
     /*============================================================*/
     Rect activeFigureRect()

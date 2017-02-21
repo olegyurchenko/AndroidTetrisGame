@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="html_help_file">file:///android_asset/ru/help.html</string>
+    <string name="tetris_help_file">file:///android_asset/ru/tetris_help.html</string>
+    <string name="color_balls_help_file">file:///android_asset/ru/color_balls_help.html</string>
+    <string name="columnus_help_file">file:///android_asset/ru/columnus_help.html</string>
+</resources>

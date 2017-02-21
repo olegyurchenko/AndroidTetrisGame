@@ -3,13 +3,21 @@ package ua.probe.oleg.tetrisgamecollection;
 import android.app.Activity;
 import android.content.Intent;
 //import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 
 import java.util.ArrayList;
+
+import ua.probe.oleg.tetrisgamecollection.colorpicker.LineColorPicker;
+import ua.probe.oleg.tetrisgamecollection.colorpicker.OnColorChangedListener;
 
 public class SettingsActivity extends Activity
   implements View.OnClickListener
@@ -21,9 +29,15 @@ public class SettingsActivity extends Activity
   Switch showNextFigureSwitch, showScoreSwitch, showGudeLinesSwitch,
     useAccelerometerSwitch, useTouchSwitch, useShakeSwitch;
 
+  LineColorPicker glassColorPicker;
+  EditText glassColorEdit;
+  View glassColorView;
+
+
   protected final int[] speedSeries = new int[]{
     100, 200, 300, 400, 500, 800,
-    1000, 2000, 3000, 4000, 5000, 8000
+    1000, 2000, 3000, 4000, 5000, 8000,
+    100000000
   };
 
   @Override
@@ -51,7 +65,90 @@ public class SettingsActivity extends Activity
     useTouchSwitch = (Switch) findViewById(R.id.switch_use_touch);
     useShakeSwitch = (Switch) findViewById(R.id.switch_use_shake);
 
+    glassColorPicker = (LineColorPicker) findViewById(R.id.picker_glass_color);
+    glassColorEdit = (EditText) findViewById(R.id.edit_glass_color);
+    glassColorView = findViewById(R.id.view_glass_color);
+
+    glassColorEdit.addTextChangedListener(new TextWatcher() {
+
+      public void afterTextChanged(Editable s) {}
+
+      public void beforeTextChanged(CharSequence s, int start,
+                                    int count, int after) {
+      }
+
+      public void onTextChanged(CharSequence s, int start,
+                                int before, int count) {
+        onGlassColorEditChanged();}
+    });
+
+    glassColorPicker.setOnColorChangedListener(new OnColorChangedListener() {
+      @Override
+      public void onColorChanged(int c) {
+        onGlassColorChanged(c);
+      }
+    });
+
+
     onSetup();
+  }
+
+  /**
+   * Generate palette of count colors
+   */
+  private int[] generateColors(int from, int to, int count) {
+    int[] palette = new int[count];
+
+    float[] hsvFrom = new float[3];
+    float[] hsvTo = new float[3];
+
+    Color.colorToHSV(from, hsvFrom);
+    Color.colorToHSV(to, hsvTo);
+
+    float step = (hsvTo[0] - hsvFrom[0]) / count;
+
+    for (int i = 0; i < count; i++) {
+      palette[i] = Color.HSVToColor(hsvFrom);
+
+      hsvFrom[0] += step;
+    }
+
+    return palette;
+  }
+
+  private void onGlassColorChanged(int c) {
+    glassColorEdit.setText(String.format("#%06X", (0xFFFFFF & c)));
+    glassColorView.setBackgroundColor(c);
+
+    settings.glassColor = c;
+  }
+
+
+  private void onGlassColorEditChanged() {
+    int color;
+    String text = glassColorEdit.getText().toString();
+    if(text.isEmpty())
+      return;
+
+    //Log.d("SettingsActivity", String.format("Text:'%s'", text));
+    try {
+      color = Color.parseColor(text);
+    }
+    catch(IllegalArgumentException e)
+    {
+      //Log.d("SettingsActivity", e.getMessage());
+      return;
+    }
+
+    //Log.d("SettingsActivity", String.format("Text:'%s' color:%d", text, color));
+    if(color == settings.glassColor)
+      return;
+
+    glassColorPicker.setSelectedColor(color);
+    glassColorView.setBackgroundColor(color);
+
+    settings.glassColor = color;
+
   }
 
   protected void onSetup()
@@ -98,7 +195,10 @@ public class SettingsActivity extends Activity
     for (int i = 0; i < speedSeries.length; i ++)
     {
       int speed = speedSeries[i];
-      strings.add("1 / " + speed + "" + getString(R.string.ms));
+      if(speed < 30000)
+        strings.add("1 / " + speed + "" + getString(R.string.ms));
+      else
+        strings.add("0");
       if(settings.tickTime == speed)
         selection = i;
     }
@@ -124,6 +224,15 @@ public class SettingsActivity extends Activity
 
     //speedEdit.setText("" + settings.tickTime);
     //complexEdit.setText("" + settings.complexRate);
+
+    // set color palette
+    glassColorPicker.setColors(generateColors(Color.BLUE, Color.RED, 16));
+
+    // set selected color [optional]
+    glassColorPicker.setSelectedColor(settings.glassColor);
+
+    onGlassColorChanged(settings.glassColor);
+
 
   }
 

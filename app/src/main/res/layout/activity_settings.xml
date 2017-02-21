@@ -1,217 +1,286 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fadeScrollbars="false"
-    android:scrollbarAlwaysDrawVerticalTrack="false"
-    android:scrollbarStyle="insideOverlay"
-    app:layout_scrollFlags="scroll|enterAlways">
-
-    <LinearLayout
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:scrollbarAlwaysDrawHorizontalTrack="false"
-        >
-
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp">
-        <TableRow android:gravity="center_vertical"
-                  android:minHeight="70dp">
-            <TextView
-                android:text="@string/column_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="120dp"/>
-
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner_columns"
-                android:minWidth="160dp"
-                android:spinnerMode="dialog"/>
-
-
-        </TableRow>
-        <TableRow android:gravity="center_vertical"
-                  android:minHeight="70dp">
-            <TextView
-                android:text="@string/row_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="120dp"/>
-
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner_rows"
-                android:spinnerMode="dialog"/>
-
-
-        </TableRow>
-        <TableRow android:gravity="center_vertical"
-                  android:minHeight="70dp">
-
-
-            <TextView
-                android:text="@string/speed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="120dp"/>
-
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner_speed"
-                android:spinnerMode="dialog"/>
-
-
-        </TableRow>
-
-        <TableRow android:gravity="center_vertical"
-                  android:minHeight="70dp">
-            <TextView
-                android:text="@string/complex"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="120dp"/>
-
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner_complex"
-                android:spinnerMode="dialog"/>
-
-
-        </TableRow>
-
-        <TableRow android:gravity="center_vertical"
-                  android:minHeight="70dp">
-            <TextView
-                android:text="@string/show_next_figure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="120dp"/>
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:id="@+id/switch_next_figure"
-                />
-        </TableRow>
-
-        <TableRow android:gravity="center_vertical"
-                  android:minHeight="70dp">
-            <TextView
-                android:text="@string/show_score"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="120dp"/>
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:id="@+id/switch_show_score"
-                />
-        </TableRow>
-
-        <TableRow android:gravity="center_vertical"
-                  android:minHeight="70dp">
-            <TextView
-                android:text="@string/show_guide_lines"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="120dp"/>
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:id="@+id/switch_show_guide_line"
-                />
-        </TableRow>
-
-        <TableRow android:gravity="center_vertical"
-                  android:minHeight="70dp">
-            <TextView
-                android:text="@string/use_accelerometer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="120dp"/>
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:id="@+id/switch_use_accelerometer"
-                />
-        </TableRow>
-
-        <TableRow android:gravity="center_vertical"
-                  android:minHeight="70dp">
-            <TextView
-                android:text="@string/use_touch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="120dp"/>
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:id="@+id/switch_use_touch"
-                />
-        </TableRow>
-
-        <TableRow android:gravity="center_vertical"
-                  android:minHeight="70dp">
-            <TextView
-                android:text="@string/use_shake"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="120dp"/>
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:id="@+id/switch_use_shake"
-                />
-        </TableRow>
-
-        <TableRow android:gravity="center_vertical"
-                  android:minHeight="70dp">
-
-            <Button
-                android:text="@string/reset_to_default"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_default"
-                android:onClick="onClick"
-                android:layout_span="2"/>
-        </TableRow>
-
-    </TableLayout>
+    >
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <Button
-            android:text="@string/cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/btn_cancel"
-            android:onClick="onClick"
-            style="@style/Widget.AppCompat.Button.Borderless"/>
-
-        <Button
-            android:text="@string/ok"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_ok"
             android:onClick="onClick"
-            style="@style/Widget.AppCompat.Button.Borderless"/>
+            android:text="@string/cancel"/>
+
+        <Button
+            android:id="@+id/btn_ok"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="@string/ok"/>
     </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadeScrollbars="false"
+        android:scrollbarAlwaysDrawVerticalTrack="false"
+        android:scrollbarStyle="insideOverlay"
+        app:layout_scrollFlags="scroll|enterAlways">
+
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp">
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="120dp"
+                    android:text="@string/column_count"/>
+
+                <Spinner
+                    android:id="@+id/spinner_columns"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minWidth="160dp"
+                    android:spinnerMode="dialog"/>
+
+
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="120dp"
+                    android:text="@string/row_count"/>
+
+                <Spinner
+                    android:id="@+id/spinner_rows"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:spinnerMode="dialog"/>
+
+
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="120dp"
+                    android:text="@string/speed"/>
+
+                <Spinner
+                    android:id="@+id/spinner_speed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:spinnerMode="dialog"/>
+
+
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="120dp"
+                    android:text="@string/complex"/>
+
+                <Spinner
+                    android:id="@+id/spinner_complex"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:spinnerMode="dialog"/>
+
+
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="120dp"
+                    android:text="@string/show_next_figure"/>
+
+                <Switch
+                    android:id="@+id/switch_next_figure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    />
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="120dp"
+                    android:text="@string/show_score"/>
+
+                <Switch
+                    android:id="@+id/switch_show_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    />
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="120dp"
+                    android:text="@string/show_guide_lines"/>
+
+                <Switch
+                    android:id="@+id/switch_show_guide_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    />
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="120dp"
+                    android:text="@string/use_accelerometer"/>
+
+                <Switch
+                    android:id="@+id/switch_use_accelerometer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    />
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="120dp"
+                    android:text="@string/use_touch"/>
+
+                <Switch
+                    android:id="@+id/switch_use_touch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    />
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="120dp"
+                    android:text="@string/use_shake"/>
+
+                <Switch
+                    android:id="@+id/switch_use_shake"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    />
+
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="120dp"
+                    android:text="@string/glass_color"/>
+
+
+                    <ua.probe.oleg.tetrisgamecollection.colorpicker.LineColorPicker
+                        android:id="@+id/picker_glass_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        app:orientation="horizontal"/>
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="120dp"
+                    android:text=""
+                    android:id="@+id/view_glass_color"/>
+
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:ems="10"
+                        android:id="@+id/edit_glass_color"
+                        android:layout_height="wrap_content"
+                        android:digits="0123456789ABCDEF"
+                        android:inputType="textCapCharacters"
+                        />
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+                <Button
+                    android:id="@+id/btn_default"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_span="2"
+                    android:onClick="onClick"
+                    android:text="@string/reset_to_default"/>
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
 </LinearLayout>
-</ScrollView>
