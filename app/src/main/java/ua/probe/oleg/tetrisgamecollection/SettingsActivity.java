@@ -141,7 +141,7 @@ public class SettingsActivity extends Activity
     }
 
     //Log.d("SettingsActivity", String.format("Text:'%s' color:%d", text, color));
-    if(color == -1 || color == settings.glassColor)
+    if(color == settings.glassColor)
       return;
 
     glassColorPicker.setSelectedColor(color);
