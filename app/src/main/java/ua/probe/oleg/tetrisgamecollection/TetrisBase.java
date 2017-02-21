@@ -1587,12 +1587,13 @@ class TetrisBase {
       int interval = demoMode ? 200 : this.interval;
       boolean modified = false;
 
+      if(nextFigure == null) {
+        nextFigure = onNewFigure();
+        modified = true;
+      }
+
       if(state == State.WORKED) {
 
-        if(nextFigure == null) {
-          nextFigure = onNewFigure();
-          modified = true;
-        }
 
         if(glass.getActiveFigure() == null)
         {
