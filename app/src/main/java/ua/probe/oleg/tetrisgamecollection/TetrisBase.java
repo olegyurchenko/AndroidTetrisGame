@@ -1040,8 +1040,6 @@ class TetrisBase {
     {
       if(tickTime <= 100)
         tickTime = 100;
-      if(tickTime > 10000)
-        tickTime = 10000;
       if(complexRate < 0)
         complexRate = 0;
       if(complexRate > 100)

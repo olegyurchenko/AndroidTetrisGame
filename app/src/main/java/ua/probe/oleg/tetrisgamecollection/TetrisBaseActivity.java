@@ -144,8 +144,19 @@ public class TetrisBaseActivity extends AppCompatActivity
       return;
     }
 
-    int height = oldBottom - top;
+
+
+    //Log.d("TetrisBaseActivity", String.format("onLayoutChange(%d,%d,%d,%d)", left, top, right, bottom));
+    int height = bottom - top;
     int width = right - left;
+
+    int oldHeight = oldBottom - oldTop;
+    int oldWidth = oldRight - oldLeft;
+
+    if(oldHeight == height && oldWidth == width)
+      return;
+
+
     int btnHeight = height / 6;
 
     if(width > height) //Landscape

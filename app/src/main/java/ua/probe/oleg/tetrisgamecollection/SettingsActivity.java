@@ -23,7 +23,8 @@ public class SettingsActivity extends Activity
 
   protected final int[] speedSeries = new int[]{
     100, 200, 300, 400, 500, 800,
-    1000, 2000, 3000, 4000, 5000, 8000
+    1000, 2000, 3000, 4000, 5000, 8000,
+    100000000
   };
 
   @Override
@@ -98,7 +99,10 @@ public class SettingsActivity extends Activity
     for (int i = 0; i < speedSeries.length; i ++)
     {
       int speed = speedSeries[i];
-      strings.add("1 / " + speed + "" + getString(R.string.ms));
+      if(speed < 30000)
+        strings.add("1 / " + speed + "" + getString(R.string.ms));
+      else
+        strings.add("0");
       if(settings.tickTime == speed)
         selection = i;
     }
