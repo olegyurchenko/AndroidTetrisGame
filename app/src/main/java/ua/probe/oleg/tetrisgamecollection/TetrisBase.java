@@ -1174,7 +1174,7 @@ class TetrisBase {
       screenRotationBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_screen_rotation);
       robotBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_robot);
 
-      squareBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.square);
+      //squareBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.square);
 
       //glassBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.square);
 
@@ -1198,19 +1198,6 @@ class TetrisBase {
       textSize = (int) (14.0f *  densityMultiplier);
 
       Log.d("Controller", String.format("textSize:%d", textSize));
-      /*
-      theme.resolveAttribute(android.R.attr.textColor, typedValue, true);
-      if (typedValue.type >= TypedValue.TYPE_FIRST_COLOR_INT && typedValue.type <= TypedValue.TYPE_LAST_COLOR_INT) {
-        // windowBackground is a glassColor
-        textColor = typedValue.data;
-      }
-
-      int[] textSizeAttr = new int[] { android.R.attr.textSize };
-      int indexOfAttrTextSize = 0;
-      TypedArray ta = context.obtainStyledAttributes(typedValue.data, textSizeAttr);
-      textSize = ta.getDimensionPixelSize(indexOfAttrTextSize, -1);
-      ta.recycle();
-*/
 
       if(settings.useAccelerometer || settings.useShake)
         accelerometer = new Accelerometer(context);
