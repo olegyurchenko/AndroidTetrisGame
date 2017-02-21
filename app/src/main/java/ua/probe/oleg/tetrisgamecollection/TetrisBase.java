@@ -2,6 +2,8 @@ package ua.probe.oleg.tetrisgamecollection;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -1148,9 +1150,10 @@ class TetrisBase {
     Random random;
     final int UNDO_SIZE = 32;
     Stack<byte[]> undo;
-    final int TEXT_SIZE = 30;
     boolean demoMode = false;
     int backColor = Color.WHITE;
+    int textColor = Color.BLACK;
+    int textSize = 30;
     /*============================================================*/
     Controller(Context c, String sectionName)
     {
@@ -1176,13 +1179,38 @@ class TetrisBase {
       //glassBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.square);
 
 
-      TypedValue a = new TypedValue();
-      context.getTheme().resolveAttribute(android.R.attr.windowBackground, a, true);
-      if (a.type >= TypedValue.TYPE_FIRST_COLOR_INT && a.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+      TypedValue typedValue = new TypedValue();
+
+      Resources.Theme theme = context.getTheme();
+      theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true);
+      if (typedValue.type >= TypedValue.TYPE_FIRST_COLOR_INT && typedValue.type <= TypedValue.TYPE_LAST_COLOR_INT) {
         // windowBackground is a glassColor
-        backColor = a.data;
+        backColor = typedValue.data;
       }
 
+
+      int[] attrs = new int[] { android.R.attr.textColorSecondary };
+      TypedArray a = theme.obtainStyledAttributes(R.style.AppTheme, attrs);
+      textColor = a.getColor(0, Color.BLACK);
+      a.recycle();
+
+      final float densityMultiplier = context.getResources().getDisplayMetrics().density;
+      textSize = (int) (14.0f *  densityMultiplier);
+
+      Log.d("Controller", String.format("textSize:%d", textSize));
+      /*
+      theme.resolveAttribute(android.R.attr.textColor, typedValue, true);
+      if (typedValue.type >= TypedValue.TYPE_FIRST_COLOR_INT && typedValue.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+        // windowBackground is a glassColor
+        textColor = typedValue.data;
+      }
+
+      int[] textSizeAttr = new int[] { android.R.attr.textSize };
+      int indexOfAttrTextSize = 0;
+      TypedArray ta = context.obtainStyledAttributes(typedValue.data, textSizeAttr);
+      textSize = ta.getDimensionPixelSize(indexOfAttrTextSize, -1);
+      ta.recycle();
+*/
 
       if(settings.useAccelerometer || settings.useShake)
         accelerometer = new Accelerometer(context);
@@ -1261,13 +1289,18 @@ class TetrisBase {
       geometryInit();
     }
     /*============================================================*/
+    void setTextSize(int sz) {
+      textSize = sz;
+      setModified(true);
+    }
+    /*============================================================*/
     private int nextFigureCellSize = 20;
     void geometryInit()
     {
       int x, y, w, h;
       int border = 20;
-      int textHeight = 4 * TEXT_SIZE + TEXT_SIZE / 2;
-      int textWidth = 10 * TEXT_SIZE;
+      int textHeight = 4 * textSize + textSize / 2;
+      int textWidth = 10 * textSize;
 
       nextFigureRect.set(0, 0, 5 * nextFigureCellSize, 5 * nextFigureCellSize);
       if(rect.width() < rect.height()) //Verical
@@ -1298,7 +1331,7 @@ class TetrisBase {
         gameTimeRect.set(nextFigureRect.right, nextFigureRect.top, rect.width() - border, nextFigureRect.bottom);
         statisticRect.set(border, y + h, rect.right - border, rect.bottom - border);
         //ratingX = x;
-        //ratingY = y + h + TEXT_SIZE / 2;
+        //ratingY = y + h + textSize / 2;
       }
       else
       { //Horisontal
@@ -1323,7 +1356,7 @@ class TetrisBase {
         //nextFigureY = border;
 
         statisticRect.set(nextFigureRect.left, nextFigureRect.bottom, rect.right - border, nextFigureRect.bottom + textHeight);
-        //ratingX = x + w + border + TEXT_SIZE / 2;
+        //ratingX = x + w + border + textSize / 2;
         //ratingY = border + glass.getShapeWidth() * 3;
       }
 
@@ -1348,16 +1381,16 @@ class TetrisBase {
     {
 
       paint.setTypeface(Typeface.DEFAULT);// your preference here
-      paint.setTextSize(TEXT_SIZE);// have this the same as your text size
+      paint.setTextSize(textSize);// have this the same as your text size
       paint.getTextBounds(text, 0, text.length(), bounds);
 
       int x = rect.left + (rect.width() - bounds.width()) / 2;
       int y = rect.top + (rect.height() - bounds.height())/ 2;
 
-      statusRect.set(x - TEXT_SIZE,
-        y - 2 * TEXT_SIZE,
-        x + bounds.width() + TEXT_SIZE,
-        y + TEXT_SIZE);
+      statusRect.set(x - textSize,
+        y - 2 * textSize,
+        x + bounds.width() + textSize,
+        y + textSize);
 
       paint.setColor(settings.statusColor);
       paint.setAlpha(200);
@@ -1375,13 +1408,13 @@ class TetrisBase {
       String text = glass.getStatistics().gameTimeText();
 
       paint.setTypeface(Typeface.DEFAULT);// your preference here
-      paint.setTextSize(TEXT_SIZE);// have this the same as your text size
+      paint.setTextSize(textSize);// have this the same as your text size
       paint.getTextBounds(text, 0, text.length(), bounds);
 
       int x = gameTimeRect.left + (gameTimeRect.width() - bounds.width()) / 2;
       int y = gameTimeRect.top + (gameTimeRect.height() - bounds.height()) / 2 + bounds.height();
 
-      paint.setColor(Color.BLACK);
+      paint.setColor(textColor);
       canvas.drawText(text, x, y, paint);
 
       drawBorder(canvas, gameTimeRect, 1, BevelCut.Raised, BevelCut.Lowered);
@@ -1403,22 +1436,22 @@ class TetrisBase {
       String text = String.format(Locale.getDefault(), "%,d", maxVal);
 
       paint.setTypeface(Typeface.DEFAULT);// your preference here
-      paint.setTextSize(TEXT_SIZE);// have this the same as your text size
+      paint.setTextSize(textSize);// have this the same as your text size
       paint.getTextBounds(text, 0, text.length(), bounds);
       paint.setColor(Color.BLACK);
 
       int[] width = new int[] {
-        statisticRect.width() - bounds.width() - 2 * TEXT_SIZE,
-        bounds.width() + 2 * TEXT_SIZE
+        statisticRect.width() - bounds.width() - 2 * textSize,
+        bounds.width() + 2 * textSize
       };
 
       int height = statisticRect.height() / 3;
 
-      if(height > TEXT_SIZE + TEXT_SIZE / 2)
-        height = TEXT_SIZE + TEXT_SIZE / 2;
+      if(height > textSize + textSize / 2)
+        height = textSize + textSize / 2;
 
-      if(height < bounds.height() + TEXT_SIZE / 2)
-        height = bounds.height() + TEXT_SIZE / 2;
+      if(height < bounds.height() + textSize / 2)
+        height = bounds.height() + textSize / 2;
 
 
       for(int row = 0; row < 3; row ++)
@@ -1428,11 +1461,11 @@ class TetrisBase {
         paint.getTextBounds(text, 0, text.length(), bounds);
 
 
-        int x = statisticRect.left + width[0] - bounds.width() - TEXT_SIZE;
+        int x = statisticRect.left + width[0] - bounds.width() - textSize;
         int y = statisticRect.top + height * row + (height - bounds.height()) / 2 + bounds.height();
 
         if(x < statisticRect.left)
-          x = statisticRect.left + TEXT_SIZE;
+          x = statisticRect.left + textSize;
 
         paint.setColor(backColor);
         paint.setStyle(Paint.Style.FILL);
@@ -1440,14 +1473,14 @@ class TetrisBase {
           new Rect(statisticRect.left, statisticRect.top + height * row, statisticRect.left + width[0], statisticRect.top + height * (row + 1)),
           paint);
 
-        paint.setColor(Color.BLACK);
+        paint.setColor(textColor);
         canvas.drawText(text, x, y, paint);
 
 
         text = statistics.getText(Statistics.NUMBER_COL, row, context);
         paint.getTextBounds(text, 0, text.length(), bounds);
 
-        x = statisticRect.left + width[0] + TEXT_SIZE;
+        x = statisticRect.left + width[0] + textSize;
 
         paint.setColor(backColor);
         paint.setStyle(Paint.Style.FILL);
@@ -1455,7 +1488,7 @@ class TetrisBase {
           new Rect(statisticRect.left + width[0], statisticRect.top + height * row, statisticRect.left + width[0] + width[1], statisticRect.top + height * (row + 1)),
           paint);
 
-        paint.setColor(Color.BLACK);
+        paint.setColor(textColor);
         canvas.drawText(text, x, y, paint);
 
         drawBorder(canvas,
