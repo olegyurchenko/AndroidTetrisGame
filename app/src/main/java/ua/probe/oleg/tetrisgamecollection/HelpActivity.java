@@ -21,7 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class HelpActivity extends AppCompatActivity {
 
@@ -94,22 +97,33 @@ public class HelpActivity extends AppCompatActivity {
   public String getAppTimeStamp()
   {
     String timeStamp = "";
+/*
+    Invalid method: I attrive only installation time
 
-    try {
-      ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), 0);
-      String appFile = appInfo.sourceDir;
-      long time = new File(appFile).lastModified();
-
+    try{
+      ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), 0);
+      ZipFile zf = new ZipFile(ai.sourceDir);
+      ZipEntry ze = zf.getEntry("META-INF/MANIFEST.MF");
+      long time = ze.getTime();
       DateFormat formatter = DateFormat.getDateInstance();
       timeStamp = formatter.format(time);
-
+      zf.close();
+    }
+    catch (Exception e) {
+      //Ignore
+    }
+*/
+    try {
+      long buildDate = BuildConfig.TIMESTAMP;
+      DateFormat formatter = DateFormat.getDateInstance();
+      //SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      timeStamp = formatter.format(buildDate);
     }
     catch (Exception e) {
       //Ignore
     }
 
     return timeStamp;
-
   }
     /*============================================================*/
   public String readAboutText() {

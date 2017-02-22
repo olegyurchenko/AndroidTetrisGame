@@ -1217,12 +1217,14 @@ class TetrisBase {
     /*============================================================*/
     void onSettingsChanged()
     {
+      save();
       settings.load(context, sectionName);
       glass = onGlassCreate();
       nextFigure = null;
       state = State.PAUSED;
       setup();
       geometryInit();
+      load();
       setModified(true);
     }
     /*============================================================*/
@@ -1632,6 +1634,10 @@ class TetrisBase {
             else
             {
 //          Log.d("Game", "Add figure Ok");
+
+              //For adjust first figure step
+              lastTime = System.currentTimeMillis();
+
               nextFigure = onNewFigure();
               if(demoMode)
               {

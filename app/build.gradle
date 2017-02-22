@@ -13,6 +13,9 @@ android {
     versionProps.store(versionPropsFile.newWriter(), null)
     /*By Oleg >*/
     defaultConfig {
+        /*By Oleg <*/
+        buildConfigField "long", "TIMESTAMP", System.currentTimeMillis() + "L"
+        /*By Oleg >*/
         applicationId "ua.probe.oleg.tetrisgamecollection"
         minSdkVersion 15
         targetSdkVersion 25
@@ -35,8 +38,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.google.android.gms:play-services-appindexing:9.8.0'
-    compile 'com.android.support:design:25.1.1'
+    compile 'com.android.support:design:25.2.0'
     testCompile 'junit:junit:4.12'
 }
