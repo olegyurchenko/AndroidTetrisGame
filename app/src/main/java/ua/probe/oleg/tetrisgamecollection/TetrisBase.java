@@ -1231,6 +1231,25 @@ class TetrisBase {
       setModified(true);
     }
     /*============================================================*/
+    void onNewGame()
+    {
+      onNewGame(random.nextLong());
+    }
+    /*============================================================*/
+    void onNewGame(long randomSeed)
+    {
+      mkUndoPoint();
+      //onSettingsChanged();
+      state = State.PAUSED;
+      demoMode = false;
+      glass.onNewGame();
+      nextFigure = null;
+      settings.randomSeed = randomSeed;
+      //settings.save(context, sectionName);
+      random.setSeed(randomSeed);
+      setModified(true);
+    }
+    /*============================================================*/
     protected Glass onGlassCreate()
     {
       return new Glass(settings.columnCount, settings.rowCount);
@@ -1581,7 +1600,7 @@ class TetrisBase {
         if(state == State.PAUSED)
           text = context.getString(R.string.paused);
         else
-          text = context.getString(R.string.finished);
+          text = context.getString(R.string.game_over);
 
         drawStatusPanel(canvas, text);
       }
@@ -2039,23 +2058,6 @@ class TetrisBase {
         case FINISHED:
           break;
       }
-    }
-    /*============================================================*/
-    void onNewGame()
-    {
-      mkUndoPoint();
-      onSettingsChanged();
-      state = State.PAUSED;
-      demoMode = false;
-      //glass.onNewGame();
-      //nextFigure = null;
-      //setModified(true);
-    }
-    /*============================================================*/
-    void onNewGame(long randomSeed)
-    {
-      onNewGame();
-      random.setSeed(randomSeed);
     }
     /*============================================================*/
     /**

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class TetrisSettingsActivity extends SettingsActivity {
 
   int [] complexSeries = new int[] {
-    3, 4, 14, 5, 15, 6, 16
+    3, 4, 14, 5, 15, //6, 16
   };
 
   @Override

@@ -49,4 +49,7 @@
     <string name="btn_right">Право</string>
     <string name="btn_robot">Ход робота</string>
     <string name="btn_rotate">Вращать</string>
+    <string name="figures">Фигуры</string>
+    <string name="glass_color">Цвет стакана</string>
+    <string name="game_over">Игра закончена</string>
 </resources>
