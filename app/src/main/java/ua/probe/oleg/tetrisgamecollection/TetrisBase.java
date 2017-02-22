@@ -1194,8 +1194,11 @@ class TetrisBase {
       textColor = a.getColor(0, Color.BLACK);
       a.recycle();
 
-      final float densityMultiplier = context.getResources().getDisplayMetrics().density;
-      textSize = (int) (14.0f *  densityMultiplier);
+      //final float densityMultiplier = context.getResources().getDisplayMetrics().density;
+      //textSize = (int) (14.0f *  densityMultiplier);
+
+      float scale = context.getResources().getConfiguration().fontScale;
+      textSize = (int)(context.getResources().getDimension(R.dimen.font) * scale);
 
       Log.d("Controller", String.format("textSize:%d", textSize));
 
@@ -1427,7 +1430,6 @@ class TetrisBase {
       paint.setTypeface(Typeface.DEFAULT);// your preference here
       paint.setTextSize(textSize);// have this the same as your text size
       paint.getTextBounds(text, 0, text.length(), bounds);
-      paint.setColor(Color.BLACK);
 
       int[] width = new int[] {
         statisticRect.width() - bounds.width() - 2 * textSize,
@@ -1451,7 +1453,10 @@ class TetrisBase {
 
 
         int x = statisticRect.left + width[0] - bounds.width() - textSize;
-        int y = statisticRect.top + height * row + (height - bounds.height()) / 2 + bounds.height();
+        int y = statisticRect.top + height * row + height -
+          - (int)((paint.descent() + paint.ascent()) / 2);
+
+        //((paint.descent() + paint.ascent()) / 2) is the distance from the baseline to the center.
 
         if(x < statisticRect.left)
           x = statisticRect.left + textSize;
