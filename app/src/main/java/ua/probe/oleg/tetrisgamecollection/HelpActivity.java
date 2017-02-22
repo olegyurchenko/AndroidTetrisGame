@@ -115,7 +115,7 @@ public class HelpActivity extends AppCompatActivity {
 */
     try {
       long buildDate = BuildConfig.TIMESTAMP;
-      DateFormat formatter = DateFormat.getDateInstance();
+      DateFormat formatter = DateFormat.getDateTimeInstance();
       //SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       timeStamp = formatter.format(buildDate);
     }
