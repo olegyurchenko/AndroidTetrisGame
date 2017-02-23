@@ -37,6 +37,10 @@ import java.util.Stack;
 class TetrisBase {
 
   /*-----------------------------------------------------------------------------------------------*/
+
+  /**
+   * Class for represent x,y - column and row
+   */
   static class Cell
   {
     private int col, row;
@@ -178,6 +182,10 @@ class TetrisBase {
   private static Paint squarePaint = new Paint();
   private static Bitmap squareBitmap = null;
 
+  /**
+   * Base class for square - figures components.
+   * Main property of square - color
+   */
   static class Square
   {
     int fillColor, borderColor;
@@ -246,6 +254,11 @@ class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
+  /**
+   * Base class for figures
+   * It used unchanged in tetris & columnus, and use extended in ColorBalls
+   * It contain squares (or balls)
+   */
   static class Figure implements Cloneable
   {
     SparseArray<Square> squareMap;
@@ -325,11 +338,20 @@ class TetrisBase {
       }
     }
 
+    /**
+     * Method - fabric for accessors
+     * @return new Square
+     */
     Square onNewShape()
     {
       return new Square();
     }
 
+    /**
+     * Save figure to data stream (use for file or undo stack)
+     * @param dos - stream to save
+     * @throws IOException
+     */
     void save(DataOutputStream dos) throws IOException
     {
       dos.writeInt(columnCount);
@@ -347,6 +369,12 @@ class TetrisBase {
       }
 
     }
+
+    /**
+     * Load figure from data stream (use fro file and undo stack)
+     * @param dis - stream for load
+     * @throws IOException
+     */
     void load(DataInputStream dis)  throws IOException
     {
       squareMap.clear();
@@ -365,6 +393,9 @@ class TetrisBase {
   }
 
   /*-----------------------------------------------------------------------------------------------*/
+  /**
+   * Data structure for represent game statistic
+   */
   static class Statistics implements Cloneable
   {
     static final int
@@ -397,6 +428,11 @@ class TetrisBase {
       workTime = 0;
     }
 
+    /**
+     * Save data to data stream (use for file or undo stack)
+     * @param dos - stream to save
+     * @throws IOException
+     */
     void save(DataOutputStream dos) throws IOException
     {
       dos.writeLong(score);
@@ -405,6 +441,11 @@ class TetrisBase {
       dos.writeLong(workTime);
     }
 
+    /**
+     * Load data from data stream (use fro file and undo stack)
+     * @param dis - stream for load
+     * @throws IOException
+     */
     void load(DataInputStream dis)  throws IOException
     {
       score = dis.readLong();
@@ -413,6 +454,10 @@ class TetrisBase {
       workTime = dis.readLong();
     }
 
+    /**
+     * Format gameTime
+     * @return formatted string
+     */
     String gameTimeText()
     {
       final long SEC_IN_MINUTE = 60;
@@ -436,6 +481,13 @@ class TetrisBase {
         day, hour, min, sec);
     }
 
+    /**
+     * Get text for statistics table
+     * @param col column (TEXT_COL(0) - description, NUMBER_COL(1) - value)
+     * @param row row of statistic (SCORE_ROW, FIGURE_COUNT_ROW, SQUARE_COUNT_ROW)
+     * @param context context for read resources
+     * @return string contain data
+     */
     String getText(int col, int row, Context context)
     {
       String text = "";
@@ -471,6 +523,11 @@ class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
+  /**
+   * Class for represent game action. Use for auto mode.
+   * attr move - number of figure moves. >0 to right, <0 to left
+   * attr rotate - number of rotation of figure 0 <= ... < 4
+   */
   private static class GlassAction  implements Cloneable
   {
     int rotate = 0;
@@ -491,13 +548,30 @@ class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
-  //private static Bitmap glassBitmap = null;
+  /**
+   * Base class for glass - game field.
+   * Tetris, Columnus and ColorBalls use accessors for its own games.
+   * Glass is container for active figure - figure that can move or rotate
+   * and container for landed suares
+   */
   static class Glass implements Cloneable
   {
+    /**
+     * Dimensions
+     */
     int rowCount, columnCount;
+    /**
+     * Geometry rectangle
+     */
     Rect rect;
+    /**
+     * ctive figure - figure that can move or rotate
+     */
     Figure activeFigure = null;
     Cell activeFigurePosition = new Cell();
+    /**
+     * Flag for redraw glass
+     */
     boolean modified = false;
     private Paint paint, guidePaint;
     private Path guidePath;
@@ -508,15 +582,28 @@ class TetrisBase {
 
     private boolean drawGuideLines = true;
 
+    /**
+     * Container squares
+     */
     private SparseArray<Square> squareMap;
     private Statistics statistics;
     private int borderWidth = 1;
 
+    /**
+     * Constructor
+     * @param columns - column count
+     * @param rows - row count
+     */
     Glass(int columns, int rows)
     {
       init(columns, rows);
     }
 
+    /**
+     * init glass
+     * @param columns -column count
+     * @param rows - row count
+     */
     void init(int columns, int rows)
     {
       columnCount = columns;
@@ -536,6 +623,10 @@ class TetrisBase {
       bgColor = Color.WHITE;
     }
 
+    /**
+     * Fabric of statistics for accessors
+     * @return new statistics object
+     */
     Statistics onNewStatistics() {
       return new Statistics();
     }
@@ -883,11 +974,20 @@ class TetrisBase {
       statistics.clear();
     }
 
+    /**
+     * Fabric for accessors
+     * @return new Square
+     */
     Square onNewShape()
     {
       return new Square();
     }
 
+    /**
+     * Save data to data stream (to file or undo stack)
+     * @param dos - stream to save
+     * @throws IOException
+     */
     void save(DataOutputStream dos) throws IOException
     {
       int size = squareMap.size();
@@ -902,6 +1002,11 @@ class TetrisBase {
       statistics.save(dos);
     }
 
+    /**
+     * Load data for data stream (from file or undo stack)
+     * @param dis - stream for load
+     * @throws IOException
+     */
     void load(DataInputStream dis)  throws IOException
     {
       squareMap.clear();
@@ -1019,6 +1124,9 @@ class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
+  /**
+   * Data structure for represent game settings
+   */
   static class Settings
   {
     static final int MinColumns = 8, MaxColumns = 16;
@@ -1057,6 +1165,11 @@ class TetrisBase {
         rowCount = MaxRows;
     }
 
+    /**
+     * Load data from predeferences
+     * @param context - application context for get resources
+     * @param sectionName - name of section ("tetris", "columnus" ...)
+     */
     void load(Context context, String sectionName)
     {
       SharedPreferences preferences = context.getSharedPreferences(sectionName, Context.MODE_PRIVATE);
@@ -1078,7 +1191,11 @@ class TetrisBase {
       check();
     }
 
-
+    /**
+     * Save data to predeferences
+     * @param context - application context for resources access
+     * @param sectionName - name of section ("tetris", "columnus" ...)
+     */
     void save(Context context, String sectionName)
     {
       SharedPreferences preferences = context.getSharedPreferences(sectionName, Context.MODE_PRIVATE);
@@ -1104,6 +1221,10 @@ class TetrisBase {
     }
   }
   /*-----------------------------------------------------------------------------------------------*/
+  /**
+   * Base class for game controller.
+   * All games (tetris, columnus, ...) will be inherit it
+   */
   static class Controller
   {
     private boolean modified = false;
@@ -1120,8 +1241,9 @@ class TetrisBase {
 
     Settings settings;
 
-    //protected int defaultColumnCount = 8, defaultRowCount = 16;
-    //protected int complexRate = 50, tickTime = 50;
+    /**
+     * Game state
+     */
     enum State
     {
       PAUSED,
@@ -1137,6 +1259,7 @@ class TetrisBase {
     Figure nextFigure;
     //int nextFigureX, nextFigureY;
 
+    /* Geometry data      */
     Rect nextFigureRect = new Rect();
     Rect gameTimeRect = new Rect();
     Rect statisticRect = new Rect();
@@ -1250,6 +1373,10 @@ class TetrisBase {
       setModified(true);
     }
     /*============================================================*/
+    /**
+     * Fabric for inherited
+     * @return new Glass
+     */
     protected Glass onGlassCreate()
     {
       return new Glass(settings.columnCount, settings.rowCount);
@@ -1314,7 +1441,7 @@ class TetrisBase {
       int textWidth = 10 * textSize;
 
       nextFigureRect.set(0, 0, 5 * nextFigureCellSize, 5 * nextFigureCellSize);
-      if(rect.width() < rect.height()) //Verical
+      if(rect.width() < rect.height()) //Portrait orientation
       {
 
         w = rect.width() - 2 * border;
@@ -1323,7 +1450,7 @@ class TetrisBase {
         y = border + nextFigureRect.height();
 
 
-        if(y + h + textHeight > rect.height())
+        if(y + h + textHeight > rect.height()) //If not climbed - recalculate
         {
           h = rect.height() - y - textHeight;
           w = (h / glass.getRowCount()) * glass.getColumnCount();
@@ -1345,13 +1472,13 @@ class TetrisBase {
         //ratingY = y + h + textSize / 2;
       }
       else
-      { //Horisontal
+      { //Lendscape orientation
         x = border;
         h = rect.height() - 2 * border;
         w = (h / glass.getRowCount()) * glass.getColumnCount();
         h = (w / glass.getColumnCount()) * glass.getRowCount();
 
-        if(x + w + textWidth > rect.width())
+        if(x + w + textWidth > rect.width())  //If not climbed - recalculate
         {
           w = rect.width() - x - textWidth;
           h = (w / glass.getColumnCount()) * glass.getRowCount();

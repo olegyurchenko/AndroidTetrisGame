@@ -13,7 +13,9 @@ import android.view.WindowManager;
  * Class to measure device orientation
  */
 
-public class Accelerometer {
+
+
+class Accelerometer {
   private Context context;
   private SensorManager sensorManager;
   private Sensor sensorAccel;
@@ -27,11 +29,11 @@ public class Accelerometer {
   private final long SHAKE_TIMEOUT = 500;
   private final float DHAKE_THRESHOLD = 4.0f;
   /*============================================================*/
-  public class Orientation
+  class Orientation
   {
-    public float x = 0;
-    public float y = 0;
-    public float z = 0;
+    float x = 0;
+    float y = 0;
+    float z = 0;
     Orientation(float data[])
     {
       z = data[0];
@@ -40,7 +42,7 @@ public class Accelerometer {
     }
   }
   /*============================================================*/
-  public Accelerometer(Context c)
+  Accelerometer(Context c)
   {
     context = c;
     sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -52,12 +54,12 @@ public class Accelerometer {
     shakeX = shakeY = shakeZ = false;
   }
   /*============================================================*/
-  public void onPause()
+  void onPause()
   {
     sensorManager.unregisterListener(listener);
   }
   /*============================================================*/
-  public void onResume()
+  void onResume()
   {
     sensorManager.registerListener(listener, sensorAccel, SensorManager.SENSOR_DELAY_NORMAL);
     sensorManager.registerListener(listener, sensorMagnet, SensorManager.SENSOR_DELAY_NORMAL);
@@ -86,27 +88,27 @@ public class Accelerometer {
     shakeZ = z;
   }
   /*============================================================*/
-  public void clearShakeDetected()
+  void clearShakeDetected()
   {
     setShakeDetected(false, false, false, false);
   }
   /*============================================================*/
-  public synchronized boolean isShakeDetected()
+  synchronized boolean isShakeDetected()
   {
     return shakeDetected;
   }
   /*============================================================*/
-  public synchronized boolean isShakeX()
+  synchronized boolean isShakeX()
   {
     return shakeX;
   }
   /*============================================================*/
-  public synchronized boolean isShakeY()
+  synchronized boolean isShakeY()
   {
     return shakeY;
   }
   /*============================================================*/
-  public synchronized boolean isShakeZ()
+  synchronized boolean isShakeZ()
   {
     return shakeZ;
   }
@@ -199,8 +201,8 @@ public class Accelerometer {
             {
               double threshold = DHAKE_THRESHOLD;
               boolean sx = Math.abs(valuesAccel[1] - event.values[1]) >= threshold;
-              boolean sy = Math.abs(valuesAccel[2] - event.values[2]) >= threshold;;
-              boolean sz = Math.abs(valuesAccel[0] - event.values[0]) >= threshold;;
+              boolean sy = Math.abs(valuesAccel[2] - event.values[2]) >= threshold;
+              boolean sz = Math.abs(valuesAccel[0] - event.values[0]) >= threshold;
 
               setShakeDetected(true, sx, sy, sz);
             }
