@@ -1,0 +1,13 @@
+Three games in which a block figure falls into a rectangular glass.
+
+Do not let overwhelm yourself falling figures!
+Wait figure and "attach" it.
+
+In the first game (Bricks) gamer must collect a row with no spaces in the second and third (Columnus and Color balls) must collect three of the same color.
+
+Advantages:
+- Easy control
+- Endless game
+- Custom dimensions and shapes glass
+- Adjustable speed
+- The ability to rollback, save the current game state on exit
