@@ -2005,6 +2005,7 @@ class TetrisBase {
         trackY2 = y;
         //Log.d("onTouchDown", String.format("2nd finger id=%d x=%.0f y=%.0f", id, x, y));
       }
+
     }
     /*============================================================*/
     void onTouchUp(int id, float x, float y)
@@ -2017,6 +2018,18 @@ class TetrisBase {
       if(state == State.ROTATED)
       {
         state = State.WORKED;
+      }
+
+      if (settings.useTouch) {
+
+        if (state == State.PAUSED) {
+          toglePause();
+        }
+
+        if (state == State.FINISHED) {
+          onNewGame();
+        }
+
       }
     }
     /*============================================================*/
