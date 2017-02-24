@@ -189,6 +189,8 @@ class TetrisBase {
   static class Square
   {
     int fillColor, borderColor;
+    boolean deleted;
+    int deleteСountdown;
 //    protected int width = 0, height = 0;
     Paint paint = squarePaint;
     Rect rect = new Rect();
@@ -197,51 +199,59 @@ class TetrisBase {
     {
       fillColor = fColor;
       borderColor = bColor;
+      deleted = false;
     }
 
     Square(int fColor)
     {
       fillColor = fColor;
       borderColor = Color.BLACK;
+      deleted = false;
     }
 
     Square(Square other)
     {
       fillColor = other.fillColor;
       borderColor = other.borderColor;
+      deleted = other.deleted;
+      deleteСountdown = other.deleteСountdown;
     }
 
     Square()
     {
       fillColor = Color.WHITE;
       borderColor = Color.BLACK;
+      deleted = false;
     }
 
-    public int color() {return fillColor;}
+    //public int color() {return fillColor;}
+
+    boolean isEqual(Square other) {
+      return !deleted
+        && !other.deleted
+        && fillColor == other.fillColor;
+    }
+
 
     void onDraw(Canvas canvas, int x, int y, int width, int height)
     {
+
 
       rect.set(x, y, x + width, y + height);
 
       // перенастраивам кисть на заливку
       paint.setColor(fillColor);
       paint.setStyle(Paint.Style.FILL);
+
+      if(deleted)
+      {
+        paint.setAlpha(100);
+      }
       canvas.drawRect(rect, paint);
 
-      /*
-      if(squareBitmap != null) {
-        canvas.drawBitmap(squareBitmap, null, rect, paint);
+      if(!deleted) {
+        drawShadow(canvas, rect, 1, BevelCut.Raised);
       }
-
-      if(squareBitmap == null) {
-        // перенастраивам кисть на контуры
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(rect, paint);
-      }
-      */
-      drawShadow(canvas, rect, 1, BevelCut.Raised);
     }
 
     void save(DataOutputStream dos) throws IOException
@@ -252,6 +262,18 @@ class TetrisBase {
     {
       fillColor = dis.readInt();
     }
+
+    void setDeleted(int countDown) {
+      deleted = true;
+      deleteСountdown = countDown;
+    }
+
+    boolean isDeleted() {return deleted;}
+    boolean canPermanentDelete() {
+      deleteСountdown --;
+      return deleted && deleteСountdown <= 0;
+    }
+
   }
   /*-----------------------------------------------------------------------------------------------*/
   /**
@@ -588,6 +610,7 @@ class TetrisBase {
     private SparseArray<Square> squareMap;
     private Statistics statistics;
     private int borderWidth = 1;
+    final int DELETE_COUNTDOWN = 10;
 
     /**
      * Constructor
@@ -962,16 +985,42 @@ class TetrisBase {
 
     boolean annigilation()
     {
-      return false;
+      boolean modified = false;
+
+      for(int row = 0; row < rowCount; row ++) {
+        for(int column = 0; column < columnCount; column ++)
+        {
+          Square s = get(column, row);
+          if(s != null && s.isDeleted())
+          {
+            modified = true;
+            if(s.canPermanentDelete()) {
+              //Permanent delete suare
+              put(column, row, null);
+            }
+
+          }
+        }
+      }
+      if(modified)
+        setModified(true);
+
+      return modified;
     }
 
     void removeSquere(int column, int row) {
-      put(column, row, null);
+      //put(column, row, null);
+      Square s = get(column, row);
+      if(s != null && !s.isDeleted()) {
+        s.setDeleted(DELETE_COUNTDOWN);
+        setModified(true);
+      }
     }
 
     void moveSquere(int srcColumn, int srcRow, int dstColumn, int dstRow) {
       put(dstColumn, dstRow, get(srcColumn, srcRow));
       put(srcColumn, srcRow, null);
+      setModified(true);
     }
 
     void onNewGame()

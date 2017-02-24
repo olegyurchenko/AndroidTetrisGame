@@ -1,9 +1,7 @@
 package ua.probe.oleg.tetrisgamecollection;
 
 import android.content.Context;
-import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -127,8 +125,28 @@ class TetrisGame extends TetrisBase {
       super(colCount, rowCount);
     }
 
+    private int rowToDelete = -1;
+
     @Override
     boolean annigilation() {
+
+      if(rowToDelete >= 0 && rowToDelete < rowCount)
+      {
+        if(super.annigilation())
+          return true;
+        if(get(0, rowToDelete) == null) //Already deleted row
+        {
+          for (int r = rowToDelete - 1; r >= 0; r--) {
+            for (int column = 0; column < columnCount; column++) {
+              moveSquere(column, r, column, r + 1);
+            }
+          }
+
+          rowToDelete = -1;
+        }
+        return true;
+      }
+
       for (int row = 0; row < rowCount; row++) {
         boolean full = true;
         for (int column = 0; column < columnCount; column++) {
@@ -140,12 +158,10 @@ class TetrisGame extends TetrisBase {
 
         if (full) {
           //remove row
-          for (int r = row - 1; r >= 0; r--) {
-            for (int column = 0; column < columnCount; column++) {
-              //put(column, r + 1, get(column, r));
-              moveSquere(column, r, column, r + 1);
-            }
+          for (int column = 0; column < columnCount; column++) {
+            removeSquere(column, row);
           }
+          rowToDelete = row;
           addRemovedShapes(columnCount);
           return true;
         }

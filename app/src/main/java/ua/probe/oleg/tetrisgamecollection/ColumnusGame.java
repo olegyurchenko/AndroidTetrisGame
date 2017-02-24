@@ -92,8 +92,8 @@ class ColumnusGame extends TetrisBase {
             Square r = get(column + 1, row);
             if (l != null
               && r != null
-              && l.color() == s.color()
-              && r.color() == s.color()) {
+              && s.isEqual(l)
+              && s.isEqual(r)) {
               list.add(new Cell(column, row));
               list.add(new Cell(column - 1, row));
               list.add(new Cell(column + 1, row));
@@ -109,8 +109,8 @@ class ColumnusGame extends TetrisBase {
             Square b = get(column, row + 1);
             if (t != null
               && b != null
-              && t.color() == s.color()
-              && b.color() == s.color()) {
+              && s.isEqual(t)
+              && s.isEqual(b)) {
               list.add(new Cell(column, row));
               list.add(new Cell(column, row - 1));
               list.add(new Cell(column, row + 1));
@@ -126,8 +126,8 @@ class ColumnusGame extends TetrisBase {
             Square b = get(column + 1, row + 1);
             if (t != null
               && b != null
-              && t.color() == s.color()
-              && b.color() == s.color()) {
+              && s.isEqual(t)
+              && s.isEqual(b)) {
               list.add(new Cell(column, row));
               list.add(new Cell(column - 1, row - 1));
               list.add(new Cell(column + 1, row + 1));
@@ -143,8 +143,8 @@ class ColumnusGame extends TetrisBase {
             Square b = get(column + 1, row - 1);
             if (t != null
               && b != null
-              && t.color() == s.color()
-              && b.color() == s.color()) {
+              && s.isEqual(t)
+              && s.isEqual(b)) {
               list.add(new Cell(column, row));
               list.add(new Cell(column - 1, row + 1));
               list.add(new Cell(column + 1, row - 1));
@@ -217,7 +217,7 @@ class ColumnusGame extends TetrisBase {
           {
             Square s1 = g.get(column - 1, row);
             Square s2 = g.get(column - 2, row);
-            if(s1 != null && s2 != null && s1.color() == s2.color())
+            if(s1 != null && s2 != null && s1.isEqual(s2))
             {
               rating += RATE_DOUBLED_SHAPE;
             }
@@ -228,7 +228,7 @@ class ColumnusGame extends TetrisBase {
           {
             Square s1 = g.get(column + 1, row);
             Square s2 = g.get(column + 2, row);
-            if(s1 != null && s2 != null && s1.color() == s2.color())
+            if(s1 != null && s2 != null && s1.isEqual(s2))
             {
               rating += RATE_DOUBLED_SHAPE;
             }
@@ -241,8 +241,8 @@ class ColumnusGame extends TetrisBase {
             Square s2 = g.get(column - 2, row);
             Square s3 = g.get(column - 3, row);
             if(s1 != null && s2 != null && s3 != null
-              && s1.color() != s2.color()
-              && s2.color() == s3.color())
+              && !s1.isEqual(s2)
+              && s2.isEqual(s3))
             {
               rating += RATE_CLOSED_DOUBLED_SHAPE;
             }
@@ -255,8 +255,8 @@ class ColumnusGame extends TetrisBase {
             Square s2 = g.get(column + 2, row);
             Square s3 = g.get(column + 3, row);
             if(s1 != null && s2 != null && s3 != null
-              && s1.color() != s2.color()
-              && s2.color() == s3.color())
+              && !s1.isEqual(s2)
+              && s2.isEqual(s3))
             {
               rating += RATE_CLOSED_DOUBLED_SHAPE;
             }
@@ -269,7 +269,7 @@ class ColumnusGame extends TetrisBase {
           {
             Square s1 = g.get(column, row + 1);
             Square s2 = g.get(column, row + 2);
-            if(s1 != null && s2 != null && s1.color() == s2.color())
+            if(s1 != null && s2 != null && s1.isEqual(s2))
             {
               rating += RATE_DOUBLED_SHAPE;
             }
@@ -285,8 +285,8 @@ class ColumnusGame extends TetrisBase {
             Square s2 = g.get(column, row + 2);
             Square s3 = g.get(column, row + 3);
             if(s1 != null && s2 != null && s3 != null
-              && s1.color() != s2.color()
-              && s2.color() == s3.color())
+              && !s1.isEqual(s2)
+              && s2.isEqual(s3))
             {
               rating += RATE_CLOSED_DOUBLED_SHAPE;
             }
@@ -299,7 +299,7 @@ class ColumnusGame extends TetrisBase {
           {
             Square s1 = g.get(column + 1, row + 1);
             Square s2 = g.get(column + 2, row + 2);
-            if(s1 != null && s2 != null && s1.color() == s2.color())
+            if(s1 != null && s2 != null && s1.isEqual(s2))
             {
               rating += RATE_DOUBLED_SHAPE;
             }
@@ -315,8 +315,8 @@ class ColumnusGame extends TetrisBase {
             Square s2 = g.get(column + 2, row + 2);
             Square s3 = g.get(column + 3, row + 3);
             if(s1 != null && s2 != null && s3 != null
-              && s1.color() != s2.color()
-              && s2.color() == s3.color())
+              && !s1.isEqual(s2)
+              && s2.isEqual(s3))
             {
               rating += RATE_CLOSED_DOUBLED_SHAPE;
             }
@@ -329,7 +329,7 @@ class ColumnusGame extends TetrisBase {
           {
             Square s1 = g.get(column - 1, row + 1);
             Square s2 = g.get(column - 2, row + 2);
-            if(s1 != null && s2 != null && s1.color() == s2.color())
+            if(s1 != null && s2 != null && s1.isEqual(s2))
             {
               rating += RATE_DOUBLED_SHAPE;
             }
@@ -345,8 +345,8 @@ class ColumnusGame extends TetrisBase {
             Square s2 = g.get(column - 2, row + 2);
             Square s3 = g.get(column - 3, row + 3);
             if(s1 != null && s2 != null && s3 != null
-              && s1.color() != s2.color()
-              && s2.color() == s3.color())
+              && !s1.isEqual(s2)
+              && s2.isEqual(s3))
             {
               rating += RATE_CLOSED_DOUBLED_SHAPE;
             }
@@ -357,6 +357,7 @@ class ColumnusGame extends TetrisBase {
 
       return rating;
     }
+
   }
   /*-----------------------------------------------------------------------------------------------*/
   static class Controller extends TetrisBase.Controller
