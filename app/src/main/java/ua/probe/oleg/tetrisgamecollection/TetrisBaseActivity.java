@@ -293,45 +293,51 @@ public class TetrisBaseActivity extends AppCompatActivity
 
   @Override
   public void onClick(View v) {
-    switch (v.getId()) {
-      case R.id.btnLeft1:
-      case R.id.btnLeft2:
-        gameController.moveLeft();
-        break;
-      case R.id.btnRight1:
-      case R.id.btnRight2:
-        gameController.moveRight();
-        break;
-      case R.id.btnDown1:
-      case R.id.btnDown2:
-        gameController.moveDown();
-        break;
-      case R.id.btnRotate1:
-      case R.id.btnRotate2:
-        gameController.rotate();
-        break;
-      case R.id.btnPause:
-        gameController.toglePause();
-        break;
+    try {
+      switch (v.getId()) {
+        case R.id.btnLeft1:
+        case R.id.btnLeft2:
+          gameController.moveLeft();
+          break;
+        case R.id.btnRight1:
+        case R.id.btnRight2:
+          gameController.moveRight();
+          break;
+        case R.id.btnDown1:
+        case R.id.btnDown2:
+          gameController.moveDown();
+          break;
+        case R.id.btnRotate1:
+        case R.id.btnRotate2:
+          gameController.rotate();
+          break;
+        case R.id.btnPause:
+          gameController.toglePause();
+          break;
 //      case R.id.btnSettings:
 //        onSettings();
 //        break;
-      case R.id.btnCreate:
-        gameController.onNewGame();
-        break;
-      case R.id.btnMagic:
-        //gameController.onNewGame(0L);
-        if(gameController.state != TetrisBase.Controller.State.PAUSED)
-          gameController.toglePause();
-        showMagicDialog();
-        break;
-      case R.id.btnUndo:
-        gameController.onUndo();
-        break;
-      case R.id.btnRobot:
-        gameController.onRobotAction();
-        break;
+        case R.id.btnCreate:
+          gameController.onNewGame();
+          break;
+        case R.id.btnMagic:
+          //gameController.onNewGame(0L);
+          if (gameController.state != TetrisBase.Controller.State.PAUSED)
+            gameController.toglePause();
+          showMagicDialog();
+          break;
+        case R.id.btnUndo:
+          gameController.onUndo();
+          break;
+        case R.id.btnRobot:
+          gameController.onRobotAction();
+          break;
+      }
     }
+    catch (Exception e) {
+      Log.e("TtetrisBaseActivity", "onClick", e);
+    }
+
   }
 
   protected Class<?> settinsActivityClass()
@@ -378,11 +384,15 @@ public class TetrisBaseActivity extends AppCompatActivity
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     switch(requestCode) {
       case 1:
-        if(Activity.RESULT_OK == resultCode)
-        {
-          gameController.onSettingsChanged();
+        if (Activity.RESULT_OK == resultCode) {
+          try {
+            gameController.onSettingsChanged();
+          }
+          catch (Exception e) {
+            Log.e("TtetrisBaseActivity", "onActivityResult", e);
+          }
+          break;
         }
-        break;
     }
   }
 
@@ -395,12 +405,23 @@ public class TetrisBaseActivity extends AppCompatActivity
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
       super.onSizeChanged(w, h, oldw, oldh);
-      gameController.setSize(w, h);
+      try {
+        gameController.setSize(w, h);
+      }
+      catch (Exception e) {
+        Log.e("TtetrisBaseActivity", "onSizeChanged", e);
+      }
+
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-      gameController.onDraw(canvas);
+      try {
+        gameController.onDraw(canvas);
+      }
+      catch (Exception e) {
+        Log.e("TtetrisBaseActivity", "onDraw", e);
+      }
     }
 
   }
