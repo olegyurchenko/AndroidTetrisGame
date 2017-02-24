@@ -111,62 +111,64 @@ class ColorBallsGame extends TetrisBase {
     }
 
     @Override
-    boolean annigilation()
-    {
-      int modifications = 0;
+    boolean annigilation() {
+      //int modifications = 0;
 
-      //boolean modified;
+      boolean modified = false;
 
 
       //do {
-        //modified = false;
+      //modified = false;
 
-        for (int row = 0; row < rowCount; row ++)
-        {
-          for (int column = 0; column < columnCount; column++)
-          {
-            Square s = get(column, row);
-            if(s == null)
-              continue;
-            // [x]
-            // [ ]
-            if (row < rowCount - 1 && get(column, row + 1) == null) {
-              //Found pended block
-              put(column, row + 1, s);
-              put(column, row, null);
-              //modified = true;
-              modifications ++;
-              continue;
-            }
+      for (int row = 0; row < rowCount; row++) {
+        for (int column = 0; column < columnCount; column++) {
+          Square s = get(column, row);
+          if (s == null)
+            continue;
+          // [x]
+          // [ ]
+          if (row < rowCount - 1 && get(column, row + 1) == null) {
+            //Found pended block
+            //put(column, row + 1, s);
+            //put(column, row, null);
+            moveSquere(column, row, column, row + 1);
+            modified = true;
+            //modifications ++;
+            continue;
+          }
 
-            //    [X]
-            // [ ][x]
-            if (row < rowCount - 1
-              && column > 0
-              && get(column - 1, row + 1) == null) {
-              //Found pended block
-              put(column - 1, row + 1, s);
-              put(column, row, null);
-              //modified = true;
-              modifications ++;
-              continue;
-            }
+          //    [X]
+          // [ ][x]
+          if (row < rowCount - 1
+            && column > 0
+            && get(column - 1, row + 1) == null) {
+            //Found pended block
+            //put(column - 1, row + 1, s);
+            //put(column, row, null);
+            moveSquere(column, row, column - 1, row + 1);
+            modified = true;
+            //modifications ++;
+            continue;
+          }
 
-            // [X]
-            // [x][ ]
-            if (row < rowCount - 1
-              && column < columnCount - 1
-              && get(column + 1, row + 1) == null) {
-              //Found pended block
-              put(column + 1, row + 1, s);
-              put(column, row, null);
-              //modified = true;
-              modifications ++;
-            }
-
+          // [X]
+          // [x][ ]
+          if (row < rowCount - 1
+            && column < columnCount - 1
+            && get(column + 1, row + 1) == null) {
+            //Found pended block
+            //put(column + 1, row + 1, s);
+            //put(column, row, null);
+            moveSquere(column, row, column + 1, row + 1);
+            modified = true;
+            //modifications ++;
           }
 
         }
+
+        if (modified)
+          return true;
+      }
 
 
       //} while (modified);
@@ -174,23 +176,20 @@ class ColorBallsGame extends TetrisBase {
       ArrayList<Cell> list = new ArrayList<>();
 
       //2) Find 3 or more colors and remove it
-      for(int row = 0; row < rowCount; row ++) {
-        for (int column = 0; column < columnCount; column++)
-        {
+      for (int row = 0; row < rowCount; row++) {
+        for (int column = 0; column < columnCount; column++) {
           Square s = get(column, row);
-          if(s == null)
+          if (s == null)
             continue;
 
           //[x][X][x]
-          if(column > 0 && column < columnCount - 1)
-          {
+          if (column > 0 && column < columnCount - 1) {
             Square l = get(column - 1, row);
             Square r = get(column + 1, row);
-            if(l != null
+            if (l != null
               && r != null
               && l.color() == s.color()
-              && r.color() == s.color())
-            {
+              && r.color() == s.color()) {
               list.add(new Cell(column, row));
               list.add(new Cell(column - 1, row));
               list.add(new Cell(column + 1, row));
@@ -201,15 +200,13 @@ class ColorBallsGame extends TetrisBase {
           //[x]
           //[X]
           //[x]
-          if(row > 0 && row < rowCount - 1)
-          {
+          if (row > 0 && row < rowCount - 1) {
             Square t = get(column, row - 1);
             Square b = get(column, row + 1);
-            if(t != null
+            if (t != null
               && b != null
               && t.color() == s.color()
-              && b.color() == s.color())
-            {
+              && b.color() == s.color()) {
               list.add(new Cell(column, row));
               list.add(new Cell(column, row - 1));
               list.add(new Cell(column, row + 1));
@@ -220,15 +217,13 @@ class ColorBallsGame extends TetrisBase {
           //[x]
           //   [X]
           //      [x]
-          if(row > 0 && row < rowCount - 1 && column > 0 && column < columnCount - 1)
-          {
+          if (row > 0 && row < rowCount - 1 && column > 0 && column < columnCount - 1) {
             Square t = get(column - 1, row - 1);
             Square b = get(column + 1, row + 1);
-            if(t != null
+            if (t != null
               && b != null
               && t.color() == s.color()
-              && b.color() == s.color())
-            {
+              && b.color() == s.color()) {
               list.add(new Cell(column, row));
               list.add(new Cell(column - 1, row - 1));
               list.add(new Cell(column + 1, row + 1));
@@ -239,15 +234,13 @@ class ColorBallsGame extends TetrisBase {
           //      [x]
           //   [X]
           //[x]
-          if(row > 0 && row < rowCount - 1 && column > 0 && column < columnCount - 1)
-          {
+          if (row > 0 && row < rowCount - 1 && column > 0 && column < columnCount - 1) {
             Square t = get(column - 1, row + 1);
             Square b = get(column + 1, row - 1);
-            if(t != null
+            if (t != null
               && b != null
               && t.color() == s.color()
-              && b.color() == s.color())
-            {
+              && b.color() == s.color()) {
               list.add(new Cell(column, row));
               list.add(new Cell(column - 1, row + 1));
               list.add(new Cell(column + 1, row - 1));
@@ -257,16 +250,15 @@ class ColorBallsGame extends TetrisBase {
         }
       }
 
-      for(Cell c:list)
-      {
-        if(get(c.column(), c.row()) != null) {
+      for (Cell c : list) {
+        if (get(c.column(), c.row()) != null) {
+          removeSquere(c.column(), c.row());
           addRemovedShapes(1);
-          put(c.column(), c.row(), null);
+          //put(c.column(), c.row(), null);
         }
       }
 
-      return modifications > 0 || !list.isEmpty();
-
+      return !list.isEmpty() || super.annigilation();
     }
 
     Square onNewShape()

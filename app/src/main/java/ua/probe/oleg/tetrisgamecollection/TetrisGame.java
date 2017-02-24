@@ -141,15 +141,16 @@ class TetrisGame extends TetrisBase {
         if (full) {
           //remove row
           for (int r = row - 1; r >= 0; r--) {
-            for (int column = 0; column < columnCount; column++)
-              put(column, r + 1, get(column, r));
-
+            for (int column = 0; column < columnCount; column++) {
+              //put(column, r + 1, get(column, r));
+              moveSquere(column, r, column, r + 1);
+            }
           }
           addRemovedShapes(columnCount);
           return true;
         }
       }
-      return false;
+      return super.annigilation();
     }
 
     /**

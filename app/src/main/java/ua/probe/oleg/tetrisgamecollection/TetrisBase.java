@@ -965,6 +965,14 @@ class TetrisBase {
       return false;
     }
 
+    void removeSquere(int column, int row) {
+      put(column, row, null);
+    }
+
+    void moveSquere(int srcColumn, int srcRow, int dstColumn, int dstRow) {
+      put(dstColumn, dstRow, get(srcColumn, srcRow));
+      put(srcColumn, srcRow, null);
+    }
 
     void onNewGame()
     {
