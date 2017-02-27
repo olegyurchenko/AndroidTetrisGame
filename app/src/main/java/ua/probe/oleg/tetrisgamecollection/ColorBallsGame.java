@@ -111,6 +111,7 @@ class ColorBallsGame extends TetrisBase {
     BallsGlass(int colCount, int rowCount)
     {
       super(colCount, rowCount);
+      MOVE_COUNTDOWN = 3;
     }
 
     @Override
@@ -145,7 +146,7 @@ class ColorBallsGame extends TetrisBase {
             moveSquere(column, row, column, row + 1);
             modified = true;
             //modifications ++;
-            continue;
+            break;
           }
 
           //    [X]
@@ -159,7 +160,7 @@ class ColorBallsGame extends TetrisBase {
             moveSquere(column, row, column - 1, row + 1);
             modified = true;
             //modifications ++;
-            continue;
+            break;
           }
 
           // [X]
@@ -173,6 +174,7 @@ class ColorBallsGame extends TetrisBase {
             moveSquere(column, row, column + 1, row + 1);
             modified = true;
             //modifications ++;
+            break;
           }
 
         }

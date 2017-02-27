@@ -610,8 +610,8 @@ class TetrisBase {
     private SparseArray<Square> squareMap;
     private Statistics statistics;
     private int borderWidth = 1;
-    final int DELETE_COUNTDOWN = 10;
-    final int MOVE_COUNTDOWN = 10;
+    int DELETE_COUNTDOWN = 10;
+    int MOVE_COUNTDOWN = 3;
 
     /**
      * Constructor
@@ -1088,8 +1088,10 @@ class TetrisBase {
       put(dstColumn, dstRow, null);
       put(srcColumn, srcRow, null);
 
-      if(s != null)
+      if(s != null) {
         moveDataList.add(new MoveData(s, srcColumn, srcRow, dstColumn, dstRow));
+        Log.d("moveSquare", String.format("(%d,%d)->(%d,%d)", srcColumn, srcRow, dstColumn, dstRow));
+      }
       setModified(true);
     }
 
