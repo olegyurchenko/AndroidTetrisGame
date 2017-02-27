@@ -619,6 +619,10 @@ class TetrisBase {
     private long scoreScale = 100;
 
     private boolean drawGuideLines = true;
+    /**
+     * virtualMode for clowned glasses (demo mode)
+     */
+    private boolean virtualMode = false;
 
     /**
      * Container squares
@@ -691,6 +695,8 @@ class TetrisBase {
       g.drawGuideLines = drawGuideLines;
       g.statistics = statistics.clone();
       g.bgColor = bgColor;
+
+      g.virtualMode = true;
       return g;
     }
 
@@ -1096,23 +1102,34 @@ class TetrisBase {
     }
 
     void removeSquere(int column, int row) {
-      //put(column, row, null);
-      Square s = get(column, row);
-      if(s != null && !s.isDeleted()) {
-        s.setDeleted(DELETE_COUNTDOWN);
-        setModified(true);
+      if(virtualMode) { //Quick delete
+        put(column, row, null);
+      }
+      else {
+        Square s = get(column, row);
+        if (s != null && !s.isDeleted()) {
+          s.setDeleted(DELETE_COUNTDOWN);
+          setModified(true);
+        }
       }
     }
 
     void moveSquere(int srcColumn, int srcRow, int dstColumn, int dstRow) {
       Square s = get(srcColumn, srcRow);
       //Log.d("moveSquare", String.format("(%d,%d)->(%d,%d)", srcColumn, srcRow, dstColumn, dstRow));
-      put(dstColumn, dstRow, null);
-      put(srcColumn, srcRow, null);
 
-      if(s != null && !s.isDeleted()) {
-        moveDataList.add(new MoveData(s, srcColumn, srcRow, dstColumn, dstRow));
-        Log.d("moveSquare", String.format("(%d,%d)->(%d,%d)", srcColumn, srcRow, dstColumn, dstRow));
+      if(virtualMode) { //Quick move
+        put(dstColumn, dstRow, s);
+        put(srcColumn, srcRow, null);
+      }
+      else {
+        put(dstColumn, dstRow, null);
+        put(srcColumn, srcRow, null);
+
+        if (s != null && !s.isDeleted()) {
+          moveDataList.add(new MoveData(s, srcColumn, srcRow, dstColumn, dstRow));
+          Log.d("moveSquare", String.format("(%d,%d)->(%d,%d)", srcColumn, srcRow, dstColumn, dstRow));
+        }
       }
       setModified(true);
     }
