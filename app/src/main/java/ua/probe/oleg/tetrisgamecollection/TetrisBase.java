@@ -189,7 +189,7 @@ class TetrisBase {
   static class Square
   {
     int fillColor, borderColor;
-    boolean deleted;
+    boolean deleted = false;
     int deleteСountdown;
 //    protected int width = 0, height = 0;
     Paint paint = squarePaint;
@@ -1088,7 +1088,7 @@ class TetrisBase {
       put(dstColumn, dstRow, null);
       put(srcColumn, srcRow, null);
 
-      if(s != null) {
+      if(s != null && s.isDeleted()) {
         moveDataList.add(new MoveData(s, srcColumn, srcRow, dstColumn, dstRow));
         Log.d("moveSquare", String.format("(%d,%d)->(%d,%d)", srcColumn, srcRow, dstColumn, dstRow));
       }
