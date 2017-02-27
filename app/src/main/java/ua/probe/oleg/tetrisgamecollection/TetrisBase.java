@@ -611,6 +611,7 @@ class TetrisBase {
     private Statistics statistics;
     private int borderWidth = 1;
     final int DELETE_COUNTDOWN = 10;
+    final int MOVE_COUNTDOWN = 10;
 
     /**
      * Constructor
@@ -704,6 +705,33 @@ class TetrisBase {
     int getShapeWidth() { return rect.width() / columnCount;}
     int getShapeHeight() {return rect.height() / rowCount;}
 
+    /**
+     * Data for save and handling move cells
+     */
+    private class MoveData {
+      Square square;
+      Cell from;
+      Cell to;
+      int countdown;
+
+      MoveData(Square s, int srcColumn, int srcRow, int dstColumn, int dstRow) {
+        square = s;
+        from = new Cell(srcColumn, srcRow);
+        to = new Cell(dstColumn, dstRow);
+        countdown = MOVE_COUNTDOWN;
+      }
+
+      boolean canPermanentMove() {
+        countdown --;
+        return countdown <= 0;
+      }
+    }
+
+    /**
+     * Move cells list
+     */
+    ArrayList<MoveData> moveDataList = new ArrayList<>();
+
     void onDraw(Canvas canvas)
     {
       Figure figure = this.activeFigure; //Thread safe
@@ -738,6 +766,27 @@ class TetrisBase {
             */
           }
         }
+      }
+
+      //Draw moving cells
+      int size = moveDataList.size();
+      for(int i = 0; i < size; i++) {
+        MoveData data = moveDataList.get(i);
+
+        //int x = rect.left + data.from.column() * shapeWidth + ((data.to.column() - data.from.column()) * shapeWidth);// / 2;
+        //int y = rect.top + data.from.row() * shapeHeight + ((data.to.row() - data.from.row()) * shapeHeight);// / 2;
+        int x = rect.left + data.from.column() * shapeWidth;
+        int y = rect.top + data.from.row() * shapeHeight;
+
+        x += ((data.to.column() - data.from.column()) * shapeWidth * (MOVE_COUNTDOWN - data.countdown)) / MOVE_COUNTDOWN;
+        y += ((data.to.row() - data.from.row()) * shapeHeight * (MOVE_COUNTDOWN - data.countdown)) / MOVE_COUNTDOWN;
+/*
+        Log.d("onDraw", String.format("x:%d dx:%d y:%d dy:%d countdown:%d f:%d t:%d", x, dx, y, dy,
+          data.countdown,
+          data.from.row(),
+          data.to.row()));
+*/
+        data.square.onDraw(canvas, x, y, shapeWidth, shapeHeight);
       }
 
       if(figure != null)
@@ -983,6 +1032,7 @@ class TetrisBase {
       activeFigure = null;
     }
 
+
     boolean annigilation()
     {
       boolean modified = false;
@@ -1002,6 +1052,22 @@ class TetrisBase {
           }
         }
       }
+
+      int size = moveDataList.size();
+      for(int i = 0; i < size; i++)
+      {
+        MoveData data = moveDataList.get(i);
+
+        if(data.canPermanentMove()) {
+          put(data.to.column(), data.to.row(), data.square);
+
+          moveDataList.remove(i);
+          size --;
+          i --;
+        }
+        modified = true;
+      }
+
       if(modified)
         setModified(true);
 
@@ -1018,8 +1084,12 @@ class TetrisBase {
     }
 
     void moveSquere(int srcColumn, int srcRow, int dstColumn, int dstRow) {
-      put(dstColumn, dstRow, get(srcColumn, srcRow));
+      Square s = get(srcColumn, srcRow);
+      put(dstColumn, dstRow, null);
       put(srcColumn, srcRow, null);
+
+      if(s != null)
+        moveDataList.add(new MoveData(s, srcColumn, srcRow, dstColumn, dstRow));
       setModified(true);
     }
 
