@@ -130,10 +130,11 @@ class TetrisGame extends TetrisBase {
     @Override
     boolean annigilation() {
 
+      if(super.annigilation())
+        return true;
+
       if(rowToDelete >= 0 && rowToDelete < rowCount)
       {
-        if(super.annigilation())
-          return true;
         if(get(0, rowToDelete) == null) //Already deleted row
         {
           for (int r = rowToDelete - 1; r >= 0; r--) {
@@ -166,7 +167,7 @@ class TetrisGame extends TetrisBase {
           return true;
         }
       }
-      return super.annigilation();
+      return false;
     }
 
     /**

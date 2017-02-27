@@ -125,6 +125,9 @@ class ColorBallsGame extends TetrisBase {
       boolean modified = false;
 
 
+      if(super.annigilation())
+        return true;
+
       //do {
       //modified = false;
 
@@ -266,7 +269,7 @@ class ColorBallsGame extends TetrisBase {
         }
       }
 
-      return !list.isEmpty() || super.annigilation();
+      return !list.isEmpty();
     }
 
     Square onNewShape()

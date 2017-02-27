@@ -59,6 +59,9 @@ class ColumnusGame extends TetrisBase {
       //    [x]    ->
       // [x]   [x]    [x][x][x]
 
+      if(super.annigilation())
+        return true;
+
       boolean modified = false;
 
       for (int row = rowCount - 2; row >= 0; row--) {
@@ -162,7 +165,7 @@ class ColumnusGame extends TetrisBase {
         }
       }
 
-      return !list.isEmpty() || super.annigilation();
+      return !list.isEmpty();
     }
 
     @Override
