@@ -186,7 +186,7 @@ class TetrisBase {
    * Base class for square - figures components.
    * Main property of square - color
    */
-  static class Square
+  static class Square implements Cloneable
   {
     int fillColor, borderColor;
     boolean deleted = false;
@@ -224,6 +224,14 @@ class TetrisBase {
       deleted = false;
     }
 
+    public Square clone() throws CloneNotSupportedException {
+      Square s = (Square) super.clone();
+      s.fillColor = fillColor;
+      s.borderColor = borderColor;
+      s.deleted = deleted;
+      s.deleteСountdown = deleteСountdown;
+      return s;
+    }
     //public int color() {return fillColor;}
 
     boolean isEqual(Square other) {
@@ -301,7 +309,15 @@ class TetrisBase {
     public Figure clone() throws CloneNotSupportedException
     {
       Figure f = (Figure) super.clone();
+      /*
       f.squareMap = squareMap.clone();
+      f.columnCount = columnCount;
+      f.rowCount = rowCount;
+      */
+      int sz = squareMap.size();
+      for(int i = 0; i < sz; i++) {
+        f.squareMap.put(squareMap.keyAt(i), squareMap.valueAt(i).clone());
+      }
       f.columnCount = columnCount;
       f.rowCount = rowCount;
       return f;
@@ -660,7 +676,12 @@ class TetrisBase {
     {
       Glass g = (Glass) super.clone();
       g.init(columnCount, rowCount);
-      g.squareMap = squareMap.clone();
+//      g.squareMap = squareMap.clone();
+      int sz = squareMap.size();
+      for(int i = 0; i < sz; i++) {
+        g.squareMap.put(squareMap.keyAt(i), squareMap.valueAt(i).clone());
+      }
+
       g.rect = new Rect(rect);
       if(activeFigure != null)
         g.activeFigure = activeFigure.clone();
@@ -1085,10 +1106,11 @@ class TetrisBase {
 
     void moveSquere(int srcColumn, int srcRow, int dstColumn, int dstRow) {
       Square s = get(srcColumn, srcRow);
+      //Log.d("moveSquare", String.format("(%d,%d)->(%d,%d)", srcColumn, srcRow, dstColumn, dstRow));
       put(dstColumn, dstRow, null);
       put(srcColumn, srcRow, null);
 
-      if(s != null && s.isDeleted()) {
+      if(s != null && !s.isDeleted()) {
         moveDataList.add(new MoveData(s, srcColumn, srcRow, dstColumn, dstRow));
         Log.d("moveSquare", String.format("(%d,%d)->(%d,%d)", srcColumn, srcRow, dstColumn, dstRow));
       }

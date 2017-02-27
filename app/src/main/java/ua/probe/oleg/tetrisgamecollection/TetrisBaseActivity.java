@@ -199,10 +199,10 @@ public class TetrisBaseActivity extends AppCompatActivity
     myTimer.schedule(new TimerTask() { // Определяем задачу
       @Override
       public void run() {
-        gameController.onTimer();
         uiHandler.post(new Runnable() {
           @Override
           public void run() {
+            gameController.onTimer();
             if (gameController.isModified())
               drawView.invalidate();
           }
