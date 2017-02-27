@@ -1118,17 +1118,17 @@ class TetrisBase {
       Square s = get(srcColumn, srcRow);
       //Log.d("moveSquare", String.format("(%d,%d)->(%d,%d)", srcColumn, srcRow, dstColumn, dstRow));
 
+      put(srcColumn, srcRow, null);
+
       if(virtualMode) { //Quick move
         put(dstColumn, dstRow, s);
-        put(srcColumn, srcRow, null);
       }
       else {
         put(dstColumn, dstRow, null);
-        put(srcColumn, srcRow, null);
 
         if (s != null && !s.isDeleted()) {
           moveDataList.add(new MoveData(s, srcColumn, srcRow, dstColumn, dstRow));
-          Log.d("moveSquare", String.format("(%d,%d)->(%d,%d)", srcColumn, srcRow, dstColumn, dstRow));
+          //Log.d("moveSquare", String.format("(%d,%d)->(%d,%d)", srcColumn, srcRow, dstColumn, dstRow));
         }
       }
       setModified(true);
