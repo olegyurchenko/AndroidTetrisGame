@@ -82,7 +82,7 @@
                 <Spinner
                     android:id="@+id/spinner_rows"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:spinnerMode="dialog"/>
 
 
@@ -102,7 +102,7 @@
                 <Spinner
                     android:id="@+id/spinner_speed"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:spinnerMode="dialog"/>
 
 
@@ -121,7 +121,7 @@
                 <Spinner
                     android:id="@+id/spinner_complex"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:spinnerMode="dialog"/>
 
 
@@ -140,7 +140,7 @@
                 <Switch
                     android:id="@+id/switch_next_figure"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="match_parent"
                     />
             </TableRow>
 
@@ -157,7 +157,7 @@
                 <Switch
                     android:id="@+id/switch_show_score"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="match_parent"
                     />
             </TableRow>
 
@@ -174,7 +174,7 @@
                 <Switch
                     android:id="@+id/switch_show_guide_line"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="match_parent"
                     />
             </TableRow>
 
@@ -191,7 +191,7 @@
                 <Switch
                     android:id="@+id/switch_visual_effects"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="match_parent"
                     />
             </TableRow>
 
@@ -208,7 +208,7 @@
                 <Switch
                     android:id="@+id/switch_use_accelerometer"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="match_parent"
                     />
             </TableRow>
 
@@ -225,7 +225,7 @@
                 <Switch
                     android:id="@+id/switch_use_touch"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="match_parent"
                     />
             </TableRow>
 
@@ -242,7 +242,7 @@
                 <Switch
                     android:id="@+id/switch_use_shake"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="match_parent"
                     />
 
             </TableRow>
