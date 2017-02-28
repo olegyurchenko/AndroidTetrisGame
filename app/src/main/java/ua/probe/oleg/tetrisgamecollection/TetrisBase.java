@@ -618,12 +618,24 @@ class TetrisBase {
     //private long score;
     private long scoreScale = 100;
 
+    /**
+     * Enable/Disable drawing guide lines
+     */
     private boolean drawGuideLines = true;
+
+    void setDrawGuideLines(boolean b) { drawGuideLines = b;}
     /**
      * virtualMode for clowned glasses (demo mode)
      */
     private boolean virtualMode = false;
 
+
+    /**
+     * Enable/Disable animation effects
+     */
+    private boolean effectsEnabled = true;
+
+    void setEffectsEnabled(boolean b) {effectsEnabled = b;}
     /**
      * Container squares
      */
@@ -1102,7 +1114,7 @@ class TetrisBase {
     }
 
     void removeSquere(int column, int row) {
-      if(virtualMode) { //Quick delete
+      if(virtualMode || !effectsEnabled) { //Quick delete
         put(column, row, null);
       }
       else {
@@ -1120,7 +1132,7 @@ class TetrisBase {
 
       put(srcColumn, srcRow, null);
 
-      if(virtualMode) { //Quick move
+      if(virtualMode || !effectsEnabled) { //Quick move
         put(dstColumn, dstRow, s);
       }
       else {
@@ -1309,6 +1321,7 @@ class TetrisBase {
     boolean useAccelerometer = false;
     boolean useTouch = true;
     boolean useShake = false;
+    boolean visualEffects = true;
     long randomSeed;
     int glassColor = Color.argb(80, 102, 204, 255);
     int statusColor = Color.rgb(229, 234, 171);
@@ -1351,6 +1364,7 @@ class TetrisBase {
       useAccelerometer = preferences.getBoolean("useAccelerometer", useAccelerometer);
       useTouch = preferences.getBoolean("useTouch", useTouch);
       useShake = preferences.getBoolean("useShake", useShake);
+      visualEffects = preferences.getBoolean("visualEffects", visualEffects);
       randomSeed = preferences.getLong("randomSeed", 0);
       glassColor = preferences.getInt("glassColor", glassColor);
 
@@ -1380,6 +1394,7 @@ class TetrisBase {
       ed.putBoolean("useAccelerometer", useAccelerometer);
       ed.putBoolean("useTouch", useTouch);
       ed.putBoolean("useShake", useShake);
+      ed.putBoolean("visualEffects", visualEffects);
       ed.putLong("randomSeed", randomSeed);
       ed.putInt("glassColor", glassColor);
       ed.putInt("statusColor", statusColor);
@@ -1507,6 +1522,8 @@ class TetrisBase {
       interval = settings.tickTime;
       glass.setBgColor(settings.glassColor);
       glass.setScoreScale(1); //TODK !
+      glass.setDrawGuideLines(settings.showGuideLines);
+      glass.setEffectsEnabled(settings.visualEffects);
     }
     /*============================================================*/
     void onSettingsChanged()

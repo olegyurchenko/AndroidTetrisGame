@@ -52,4 +52,5 @@
     <string name="figures">Фигуры</string>
     <string name="glass_color">Цвет стакана</string>
     <string name="game_over">Игра закончена</string>
+    <string name="visual_effects">Визуальные эффекты</string>
 </resources>

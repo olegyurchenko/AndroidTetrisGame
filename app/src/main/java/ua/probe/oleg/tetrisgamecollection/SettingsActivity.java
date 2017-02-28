@@ -26,7 +26,7 @@ public class SettingsActivity extends Activity
   //EditText speedEdit, complexEdit;
   Spinner columnsSpinner, rowsSpinner, speedSpinner, complexSpinner;
   TetrisBase.Settings settings;
-  Switch showNextFigureSwitch, showScoreSwitch, showGudeLinesSwitch,
+  Switch showNextFigureSwitch, showScoreSwitch, showGudeLinesSwitch, visualEffectsSwitch,
     useAccelerometerSwitch, useTouchSwitch, useShakeSwitch;
 
   LineColorPicker glassColorPicker;
@@ -64,6 +64,7 @@ public class SettingsActivity extends Activity
     useAccelerometerSwitch = (Switch) findViewById(R.id.switch_use_accelerometer);
     useTouchSwitch = (Switch) findViewById(R.id.switch_use_touch);
     useShakeSwitch = (Switch) findViewById(R.id.switch_use_shake);
+    visualEffectsSwitch = (Switch) findViewById(R.id.switch_visual_effects);
 
     glassColorPicker = (LineColorPicker) findViewById(R.id.picker_glass_color);
     glassColorEdit = (EditText) findViewById(R.id.edit_glass_color);
@@ -221,6 +222,7 @@ public class SettingsActivity extends Activity
     useAccelerometerSwitch.setChecked(settings.useAccelerometer);
     useTouchSwitch.setChecked(settings.useTouch);
     useShakeSwitch.setChecked(settings.useShake);
+    visualEffectsSwitch.setChecked(settings.visualEffects);
 
     //speedEdit.setText("" + settings.tickTime);
     //complexEdit.setText("" + settings.complexRate);
@@ -255,6 +257,7 @@ public class SettingsActivity extends Activity
     settings.useAccelerometer = useAccelerometerSwitch.isChecked();
     settings.useTouch = useTouchSwitch.isChecked();
     settings.useShake = useShakeSwitch.isChecked();
+    settings.visualEffects = visualEffectsSwitch.isChecked();
 
     //Log.d("onClick", "settings.columnCount=" + settings.columnCount);
     //Log.d("onClick", "settings.rowCount=" + settings.rowCount);

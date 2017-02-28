@@ -11,23 +11,25 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_cancel"
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:onClick="onClick"
             android:text="@string/cancel"/>
 
         <Button
             android:id="@+id/btn_ok"
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:onClick="onClick"
             android:text="@string/ok"/>
     </LinearLayout>
@@ -171,6 +173,23 @@
 
                 <Switch
                     android:id="@+id/switch_show_guide_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    />
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_vertical"
+                android:minHeight="70dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="120dp"
+                    android:text="@string/visual_effects"/>
+
+                <Switch
+                    android:id="@+id/switch_visual_effects"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     />
