@@ -17,21 +17,21 @@
 
         <Button
             android:id="@+id/btn_cancel"
-            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:onClick="onClick"
-            android:text="@string/cancel"/>
+            android:text="@string/cancel"
+            style="@android:style/Widget.Button"/>
 
         <Button
             android:id="@+id/btn_ok"
-            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:onClick="onClick"
-            android:text="@string/ok"/>
+            android:text="@string/ok"
+            style="@android:style/Widget.Button"/>
     </LinearLayout>
 
     <ScrollView
@@ -46,6 +46,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:shrinkColumns="*"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp">
 
@@ -56,7 +57,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="120dp"
                     android:text="@string/column_count"/>
 
                 <Spinner
@@ -76,7 +76,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="120dp"
                     android:text="@string/row_count"/>
 
                 <Spinner
@@ -96,7 +95,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="120dp"
                     android:text="@string/speed"/>
 
                 <Spinner
@@ -115,7 +113,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="120dp"
                     android:text="@string/figures"/>
 
                 <Spinner
@@ -134,7 +131,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="120dp"
                     android:text="@string/show_next_figure"/>
 
                 <Switch
@@ -151,7 +147,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="120dp"
                     android:text="@string/show_score"/>
 
                 <Switch
@@ -168,7 +163,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="120dp"
                     android:text="@string/show_guide_lines"/>
 
                 <Switch
@@ -185,7 +179,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="120dp"
                     android:text="@string/visual_effects"/>
 
                 <Switch
@@ -202,7 +195,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="120dp"
                     android:text="@string/use_accelerometer"/>
 
                 <Switch
@@ -219,7 +211,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="120dp"
                     android:text="@string/use_touch"/>
 
                 <Switch
@@ -236,7 +227,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="120dp"
                     android:text="@string/use_shake"/>
 
                 <Switch
@@ -254,7 +244,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="120dp"
                     android:text="@string/glass_color"/>
 
 
@@ -272,7 +261,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="120dp"
                     android:text=""
                     android:id="@+id/view_glass_color"/>
 
