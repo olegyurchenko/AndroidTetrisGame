@@ -63,10 +63,11 @@ public class HelpActivity extends AppCompatActivity {
     wv = (WebView)findViewById(R.id.view_about);
 
     String versionName = BuildConfig.VERSION_NAME;
+    int versionCode = BuildConfig.VERSION_CODE;
 
     String versionText = String.format(Locale.getDefault(), getString(R.string.version_format),
       versionName,
-      //versionCode,
+      versionCode,
       getAppTimeStamp());
 
     String aboutText = String.format(Locale.getDefault(),"<p>%s</p><p>%s</p>",

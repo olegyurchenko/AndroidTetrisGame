@@ -36,7 +36,7 @@
     <string name="use_accelerometer">Використання акселерометра</string>
     <string name="use_shake">Використання тряски</string>
     <string name="use_touch">Використання торкання</string>
-    <string name="version_format">v%1$s (збірка %2$s)</string>
+    <string name="version_format">v%1$s (збірка %2$d від %3$s)</string>
     <string name="demo_mode">Демонстраційний режим</string>
     <string name="app_name">Блочні ігри</string>
     <string name="action_color_balls">Кольорові кульки</string>

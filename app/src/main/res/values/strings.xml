@@ -35,7 +35,7 @@
     <string name="number_of_squares">Number of squares</string>
     <string name="number_of_balls">Number of balls</string>
     <string name="about">About</string>
-    <string name="version_format">v%1$s (build at %2$s)</string>
+    <string name="version_format">v%1$s (build %2$d at %3$s)</string>
     <string name="about_file">about.html</string>
     <string name="column_count">Column count</string>
     <string name="demo_mode">Demo mode</string>
