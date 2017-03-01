@@ -1471,7 +1471,7 @@ class TetrisBase {
       paint = new Paint();
       bounds = new Rect();
       state = State.PAUSED;
-      setup();
+
       leftArrowBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_left);
       rightArrowBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_right);
       touchBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_touch);
@@ -1500,25 +1500,26 @@ class TetrisBase {
       textColor = a.getColor(0, Color.BLACK);
       a.recycle();
 
-      //final float densityMultiplier = context.getResources().getDisplayMetrics().density;
-      //textSize = (int) (14.0f *  densityMultiplier);
 
       float scale = context.getResources().getConfiguration().fontScale;
       textSize = (int)(context.getResources().getDimension(R.dimen.font) * scale);
 
-      Log.d("Controller", String.format("textSize:%d", textSize));
-
-      if(settings.useAccelerometer || settings.useShake)
-        accelerometer = new Accelerometer(context);
+      //Log.d("Controller", String.format("textSize:%d", textSize));
 
       random = new Random();
       undo = new Stack<>();
 
+      setup();
       load();
     }
     /*============================================================*/
     void setup()
     {
+      if(settings.useAccelerometer || settings.useShake)
+        accelerometer = new Accelerometer(context);
+      else
+        accelerometer = null;
+
       interval = settings.tickTime;
       glass.setBgColor(settings.glassColor);
       glass.setScoreScale(1); //TODK !
@@ -1588,7 +1589,7 @@ class TetrisBase {
       Color.rgb(0xff, 0, 0xff),
       Color.rgb(0, 0xff, 0xff),
       Color.rgb(0, 0, 0),
-      Color.rgb(0xA0, 0xA0, 0xA0),
+      //Color.rgb(0xA0, 0xA0, 0xA0),
       Color.rgb(0xff, 0x80, 0),
       Color.rgb(0xff, 0, 0x80),
       Color.rgb(0x80, 0xff, 0),

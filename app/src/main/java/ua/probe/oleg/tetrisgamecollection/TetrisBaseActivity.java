@@ -200,13 +200,14 @@ public class TetrisBaseActivity extends AppCompatActivity
       @Override
       public void run() {
         gameController.onTimer();
-        uiHandler.post(new Runnable() {
-          @Override
-          public void run() {
-            if (gameController.isModified())
+        if (gameController.isModified()) {
+          uiHandler.post(new Runnable() {
+            @Override
+            public void run() {
               drawView.invalidate();
-          }
-        });
+            }
+          });
+        }
       }
     }, 100, 10); // интервал - 100 миллисекунд, 0 миллисекунд до первого запуска.
 
