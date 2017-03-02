@@ -9,23 +9,23 @@
         <item android:title="@string/pause"
               android:id="@+id/item_pause"
               android:icon="@drawable/ic_pause"
-              app:showAsAction="ifRoom|withText"/>
+              app:showAsAction="always"/>
         <item android:title="@string/undo"
               android:id="@+id/item_undo"
               android:icon="@drawable/ic_undo"
-              app:showAsAction="ifRoom|withText"/>
+              app:showAsAction="always"/>
         <item android:title="@string/new_game"
               android:id="@+id/item_new_game"
               android:icon="@drawable/ic_create"
-              app:showAsAction="ifRoom|withText"/>
+              app:showAsAction="ifRoom"/>
         <item android:title="@string/select_game"
               android:id="@+id/item_magic"
               android:icon="@drawable/ic_magic"
-              app:showAsAction="withText"/>
+              app:showAsAction="never|withText"/>
         <item android:title="@string/demo_mode"
               android:id="@+id/item_demo_mode"
               android:icon="@drawable/ic_robot"
-              app:showAsAction="withText"/>
+              app:showAsAction="never|withText"/>
     </group>
     <group
         android:id="@+id/grp_2">
